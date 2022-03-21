@@ -17,8 +17,8 @@ api_key = input("Enter API Key: ")
 
 url = "https://api.wheniwork.com/2/login"
 payload = json.dumps({
-"username": "sawi43kd@arcticwolf.net", #TODO get_username()
-"password": password #TODO get_pass()
+"username": "sawi43kd@arcticwolf.net", 
+"password": password 
 })
 headers = {
 'W-Key': api_key,
@@ -31,7 +31,7 @@ try:
 except:
     print(str(response) + " | Password or API Key Incorrect.")
 
-
+# Builds out a full rotation given the below parameters.
 def build_schedule(user_email, start_date, schedule_name, starting_week, rotations, team_number):
     user_email = get_user_email(user_email)
     start_date = get_start_date(start_date)
@@ -111,6 +111,7 @@ def get_employee_list(input_file):
             employee_list.append(current_row)
     return employee_list
 
+#Checks email for correct format. Not super necessary unless taking user input
 def get_user_email(user_name):
     if not user_name.endswith('@arcticwolf.com'):
         print("Incorrect Format with username: " + user_name)
@@ -166,7 +167,7 @@ def is_DST(dt, schedule_id):
     dst_start = datetime(2022, 3, 13, 7, 0, tzinfo=tzutc())
     dst_end = datetime(2022, 11, 6, 7, 0, tzinfo=tzutc())
 
-    if schedule_id == "5227330":
+    if schedule_id == "5227330": # EMEA has different DST
         dst_start = datetime(2022, 3, 27, 3, 0, tzinfo=tzutc())
         dst_end = datetime(2022, 10, 30, 3, 0, tzinfo=tzutc())
 

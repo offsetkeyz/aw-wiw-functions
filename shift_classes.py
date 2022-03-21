@@ -88,6 +88,7 @@ class employee_for_pay:
 
 
 #################################### Schedules ########################################
+# Format: color, start time, length, days until next shift, notes, TODO team number
 
 def get_frontline_schedule(rotation_char):
 
@@ -130,13 +131,8 @@ def get_frontline_schedule(rotation_char):
 
         current_schedule = frontline_a
 
-
-
         if rotation_char == 'b':
                 current_schedule = frontline_b
-
-
-
         return current_schedule
 
 def get_techops_schedule(rotation_char):
