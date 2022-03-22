@@ -51,7 +51,7 @@ class user:
                 self.employee_id=employee_id
 
         def __repr__(self) -> str:
-                all_positions = {10470912 : 'Triage Sec Eng 1', 10471903:'Triage Sec Analyst', 10471919:'Triage Sec Eng 2', 10474041:'Triage Sec Eng 3', 10477571:'Network Ops Supp Analyst', 10477572:'Manager, iSOC', 10486791:'TSE4', 10652403:'ISOC Intern', 10652404:'EMEA Intern', 10486791:'Triage Sec Eng 4', 10470912:'Triage Sec Engineer 1', 10656558:'unknown', 10654095:'USA', 10654096:'CAN'}
+                all_positions = {'Triage Sec Eng 1': 10470912, 'Triage Sec Analyst': 10470912, 'Triage Sec Eng 2': 10471919, 'Triage Sec Eng 3': 10474041, 'Network Ops Supp Analyst': 10477571, 'Manager, iSOC': 10477572, 'TSE4': 10486791, 'ISOC Intern': 10652403, 'EMEA Intern': 10652404, 'Triage Sec Eng 4': 10486791, 'Triage Sec Engineer 1' : 10470912, 'USA': 10654095, 'CAN': 10654096, 'DEU' : 10665016, 'GBR' : 10665016, 'Dir Business Apps Sr': 10477570, 'Co-op/ Intern':10652403, 'Tech Lead Security Svs':10474045, 'Shift Lead Security Oper':10660927, 'Team Lead Security Ops':10474045,'Concierge Sec Eng 2':10668570, 'Mgr Security Ops Sr.':10668568, 'Team Lead Tech Ops':10477572,'Mgr Security Operations':10477572, 'Mgr Concierge Services':10477572,'Mgr, Security Operations':10477572, 'Triage Business Analyst':10668571,'Concierge Sec Eng 3':10665015,'Business Sys Mgr':10477572,'Dir Security Oper Sr':10477570,'Dir Security Svs':10477570}
 
                 output = str(self.first_name) + ' ' + str(self.last_name) + ': ' + str(self.employee_id)
                 for i in self.position:
@@ -89,6 +89,8 @@ class employee_for_pay:
 
 #################################### Schedules ########################################
 # Format: color, start time, length, days until next shift, notes, TODO team number
+
+
 
 def get_frontline_schedule(rotation_char):
 
@@ -135,66 +137,92 @@ def get_frontline_schedule(rotation_char):
                 current_schedule = frontline_b
         return current_schedule
 
-def get_techops_schedule(rotation_char):
+def get_tse2_schedule(rotation_char):
+        teal_notes = """8am - 12pm EST - Incident Triage as scheduled in PagerDuty.
+                12-4pm - Lunch/Breaks/Assist where needed.
+                Open/Pending Tier 2 ticket work Zendesk.        
+                """
+        red_notes = '''
+                10 am-12 pm EST - Assist where needed/Breaks/Ticket work
+                12 pm-4pm EST - Incident Triage as scheduled in PagerDuty
+                4 pm-6 pm EST - Assist where needed/Breaks/Ticket work
+        '''
+        orange_notes = '''
+                12pm - 4pm EST - Lunch/Break/Assist where needed/ Ticket work
+                4 pm - 8 pm EST - Incident Triage as scheduled in PagerDuty
+        '''
+        purple_notes = '''
+                2 hours working on SCCS requests
+                Entry/ Ticket work Tier 2 open&Pending          
+        '''
+        night_and_weekend_notes = '''
+                * Incident triage as scheduled with team
+                * Ticket work
+                * Hourly checks on AC/EMEA boards
+        '''
+        green_notes = '''
+                Main priority - Ticket work Tier 2 open&Pending
+                Main Priority #2 - Supporting Tier 3 Security investigation
+                Shadow sessions/Training new hires
+                Assist where needed (e.g. SCCS, Entry)
+        '''
+        tse2_a = { # has monday off rotation
+                1: [['orange', 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 3, orange_notes]],
+                2: [["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 3, red_notes]],
+                3: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]],
+                4: [["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 4, teal_notes]],
+                5: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 8, night_and_weekend_notes]],
+                6: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 4, night_and_weekend_notes]],
+                7: [["purple", 15, 8, 1, purple_notes],["blue", 13, 12, 1, night_and_weekend_notes],["blue", 13, 12, 2, night_and_weekend_notes]],
+                8: [["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 3, purple_notes]]
+        }
 
-        schedule = []
-        current_schedule = techops_a
+        tse2_b = {# tuesday off rotation
+                1: [['orange', 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 3, orange_notes]],
+                2: [["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 3, red_notes]],
+                3: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]],
+                4: [["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 4, teal_notes]],
+                5: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 8, night_and_weekend_notes]],
+                6: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 4, night_and_weekend_notes]],
+                7: [["purple", 15, 8, 1, purple_notes],["blue", 13, 12, 1, night_and_weekend_notes],["blue", 13, 12, 1, night_and_weekend_notes]],
+                8: [["purple", 15, 8, 2, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 3, purple_notes]]
+        }
 
         if rotation_char == 'b':
-                current_schedule = techops_b
+                return tse2_b
+        return tse2_a
 
-        techops_a = {
-            1: [["teal", 17, 8, 1, "notes"],["teal", 17, 8, 1, "notes"], 
-                    ["teal", 17, 8, 1, "notes"], ["teal", 17, 8, 1, "notes"], 
-                    ["teal", 17, 8, 3, "notes"]],
-            2: [["purple", 14, 8, 1, "notes"],["purple", 14, 8, 1, "notes"], 
-                    ["purple", 14, 8, 1, "notes"], ["purple", 14, 8, 1, "notes"], 
-                    ["purple", 14, 8, 3, "notes"]],
-            3: [["green", 16, 8, 1, "notes"],["green", 16, 8, 1, "notes"], 
-                    ["green", 16, 8, 1, "notes"], ["green", 16, 8, 1, "notes"], 
-                    ["green", 16, 8, 3, "notes"]],
-            4: [["red", 13, 8, 1, "notes"],["red", 13, 8, 1, "notes"], 
-                    ["red", 13, 8, 1, "notes"], ["red", 13, 8, 1, "notes"], 
-                    ["red", 13, 8, 4, "notes"]],
-            5: [["gray", 1, 12, 1, "notes"],["gray", 1, 12, 1, "notes"], 
-                    ["gray", 1, 12, 8, "notes"]],
-            6: [["gray", 1, 12, 1, "notes"],["gray", 1, 12, 1, "notes"], 
-                    ["gray", 1, 12, 1, "notes"], ["gray", 1, 12, 4, "notes"]],
-            7: [["orange", 15, 8, 1, "notes"],["blue", 13, 12, 1, "notes"], 
-                    ["blue", 13, 12, 2, "notes"]],
-            8: [["orange", 15, 8, 1, "notes"],["orange", 15, 8, 1, "notes"], 
-                    ["orange", 15, 8, 1, "notes"], ["orange", 15, 8, 3, "notes"]],
-            9: [["orange", 15, 8, 1, "notes"],["orange", 15, 8, 1, "notes"], 
-                    ["orange", 15, 8, 1, "notes"], ["orange", 15, 8, 1, "notes"],["orange", 15, 8, 3, "notes"]]
+def get_EMEA_tier3(rotation_char):
+        yellow_notes = "AC Board Coverage 11a-5pm Frankfurt Time"
+        orange_notes = "AC Board Coverage 8a-11a Frankfurt Time"
+        teal_notes = "AC Board Coverage 5p-8p Frankfurt Time"
+        purple_notes = "No Board Coverage"
+
+        emea_t3_a = {
+                1: [["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 3, purple_notes]],
+                2: [["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 3, purple_notes]],
+                3: [["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 3, purple_notes]],
+                4: [["orange", 7, 8, 1, orange_notes],["orange", 7, 8, 1, orange_notes],["orange", 7, 8, 1, orange_notes],["orange", 7, 8, 1, orange_notes],["orange", 7, 8, 3, orange_notes]]
         }
 
-        techops_b = {
-            1: [["teal", 17, 8, 1, "notes"],["teal", 17, 8, 1, "notes"], 
-                    ["teal", 17, 8, 1, "notes"], ["teal", 17, 8, 1, "notes"], 
-                    ["teal", 17, 8, 3, "notes"]],
-            2: [["purple", 14, 8, 1, "notes"],["purple", 14, 8, 1, "notes"], 
-                    ["purple", 14, 8, 1, "notes"], ["purple", 14, 8, 1, "notes"], 
-                    ["purple", 14, 8, 3, "notes"]],
-            3: [["green", 16, 8, 1, "notes"],["green", 16, 8, 1, "notes"], 
-                    ["green", 16, 8, 1, "notes"], ["green", 16, 8, 1, "notes"], 
-                    ["green", 16, 8, 3, "notes"]],
-            4: [["red", 13, 8, 1, "notes"],["red", 13, 8, 1, "notes"], 
-                    ["red", 13, 8, 1, "notes"], ["red", 13, 8, 1, "notes"], 
-                    ["red", 13, 8, 4, "notes"]],
-            5: [["gray", 1, 12, 1, "notes"],["gray", 1, 12, 1, "notes"], 
-                    ["gray", 1, 12, 8, "notes"]],
-            6: [["gray", 1, 12, 1, "notes"],["gray", 1, 12, 1, "notes"], 
-                    ["gray", 1, 12, 1, "notes"], ["gray", 1, 12, 4, "notes"]],
-            7: [["orange", 15, 8, 1, "notes"],["blue", 13, 12, 1, "notes"], 
-                    ["blue", 13, 12, 1, "notes"]],
-            8: [["orange", 15, 8, 2, "notes"],["orange", 15, 8, 1, "notes"], 
-                    ["orange", 15, 8, 1, "notes"], ["orange", 15, 8, 3, "notes"]],
-            9: [["orange", 15, 8, 1, "notes"],["orange", 15, 8, 1, "notes"], 
-                    ["orange", 15, 8, 1, "notes"], ["orange", 15, 8, 1, "notes"],["orange", 15, 8, 3, "notes"]]
+        emea_t3_b = {
+                1: [["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 3, yellow_notes]],
+                2: [["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 3, yellow_notes]],
+                3: [["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 3, yellow_notes]],
+                4: [["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 3, yellow_notes]]
         }
 
-        return current_schedule
+        emea_t3_c = {
+                1: [["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 3, purple_notes]],
+                2: [["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 3, purple_notes]],
+                3: [["teal", 7, 8, 1, teal_notes],["teal", 7, 8, 1, teal_notes],["teal", 7, 8, 1, teal_notes],["teal", 7, 8, 1, teal_notes],["teal", 7, 8, 3, teal_notes]]
+        }
 
+        if rotation_char == 'b':
+                return emea_t3_b
+        elif rotation_char == 'c':
+                return emea_t3_c
+        return emea_t3_a
 
 def get_tse3_schedule(rotation_char):
         teal_a_notes = "CFE Alpha Board 16:00 - 20:00 EST and Miss Investigations"
@@ -294,8 +322,7 @@ def get_tse3_schedule(rotation_char):
                 return tse3_schedule_a
         elif rotation_char == 'b':
                 return tse3_schedule_b
-        else:
-                return tse3_schedule_c
+        return tse3_schedule_c
 
         
 def get_emea_schedule(rotation_char):
@@ -315,6 +342,66 @@ def get_emea_schedule(rotation_char):
 
         return emea_a
 
+def get_techops_schedule(rotation_char):
+
+        schedule = []
+        current_schedule = techops_a
+
+        if rotation_char == 'b':
+                current_schedule = techops_b
+
+        techops_a = {
+            1: [["teal", 17, 8, 1, "notes"],["teal", 17, 8, 1, "notes"], 
+                    ["teal", 17, 8, 1, "notes"], ["teal", 17, 8, 1, "notes"], 
+                    ["teal", 17, 8, 3, "notes"]],
+            2: [["purple", 14, 8, 1, "notes"],["purple", 14, 8, 1, "notes"], 
+                    ["purple", 14, 8, 1, "notes"], ["purple", 14, 8, 1, "notes"], 
+                    ["purple", 14, 8, 3, "notes"]],
+            3: [["green", 16, 8, 1, "notes"],["green", 16, 8, 1, "notes"], 
+                    ["green", 16, 8, 1, "notes"], ["green", 16, 8, 1, "notes"], 
+                    ["green", 16, 8, 3, "notes"]],
+            4: [["red", 13, 8, 1, "notes"],["red", 13, 8, 1, "notes"], 
+                    ["red", 13, 8, 1, "notes"], ["red", 13, 8, 1, "notes"], 
+                    ["red", 13, 8, 4, "notes"]],
+            5: [["gray", 1, 12, 1, "notes"],["gray", 1, 12, 1, "notes"], 
+                    ["gray", 1, 12, 8, "notes"]],
+            6: [["gray", 1, 12, 1, "notes"],["gray", 1, 12, 1, "notes"], 
+                    ["gray", 1, 12, 1, "notes"], ["gray", 1, 12, 4, "notes"]],
+            7: [["orange", 15, 8, 1, "notes"],["blue", 13, 12, 1, "notes"], 
+                    ["blue", 13, 12, 2, "notes"]],
+            8: [["orange", 15, 8, 1, "notes"],["orange", 15, 8, 1, "notes"], 
+                    ["orange", 15, 8, 1, "notes"], ["orange", 15, 8, 3, "notes"]],
+            9: [["orange", 15, 8, 1, "notes"],["orange", 15, 8, 1, "notes"], 
+                    ["orange", 15, 8, 1, "notes"], ["orange", 15, 8, 1, "notes"],["orange", 15, 8, 3, "notes"]]
+        }
+
+        techops_b = {
+            1: [["teal", 17, 8, 1, "notes"],["teal", 17, 8, 1, "notes"], 
+                    ["teal", 17, 8, 1, "notes"], ["teal", 17, 8, 1, "notes"], 
+                    ["teal", 17, 8, 3, "notes"]],
+            2: [["purple", 14, 8, 1, "notes"],["purple", 14, 8, 1, "notes"], 
+                    ["purple", 14, 8, 1, "notes"], ["purple", 14, 8, 1, "notes"], 
+                    ["purple", 14, 8, 3, "notes"]],
+            3: [["green", 16, 8, 1, "notes"],["green", 16, 8, 1, "notes"], 
+                    ["green", 16, 8, 1, "notes"], ["green", 16, 8, 1, "notes"], 
+                    ["green", 16, 8, 3, "notes"]],
+            4: [["red", 13, 8, 1, "notes"],["red", 13, 8, 1, "notes"], 
+                    ["red", 13, 8, 1, "notes"], ["red", 13, 8, 1, "notes"], 
+                    ["red", 13, 8, 4, "notes"]],
+            5: [["gray", 1, 12, 1, "notes"],["gray", 1, 12, 1, "notes"], 
+                    ["gray", 1, 12, 8, "notes"]],
+            6: [["gray", 1, 12, 1, "notes"],["gray", 1, 12, 1, "notes"], 
+                    ["gray", 1, 12, 1, "notes"], ["gray", 1, 12, 4, "notes"]],
+            7: [["orange", 15, 8, 1, "notes"],["blue", 13, 12, 1, "notes"], 
+                    ["blue", 13, 12, 1, "notes"]],
+            8: [["orange", 15, 8, 2, "notes"],["orange", 15, 8, 1, "notes"], 
+                    ["orange", 15, 8, 1, "notes"], ["orange", 15, 8, 3, "notes"]],
+            9: [["orange", 15, 8, 1, "notes"],["orange", 15, 8, 1, "notes"], 
+                    ["orange", 15, 8, 1, "notes"], ["orange", 15, 8, 1, "notes"],["orange", 15, 8, 3, "notes"]]
+        }
+
+        return current_schedule
+
 def get_pink(rotation_char):
         pink_notes = ''
         pink_emea = {
@@ -333,10 +420,12 @@ def get_current_schedule(schedule_name, rotation_char):
         return get_techops_schedule(rotation_char)
     elif schedule_name == "5134192":
         return get_tse3_schedule(rotation_char)
-    elif schedule_name == "5189759":
+    elif schedule_name == "5189759": #Colin Test
         return get_tse3_schedule(rotation_char)
     elif schedule_name == "5227330":
         return get_emea_schedule(rotation_char)
+    elif schedule_name == "5132410":
+        return get_tse2_schedule(rotation_char)
     elif schedule_name == "5129876":
         return get_pink(rotation_char)
     elif schedule_name == "5132409":

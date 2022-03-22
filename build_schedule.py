@@ -38,26 +38,26 @@ def build_schedule(user_email, start_date, schedule_name, starting_week, rotatio
     location_id = get_location_id(schedule_name)
     starting_week_rotation = starting_week
     rotation_char = starting_week_rotation[-1]
+    position = get_position(schedule_name)
 
     if len(starting_week_rotation) == 3:
         starting_week = int(starting_week_rotation[:2])
     else:
         starting_week = int(starting_week_rotation[0])
-
     i=1
     current_date = start_date
     # build out 3 rotations
-    while i <=3:
+    while i <=1:
         current_schedule = shift_classes.get_current_schedule(location_id, rotation_char)
         for x in range(starting_week, len(current_schedule) + 1): 
             current_week_schedule = current_schedule.get(x)
             for j in current_week_schedule:
-                create_shift(user_email, current_date.replace(hour=j[1], tzinfo=tzutc()), j[2], j[0], j[4], location_id, team_number)
+                create_shift(user_email, current_date.replace(hour=j[1], tzinfo=tzutc()), j[2], j[0], j[4], location_id, team_number, position)
                 current_date = current_date + timedelta(days=j[3])
         for y in range(1, starting_week):
             current_week_schedule = current_schedule.get(y)
             for j in current_week_schedule:
-                create_shift(user_email, current_date.replace(hour=j[1], tzinfo=tzutc()), j[2], j[0], j[4], location_id, team_number)
+                create_shift(user_email, current_date.replace(hour=j[1], tzinfo=tzutc()), j[2], j[0], j[4], location_id, team_number, position)
                 current_date = current_date + timedelta(days=j[3])
         try: #rotate through a/b or a/b/c
             if int(rotations) > 2:
@@ -76,7 +76,7 @@ def build_schedule(user_email, start_date, schedule_name, starting_week, rotatio
         except:
             print('error switching rotation character line 65')
 
-def create_shift(user_email, start_time, length, color, notes, schedule_id, team_number):
+def create_shift(user_email, start_time, length, color, notes, schedule_id, team_number, position):
     user_id = get_user_id_from_email(user_email)
     
     start_hour = int(start_time.strftime('%H'))
@@ -91,7 +91,9 @@ def create_shift(user_email, start_time, length, color, notes, schedule_id, team
         "start_time": start_time.strftime("%a, %d %b %Y %H:%M:%S %z"),
         "end_time" : end_time.strftime("%a, %d %b %Y %H:%M:%S %z"),
         "color": shift_color,
-        "notes" : notes
+        "notes" : notes,
+        "site_id" : get_team(team_number),
+        "position_id": position
     }) 
     response = requests.request("POST", url_headers[0], headers=url_headers[1], data=payload)
 
@@ -110,6 +112,27 @@ def get_employee_list(input_file):
 
             employee_list.append(current_row)
     return employee_list
+
+def get_team(team_number):
+    try:
+        n = int(team_number)
+    except:
+        print("Team number not INT")
+    teams = {
+        1: 4781862,2: 4781869,3: 4781872,4: 4781873,5: 4781874,6: 4781875,7: 4781876,8: 4781877,9: 4781878,10: 4781873
+     }
+    try:
+         return teams[n]
+    except: 
+        print("error with team number")
+        return
+
+def get_position(schedule_name):
+    all_positions = {'tse1': 10470912, 'tse1': 10470912, 'tse2': 10471919, 'tse3': 10474041, 'techops': 10477571}
+    try:
+        return all_positions[schedule_name]
+    except:
+        print("error with get_position()")
 
 #Checks email for correct format. Not super necessary unless taking user input
 def get_user_email(user_name):
@@ -174,3 +197,8 @@ def is_DST(dt, schedule_id):
     if (dt > dst_start and dt < dst_end):
         return -1
     return 0
+
+
+schedules = get_employee_list(tse2_employee_list)
+for x in schedules:
+    build_schedule(x[0], x[1], x[2], x[3], x[4], x[5])
