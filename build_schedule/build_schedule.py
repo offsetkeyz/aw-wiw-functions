@@ -10,8 +10,6 @@ emea_employee_list = '/Users/colin.mcallister/OneDrive - Arctic Wolf Networks In
 emea_t3_employee_list = '/Users/colin.mcallister/OneDrive - Arctic Wolf Networks Inc/Documents/emea_t3.csv'
 techops_employee_list = '/Users/colin.mcallister/OneDrive - Arctic Wolf Networks Inc/Documents/techops.csv'
 
-sample_file_location = 'sample.csv'
-
 # replace the contents of the parenthesis with the file location
-for x in bs_methods.get_employee_list(sample_file_location):
+for x in bs_methods.get_employee_list('sample.csv'):
     bs_methods.build_schedule(x[0], x[1], x[2], x[3], x[4], x[5])
