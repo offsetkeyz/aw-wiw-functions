@@ -42,7 +42,7 @@ def build_schedule(user_email, start_date, schedule_name, starting_week, rotatio
     i=1
     current_date = start_date
     # build out 3 rotations
-    while i <=5:
+    while i <= 3:
         current_schedule = shift_classes.get_current_schedule(location_id, rotation_char)
         for x in range(starting_week, len(current_schedule) + 1): 
             current_week_schedule = current_schedule.get(x)
@@ -103,7 +103,10 @@ def get_employee_list(input_file):
     with open(input_file, "r") as text_file:
         reader = csv.reader(text_file)
         for row in reader:
-            if str(row[0]).startswith('#'): #ignore comments in text file
+            try: 
+                if str(row[0]).startswith('#'): #ignore comments in text file
+                    continue
+            except:
                 continue
             current_row = []
             for item in row:

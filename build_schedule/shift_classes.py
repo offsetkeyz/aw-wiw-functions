@@ -464,15 +464,3 @@ def get_color_code(color):
 
     return shift_color
 
-
-def get_location_id(schedule_name):
-    schedule_name = schedule_name.lower().strip()
-    schedules = {
-        "default" : "5129876",
-        "tse1" : "5132409",
-        "tse2" : "5132410",
-        "tse3" : "5134192",
-        "techops" : "5132412",
-        "colin test" : "5189759",
-        "emea tier 1" : "5227330"
-    }
