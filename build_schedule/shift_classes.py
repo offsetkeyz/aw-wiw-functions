@@ -1,7 +1,6 @@
 
 from datetime import datetime
 
-
 class shift:
     shift_id = 0
     account_id = 0
@@ -103,7 +102,7 @@ def get_frontline_schedule(rotation_char):
         red_notes = ""
         green_notes = "Backup coverage for Triage Team. Log Source Disappeared. Day Old Board."
 
-        frontline_a = {
+        frontline_a = { # Format: color, start time, length, days until next shift, notes
                 1: [["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 3, blue_notes_1]],
                 2: [["light blue", 17, 8, 1, blue_notes_2],["light blue", 17, 8, 1, blue_notes_2],["light blue", 17, 8, 1, blue_notes_2],["light blue", 17, 8, 1, blue_notes_2],["light blue", 17, 8, 3, blue_notes_2]],
                 3: [["orange", 17, 8, 1, yellow_notes],["orange", 17, 8, 1, yellow_notes],["orange", 17, 8, 1, yellow_notes],["orange", 17, 8, 1, yellow_notes],["orange", 17, 8, 3, yellow_notes]],
@@ -117,7 +116,7 @@ def get_frontline_schedule(rotation_char):
                 10: [["green", 17, 8, 1, green_notes],["green", 17, 8, 1, green_notes],["green", 17, 8, 1, green_notes],["green", 17, 8, 1, green_notes],["green", 17, 8, 3, green_notes]]
         }
 
-        frontline_b = {
+        frontline_b = { # Format: color, start time, length, days until next shift, notes
                 1: [["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 3, blue_notes_1]],
                 2: [["light blue", 17, 8, 1, blue_notes_2],["light blue", 17, 8, 1, blue_notes_2],["light blue", 17, 8, 1, blue_notes_2],["light blue", 17, 8, 1, blue_notes_2],["light blue", 17, 8, 3, blue_notes_2]],
                 3: [["orange", 17, 8, 1, yellow_notes],["orange", 17, 8, 1, yellow_notes],["orange", 17, 8, 1, yellow_notes],["orange", 17, 8, 1, yellow_notes],["orange", 17, 8, 3, yellow_notes]],
@@ -198,14 +197,14 @@ def get_EMEA_tier3(rotation_char):
         teal_notes = "AC Board Coverage 5p-8p Frankfurt Time"
         purple_notes = "No Board Coverage"
 
-        emea_t3_a = {
+        emea_t3_a = { 
                 1: [["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 3, purple_notes]],
                 2: [["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 3, purple_notes]],
                 3: [["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 3, purple_notes]],
                 4: [["orange", 7, 8, 1, orange_notes],["orange", 7, 8, 1, orange_notes],["orange", 7, 8, 1, orange_notes],["orange", 7, 8, 1, orange_notes],["orange", 7, 8, 3, orange_notes]]
         }
 
-        emea_t3_b = {
+        emea_t3_b = { 
                 1: [["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 3, yellow_notes]],
                 2: [["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 3, yellow_notes]],
                 3: [["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 1, yellow_notes],["yellow", 8, 8, 3, yellow_notes]],
@@ -240,7 +239,7 @@ def get_tse3_schedule(rotation_char):
         red_notes = "Split Combined Board amongst team members. Flex Shift (Security Investigations, SCCS, PenTest Board)"
         night_notes = "Split Combined Board amongst team members. Flex Shift (Security Investigations, SCCS, PenTest Board)"
         
-
+# Format: color, start time, length, days until next shift, notes
         tse3_schedule_a = {
             1: [["teal", 17, 8, 1, teal_a_notes],["teal", 17, 8, 1, teal_a_notes], 
                     ["teal", 17, 8, 1, teal_a_notes], ["teal", 17, 8, 1, teal_a_notes], 
@@ -266,7 +265,7 @@ def get_tse3_schedule(rotation_char):
             10: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes], 
                     ["green", 14, 8, 1, green_notes], ["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]]
         }
-
+# Format: color, start time, length, days until next shift, notes
         tse3_schedule_b = {
             1: [["teal", 17, 8, 1, teal_b_notes],["teal", 17, 8, 1, teal_b_notes], 
                     ["teal", 17, 8, 1, teal_b_notes], ["teal", 17, 8, 1, teal_b_notes], 
@@ -292,7 +291,7 @@ def get_tse3_schedule(rotation_char):
             10: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes], 
                     ["green", 14, 8, 1, green_notes], ["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]]
         }
-
+# Format: color, start time, length, days until next shift, notes
         tse3_schedule_c = {
             1: [["teal", 17, 8, 1, teal_c_notes],["teal", 17, 8, 1, teal_c_notes], 
                     ["teal", 17, 8, 1, teal_c_notes], ["teal", 17, 8, 1, teal_c_notes], 
@@ -342,7 +341,7 @@ def get_emea_schedule(rotation_char):
 
         return emea_a
 
-def get_techops_schedule(rotation_char):
+def get_techops_schedule(rotation_char): #TODO finish this. In production.
 
         schedule = []
         current_schedule = techops_a
@@ -402,7 +401,7 @@ def get_techops_schedule(rotation_char):
 
         return current_schedule
 
-def get_pink(rotation_char):
+def get_pink(rotation_char): #TODO Finish this.
         pink_notes = ''
         pink_emea = {
                 1: [["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 3, pink_notes]],
