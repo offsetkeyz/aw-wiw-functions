@@ -88,7 +88,7 @@ class employee_for_pay:
 
 
 #################################### Schedules ########################################
-# Format: color, start time, length, days until next shift, notes, TODO team number
+# Format: color, start time, length, days until next shift, notes
 
 
 
@@ -430,6 +430,8 @@ def get_current_schedule(schedule_name, rotation_char):
         return get_pink(rotation_char)
     elif schedule_name == "5132409":
         return get_frontline_schedule(rotation_char)
+    elif schedule_name == '5233779':
+        return get_EMEA_tier3(rotation_char)
     else:
         print('error with get_current_schedule in shift_classes.py')
 

@@ -10,6 +10,7 @@ tse3_employee_list = '/Users/colin.mcallister/OneDrive - Arctic Wolf Networks In
 tse2_employee_list = '/Users/colin.mcallister/OneDrive - Arctic Wolf Networks Inc/Documents/tse2.csv'
 tse1_employee_list = '/Users/colin.mcallister/OneDrive - Arctic Wolf Networks Inc/Documents/tse1.csv'
 emea_employee_list = '/Users/colin.mcallister/OneDrive - Arctic Wolf Networks Inc/Documents/emea.csv'
+emea_t3_employee_list = '/Users/colin.mcallister/OneDrive - Arctic Wolf Networks Inc/Documents/emea_t3.csv'
 techops_employee_list = '/Users/colin.mcallister/OneDrive - Arctic Wolf Networks Inc/Documents/techops.csv'
 
 password = input("Enter Password: ")
@@ -47,7 +48,7 @@ def build_schedule(user_email, start_date, schedule_name, starting_week, rotatio
     i=1
     current_date = start_date
     # build out 3 rotations
-    while i <=1:
+    while i <=5:
         current_schedule = shift_classes.get_current_schedule(location_id, rotation_char)
         for x in range(starting_week, len(current_schedule) + 1): 
             current_week_schedule = current_schedule.get(x)
@@ -59,22 +60,24 @@ def build_schedule(user_email, start_date, schedule_name, starting_week, rotatio
             for j in current_week_schedule:
                 create_shift(user_email, current_date.replace(hour=j[1], tzinfo=tzutc()), j[2], j[0], j[4], location_id, team_number, position)
                 current_date = current_date + timedelta(days=j[3])
-        try: #rotate through a/b or a/b/c
-            if int(rotations) > 2:
-                if rotation_char == 'a':
-                    rotation_char = 'b'
-                elif rotation_char == 'b':
-                    rotation_char = 'c'
+        if schedule_name != 'emea tier 3':
+            try: #rotate through a/b or a/b/c
+                if int(rotations) > 2:
+                    if rotation_char == 'a':
+                        rotation_char = 'b'
+                    elif rotation_char == 'b':
+                        rotation_char = 'c'
+                    else:
+                        rotation_char = 'a'
                 else:
-                    rotation_char = 'a'
-            else:
-                if rotation_char == 'a':
-                    rotation_char = 'b'
-                else:
-                    rotation_char = 'a'
-            i = i+1
-        except:
-            print('error switching rotation character line 65')
+                    if rotation_char == 'a':
+                        rotation_char = 'b'
+                    else:
+                        rotation_char = 'a'
+            except:
+                print('error switching rotation character line 65')
+        i = i+1
+            
 
 def create_shift(user_email, start_time, length, color, notes, schedule_id, team_number, position):
     user_id = get_user_id_from_email(user_email)
@@ -106,6 +109,8 @@ def get_employee_list(input_file):
     with open(input_file, "r") as text_file:
         reader = csv.reader(text_file)
         for row in reader:
+            if str(row[0]).startswith('#'): #ignore comments in text file
+                continue
             current_row = []
             for item in row:
                 current_row.append(item.strip())
@@ -125,7 +130,7 @@ def get_team(team_number):
          return teams[n]
     except: 
         print("error with team number")
-        return
+        return 0
 
 def get_position(schedule_name):
     all_positions = {'tse1': 10470912, 'tse1': 10470912, 'tse2': 10471919, 'tse3': 10474041, 'techops': 10477571}
@@ -133,6 +138,7 @@ def get_position(schedule_name):
         return all_positions[schedule_name]
     except:
         print("error with get_position()")
+        return 0
 
 #Checks email for correct format. Not super necessary unless taking user input
 def get_user_email(user_name):
@@ -160,7 +166,8 @@ def get_location_id(schedule_name):
         "techops" : "5132412",
         "colin test" : "5189759",
         "emea tier 1" : "5227330",
-        "pink" : "5129876"
+        "pink" : "5129876",
+        "emea tier 3": '5233779'
     }
     try: 
         return schedules.get(schedule_name)
@@ -198,7 +205,7 @@ def is_DST(dt, schedule_id):
         return -1
     return 0
 
-
-schedules = get_employee_list(tse2_employee_list)
+get_employee_list(tse1_employee_list)
+schedules = get_employee_list(emea_t3_employee_list)
 for x in schedules:
     build_schedule(x[0], x[1], x[2], x[3], x[4], x[5])
