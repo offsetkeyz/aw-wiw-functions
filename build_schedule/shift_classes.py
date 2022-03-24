@@ -95,7 +95,8 @@ def get_frontline_schedule(rotation_char):
 
         blue_notes_1 = "Oldest to Newest. --- Flex Start between 8 - 12 Local Time. The shift is scheduled for 12EST, but clock in anytime before that."
         blue_notes_2 = "Newest to Oldest. --- Flex Start between 8 - 12 Local Time. The shift is scheduled for 12EST, but clock in anytime before that."
-        dark_blue_notes = ""
+        dark_blue_notes_1 = "Oldest to Newest. Late Start."
+        dark_blue_notes_2 = "Newest to Oldest. Late Start."
         yellow_notes = "Responsible for Entry Triage"
         purple_notes = "Responsible for Entry Triage"
         night_notes = ""
@@ -112,7 +113,7 @@ def get_frontline_schedule(rotation_char):
                 # Starts on a Thursday and goes into the weekend. Has the Monday off.
                 7: [["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1], ["red", 13, 12, 1, red_notes], ["red", 13, 12, 2, red_notes]],
                 8: [["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 3, blue_notes_1]],
-                9: [["dark blue", 17, 8, 1, dark_blue_notes],["dark blue", 17, 8, 1, dark_blue_notes],["dark blue", 17, 8, 1, dark_blue_notes],["dark blue", 17, 8, 1, dark_blue_notes],["dark blue", 17, 8, 3, dark_blue_notes]],
+                9: [["dark blue", 17, 8, 1, dark_blue_notes_1],["dark blue", 17, 8, 1, dark_blue_notes_1],["dark blue", 17, 8, 1, dark_blue_notes_1],["dark blue", 17, 8, 1, dark_blue_notes_1],["dark blue", 17, 8, 3, dark_blue_notes_1]],
                 10: [["green", 17, 8, 1, green_notes],["green", 17, 8, 1, green_notes],["green", 17, 8, 1, green_notes],["green", 17, 8, 1, green_notes],["green", 17, 8, 3, green_notes]]
         }
 
@@ -126,7 +127,7 @@ def get_frontline_schedule(rotation_char):
                 # Starts on a Thursday and goes into the weekend. Has the Tuesday off.
                 7: [["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1], ["red", 13, 12, 1, red_notes], ["red", 13, 12, 1, red_notes]],
                 8: [["light blue", 17, 8, 2, blue_notes_2],["light blue", 17, 8, 1, blue_notes_2],["light blue", 17, 8, 1, blue_notes_2],["light blue", 17, 8, 3, blue_notes_2]],
-                9: [["dark blue", 17, 8, 1, dark_blue_notes],["dark blue", 17, 8, 1, dark_blue_notes],["dark blue", 17, 8, 1, dark_blue_notes],["dark blue", 17, 8, 1, dark_blue_notes],["dark blue", 17, 8, 3, dark_blue_notes]],
+                9: [["dark blue", 17, 8, 1, dark_blue_notes_2],["dark blue", 17, 8, 1, dark_blue_notes_2],["dark blue", 17, 8, 1, dark_blue_notes_2],["dark blue", 17, 8, 1, dark_blue_notes_2],["dark blue", 17, 8, 3, dark_blue_notes_2]],
                 10: [["green", 17, 8, 1, green_notes],["green", 17, 8, 1, green_notes],["green", 17, 8, 1, green_notes],["green", 17, 8, 1, green_notes],["green", 17, 8, 3, green_notes]]
         }
 
