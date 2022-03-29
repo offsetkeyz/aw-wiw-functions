@@ -19,6 +19,7 @@ headers = {
 'W-Key': api_key,
 'Content-Type': 'application/json'
 }
+  
 response = requests.request("POST", url, headers=headers, data=payload)
 try:
     token = response.json()['token']
@@ -92,7 +93,15 @@ def create_shift(user_email, start_time, length, color, notes, schedule_id, team
         "site_id" : get_team(team_number),
         "position_id": position
     }) 
-    response = requests.request("POST", url_headers[0], headers=url_headers[1], data=payload)
+    success = False
+    i = 1
+    while success == False & i < 10:
+        try:   
+            requests.request("POST", url_headers[0], headers=url_headers[1], data=payload)
+            success = True
+        except:
+            success == False
+            i += 1
 
 
 # parses through a csv for employees schedule and feeds the info into build_schedule()
@@ -174,11 +183,20 @@ def get_location_id(schedule_name):
 # takes in user email and returns WiW User ID
 def get_user_id_from_email(user_email):
     url_headers = get_url_and_headers('users?search='+user_email)
-    response = requests.request("GET", url_headers[0], headers=url_headers[1])
+    success = False
+    i = 1
+    while success == False & i < 10:
+        try:
+            response = requests.request("GET", url_headers[0], headers=url_headers[1])
+            success = True
+        except:
+            success = False
+            i +=1 
     try:
         user_id = response.json()['users'][0]['id']
     except:
         print("User: " + user_email + " not in When I Work")
+        user_id = 0
     return user_id
 
 def get_url_and_headers(type):

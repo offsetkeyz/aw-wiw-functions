@@ -111,8 +111,8 @@ def get_frontline_schedule(rotation_char):
                 5: [["gray", 1, 12, 1, night_notes],["gray", 1, 12, 1, night_notes], ["gray", 1, 12, 8, night_notes]],
                 6: [["gray", 1, 12, 1, night_notes],["gray", 1, 12, 1, night_notes], ["gray", 1, 12, 1, night_notes], ["gray", 1, 12, 3, night_notes]],
                 # Starts on a Thursday and goes into the weekend. Has the Monday off.
-                7: [["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1], ["red", 13, 12, 1, red_notes], ["red", 13, 12, 2, red_notes]],
-                8: [["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 3, blue_notes_1]],
+                7: [["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1], ["red", 13, 12, 1, red_notes]],
+                8: [["red", 13, 12, 2, red_notes],["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 3, blue_notes_1]],
                 9: [["dark blue", 17, 8, 1, dark_blue_notes_1],["dark blue", 17, 8, 1, dark_blue_notes_1],["dark blue", 17, 8, 1, dark_blue_notes_1],["dark blue", 17, 8, 1, dark_blue_notes_1],["dark blue", 17, 8, 3, dark_blue_notes_1]],
                 10: [["green", 17, 8, 1, green_notes],["green", 17, 8, 1, green_notes],["green", 17, 8, 1, green_notes],["green", 17, 8, 1, green_notes],["green", 17, 8, 3, green_notes]]
         }
@@ -125,17 +125,15 @@ def get_frontline_schedule(rotation_char):
                 5: [["gray", 1, 12, 1, night_notes],["gray", 1, 12, 1, night_notes], ["gray", 1, 12, 8, night_notes]],
                 6: [["gray", 1, 12, 1, night_notes],["gray", 1, 12, 1, night_notes], ["gray", 1, 12, 1, night_notes], ["gray", 1, 12, 3, night_notes]],
                 # Starts on a Thursday and goes into the weekend. Has the Tuesday off.
-                7: [["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1], ["red", 13, 12, 1, red_notes], ["red", 13, 12, 1, red_notes]],
-                8: [["light blue", 17, 8, 2, blue_notes_2],["light blue", 17, 8, 1, blue_notes_2],["light blue", 17, 8, 1, blue_notes_2],["light blue", 17, 8, 3, blue_notes_2]],
+                7: [["light blue", 17, 8, 1, blue_notes_1],["light blue", 17, 8, 1, blue_notes_1], ["red", 13, 12, 1, red_notes]],
+                8: [["red", 13, 12, 1, red_notes],["light blue", 17, 8, 2, blue_notes_2],["light blue", 17, 8, 1, blue_notes_2],["light blue", 17, 8, 1, blue_notes_2],["light blue", 17, 8, 3, blue_notes_2]],
                 9: [["dark blue", 17, 8, 1, dark_blue_notes_2],["dark blue", 17, 8, 1, dark_blue_notes_2],["dark blue", 17, 8, 1, dark_blue_notes_2],["dark blue", 17, 8, 1, dark_blue_notes_2],["dark blue", 17, 8, 3, dark_blue_notes_2]],
                 10: [["green", 17, 8, 1, green_notes],["green", 17, 8, 1, green_notes],["green", 17, 8, 1, green_notes],["green", 17, 8, 1, green_notes],["green", 17, 8, 3, green_notes]]
         }
 
-        current_schedule = frontline_a
-
         if rotation_char == 'b':
-                current_schedule = frontline_b
-        return current_schedule
+                return frontline_b
+        return frontline_a
 
 def get_tse2_schedule(rotation_char):
         teal_notes = """8am - 12pm EST - Incident Triage as scheduled in PagerDuty.
@@ -215,7 +213,7 @@ def get_EMEA_tier3(rotation_char):
         emea_t3_c = {
                 1: [["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 3, purple_notes]],
                 2: [["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 1, purple_notes],["purple", 8, 8, 3, purple_notes]],
-                3: [["teal", 7, 8, 1, teal_notes],["teal", 7, 8, 1, teal_notes],["teal", 7, 8, 1, teal_notes],["teal", 7, 8, 1, teal_notes],["teal", 7, 8, 3, teal_notes]]
+                3: [["teal", 11, 8, 1, teal_notes],["teal", 11, 8, 1, teal_notes],["teal", 11, 8, 1, teal_notes],["teal", 11, 8, 1, teal_notes],["teal", 11, 8, 3, teal_notes]]
         }
 
         if rotation_char == 'b':
