@@ -9,9 +9,7 @@ def build_schedule(token, schedule_name='tse1'):
 
 def main():
     token = bs_methods.authenticate_WiW_API()
-    bs_methods.delete_conflicting_shifts_for_user(bs_methods.get_user_id_from_email(token,'tyler.anderson@arcticwolf.com'),token)
-
-
+    bs_methods.delete_conflicting_shifts_for_user(bs_methods.get_user_id_from_email(token,''),token)
 
 if __name__ == "__main__":
     main()
