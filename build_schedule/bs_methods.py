@@ -6,30 +6,42 @@ import json
 import csv
 from datetime import *
 from dateutil.tz import *
+import pytz
 
-password = input("Enter Password: ")
-api_key = input("Enter API Key: ")
+def authenticate_WiW_API():
+    password = input("Enter Password: ")
+    api_key = input("Enter API Key: ")
 
-url = "https://api.wheniwork.com/2/login"
-payload = json.dumps({
-"username": "sawi43kd@arcticwolf.net", 
-"password": password 
-})
-headers = {
-'W-Key': api_key,
-'Content-Type': 'application/json'
-}
-  
-response = requests.request("POST", url, headers=headers, data=payload)
-try:
-    token = response.json()['token']
-    print("Good to Go!")
-except:
-    print(str(response) + " | Password or API Key Incorrect.")
+    url = "https://api.wheniwork.com/2/login"
+    payload = json.dumps({
+    "username": "sawi43kd@arcticwolf.net", 
+    "password": password 
+    })
+    headers = {
+    'W-Key': api_key,
+    'Content-Type': 'application/json'
+    }
+    
+    response = requests.request("POST", url, headers=headers, data=payload)
+    try:
+        token = response.json()['token']
+        print("Good to Go!")
+        return token
+    except:
+        print(str(response) + " | Password or API Key Incorrect.")
+        return authenticate_WiW_API()
+
+def get_url_and_headers(type, token):
+    url = "https://api.wheniwork.com/2/" + type
+    headers = {
+    'Host': 'api.wheniwork.com',
+    'Authorization': 'Bearer ' + token, 
+    }
+    return [url, headers]    
 
 # Builds out a full rotation given the below parameters.
-def build_schedule(user_email, start_date, schedule_name, starting_week, rotations, team_number):
-    user_email = get_user_email(user_email)
+def build_schedule(token, schedule_name,user_email, start_date, starting_week, rotations, team_number):
+    user_email = check_email_format(user_email)
     start_date = get_start_date(start_date)
     location_id = get_location_id(schedule_name)
     starting_week_rotation = starting_week
@@ -48,12 +60,12 @@ def build_schedule(user_email, start_date, schedule_name, starting_week, rotatio
         for x in range(starting_week, len(current_schedule) + 1): 
             current_week_schedule = current_schedule.get(x)
             for j in current_week_schedule:
-                create_shift(user_email, current_date.replace(hour=j[1], tzinfo=tzutc()), j[2], j[0], j[4], location_id, team_number, position)
+                create_shift(token, user_email, current_date.replace(hour=j[1], tzinfo=tzutc()), j[2], j[0], j[4], location_id, team_number, position)
                 current_date = current_date + timedelta(days=j[3])
         for y in range(1, starting_week):
             current_week_schedule = current_schedule.get(y)
             for j in current_week_schedule:
-                create_shift(user_email, current_date.replace(hour=j[1], tzinfo=tzutc()), j[2], j[0], j[4], location_id, team_number, position)
+                create_shift(token, user_email, current_date.replace(hour=j[1], tzinfo=tzutc()), j[2], j[0], j[4], location_id, team_number, position)
                 current_date = current_date + timedelta(days=j[3])
         if schedule_name != 'emea tier 3':
             try: #rotate through a/b or a/b/c
@@ -74,15 +86,15 @@ def build_schedule(user_email, start_date, schedule_name, starting_week, rotatio
         i = i+1
             
 
-def create_shift(user_email, start_time, length, color, notes, schedule_id, team_number, position):
-    user_id = get_user_id_from_email(user_email)
+def create_shift(token, user_email, start_time, length, color, notes, schedule_id, team_number, position):
+    user_id = get_user_id_from_email(token, user_email)
     
     start_hour = int(start_time.strftime('%H'))
     start_time = start_time.replace(hour=(start_hour + is_DST(start_time, schedule_id)))
     end_time = start_time + timedelta(hours=length) 
 
     shift_color = shift_classes.get_color_code(color)
-    url_headers = get_url_and_headers('shifts')
+    url_headers = get_url_and_headers('shifts', token)
     payload = json.dumps({
         "user_id": user_id, 
         "location_id": schedule_id,
@@ -90,7 +102,7 @@ def create_shift(user_email, start_time, length, color, notes, schedule_id, team
         "end_time" : end_time.strftime("%a, %d %b %Y %H:%M:%S %z"),
         "color": shift_color,
         "notes" : notes,
-        "site_id" : get_team(team_number),
+        "site_id" : get_team_id(team_number),
         "position_id": position
     }) 
     success = False
@@ -107,7 +119,7 @@ def create_shift(user_email, start_time, length, color, notes, schedule_id, team
 # parses through a csv for employees schedule and feeds the info into build_schedule()
 # 
 # files are listed at the top.
-def get_employee_list(input_file):
+def get_employee_starts_from_csv(input_file):
     employee_list = []
     with open(input_file, "r") as text_file:
         reader = csv.reader(text_file)
@@ -124,7 +136,7 @@ def get_employee_list(input_file):
             employee_list.append(current_row)
     return employee_list
 
-def get_team(team_number):
+def get_team_id(team_number):
     try:
         n = int(team_number)
     except:
@@ -138,6 +150,7 @@ def get_team(team_number):
         print("error with team number")
         return 0
 
+# assigns a position to each shift based on the schedule
 def get_position(schedule_name):
     all_positions = {'tse1': 10470912, 'tse1': 10470912, 'tse2': 10471919, 'tse3': 10474041, 'techops': 10477571}
     try:
@@ -147,12 +160,13 @@ def get_position(schedule_name):
         return 0
 
 #Checks email for correct format. Not super necessary unless taking user input
-def get_user_email(user_name):
+def check_email_format(user_name):
     if not user_name.endswith('@arcticwolf.com'):
         print("Incorrect Format with username: " + user_name)
-        user_name=get_user_email()
+        user_name=check_email_format()
     return user_name
 
+# converts datetime to correct format for WiW API
 def get_start_date(input_date):
     try:
         dt_start = datetime.strptime(input_date, '%d %b %Y')
@@ -181,8 +195,8 @@ def get_location_id(schedule_name):
         return schedules.get("default")
 
 # takes in user email and returns WiW User ID
-def get_user_id_from_email(user_email):
-    url_headers = get_url_and_headers('users?search='+user_email)
+def get_user_id_from_email(token, user_email):
+    url_headers = get_url_and_headers('users?search='+user_email, token)
     success = False
     i = 1
     while success == False & i < 10:
@@ -199,13 +213,15 @@ def get_user_id_from_email(user_email):
         user_id = 0
     return user_id
 
-def get_url_and_headers(type):
-    url = "https://api.wheniwork.com/2/" + type
-    headers = {
-    'Host': 'api.wheniwork.com',
-    'Authorization': 'Bearer ' + token, 
-    }
-    return [url, headers]
+def get_user_from_id(token, user_id):
+    url_headers = get_url_and_headers('users/'+user_id, token)
+    i = 1
+    while i < 10:
+        try:
+            return requests.request("GET", url_headers[0], headers=url_headers[1])
+        except:
+            i +=1 
+    return
 
 #takes DateTime and returns 0 if no and -1 if yes.
 def is_DST(dt, schedule_id):
@@ -219,3 +235,40 @@ def is_DST(dt, schedule_id):
     if (dt > dst_start and dt < dst_end):
         return -1
     return 0
+
+def get_all_future_shifts(token):    
+# url_headers = get_url_and_headers('shifts')
+    url_headers = get_url_and_headers('shifts?start=' + str(datetime.now()) + "&end=" + str(datetime.now()+ timedelta(days=180)), token)
+    response = requests.request("GET", url_headers[0], headers=url_headers[1])
+    all_shifts = response.json()['shifts']
+    employee_shifts = {}
+    for i in all_shifts:
+        start_time = datetime.strptime(i['start_time'], '%a, %d %b %Y %H:%M:%S %z').astimezone(pytz.timezone('UTC'))
+        end_time = datetime.strptime(i['end_time'], '%a, %d %b %Y %H:%M:%S %z').astimezone(pytz.timezone('UTC'))
+        if int(i['user_id']) in employee_shifts:
+            current_users_shifts = employee_shifts.get(int(i['user_id']))
+            current_users_shifts.append((shift_classes.shift(int(i['id']), int(i['account_id']), int(i['user_id']), int(i['location_id']), int(i['position_id']),
+                                int(i['site_id']), start_time, end_time, bool(i['is_shared']), i['linked_users'], bool(i['actionable']), int(i['block_id']))))
+            employee_shifts[int(i['user_id'])] = current_users_shifts
+        else: 
+            employee_shifts[int(i['user_id'])] = [(shift_classes.shift(int(i['id']), int(i['account_id']), int(i['user_id']), int(i['location_id']), int(i['position_id']),
+                                int(i['site_id']), start_time, end_time, bool(i['is_shared']), i['linked_users'], bool(i['actionable']), int(i['block_id'])))]
+    return employee_shifts
+
+def delete_shift(shift_id, token):
+    url_headers = get_url_and_headers('shifts/' + shift_id, token)
+    response = requests.request("DELETE", url_headers[0], headers=url_headers[1])
+
+def delete_conflicting_shifts_for_user(user_id, token):
+    all_shifts = get_all_future_shifts(token)
+    try:
+        user_shifts = all_shifts.get(int(user_id))
+    except:
+        print('issue with delete_conflicting_shifts_for_user()')
+    for shift in user_shifts:
+        for shift_to_delete in user_shifts:
+            if shift.start_time == shift_to_delete.start_time:
+                # remove shift from array
+                # delete shift from WiW
+                delete_shift(shift.id, token)
+

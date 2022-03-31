@@ -457,8 +457,6 @@ def get_color_code(color):
         shift_color = "0070c0"
     elif color == "pink":
         shift_color = "ff00dd"
-    elif color == "orange":
-        shift_color = "ffaa00"
 
     return shift_color
 
