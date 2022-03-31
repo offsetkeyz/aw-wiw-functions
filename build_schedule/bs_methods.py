@@ -238,7 +238,7 @@ def is_DST(dt, schedule_id):
 
 def get_all_future_shifts(token):    
 # url_headers = get_url_and_headers('shifts')
-    url_headers = get_url_and_headers('shifts?start=' + str(datetime.now()) + "&end=" + str(datetime.now()+ timedelta(days=180)), token)
+    url_headers = get_url_and_headers('shifts?start=' + str(datetime.now()) + "&end=" + str(datetime.now()+ timedelta(days=180)) + "&unpublished=true", token)
     response = requests.request("GET", url_headers[0], headers=url_headers[1])
     all_shifts = response.json()['shifts']
     employee_shifts = {}
@@ -256,8 +256,9 @@ def get_all_future_shifts(token):
     return employee_shifts
 
 def delete_shift(shift_id, token):
-    url_headers = get_url_and_headers('shifts/' + shift_id, token)
+    url_headers = get_url_and_headers('shifts/' + str(shift_id), token)
     response = requests.request("DELETE", url_headers[0], headers=url_headers[1])
+    print('shift deleted')
 
 def delete_conflicting_shifts_for_user(user_id, token):
     all_shifts = get_all_future_shifts(token)
@@ -267,8 +268,7 @@ def delete_conflicting_shifts_for_user(user_id, token):
         print('issue with delete_conflicting_shifts_for_user()')
     for shift in user_shifts:
         for shift_to_delete in user_shifts:
-            if shift.start_time == shift_to_delete.start_time:
-                # remove shift from array
-                # delete shift from WiW
-                delete_shift(shift.id, token)
+            if (shift.start_time <= shift_to_delete.start_time < shift.end_time) and shift.shift_id != shift_to_delete.shift_id:
+                delete_shift(shift_to_delete.shift_id, token)
+                user_shifts.remove(shift_to_delete)
 
