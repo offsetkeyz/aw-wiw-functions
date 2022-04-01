@@ -1,5 +1,6 @@
 __author__ = "Colin McAllister"
 
+from tracemalloc import start
 import shift_classes
 import requests
 import json
@@ -232,43 +233,85 @@ def is_DST(dt, schedule_id):
         dst_start = datetime(2022, 3, 27, 3, 0, tzinfo=tzutc())
         dst_end = datetime(2022, 10, 30, 3, 0, tzinfo=tzutc())
 
-    if (dt > dst_start and dt < dst_end):
+    if (dst_start < dt < dst_end):
         return -1
     return 0
+
+#######################################################################################################################################################
+###################################################              SHIFTS            ####################################################################
+#######################################################################################################################################################
+
+# deletes all conflicting future shifts for this user.
+def delete_conflicting_shifts_for_user(user_id, token):
+    all_shifts = get_all_future_shifts(token)
+    # try:
+    #     user_shifts = all_shifts.get(int(user_id))
+    # except:
+    #     print('issue with delete_conflicting_shifts_for_user()')
+    # for shift in user_shifts:
+    #     for shift_to_delete in user_shifts:
+    #         if (shift.start_time <= shift_to_delete.start_time < shift.end_time) and shift.shift_id != shift_to_delete.shift_id:
+    #             delete_shift(shift_to_delete.shift_id, token)
+    #             user_shifts.remove(shift_to_delete)
+
+
+def delete_shift(shift_id, token):
+    url_headers = get_url_and_headers('shifts/' + str(shift_id), token)
+    response = requests.request("DELETE", url_headers[0], headers=url_headers[1])
+
+def get_time_off_requests(token):
+    print('in progress')
 
 def get_all_future_shifts(token):    
 # url_headers = get_url_and_headers('shifts')
     url_headers = get_url_and_headers('shifts?start=' + str(datetime.now()) + "&end=" + str(datetime.now()+ timedelta(days=180)) + "&unpublished=true", token)
     response = requests.request("GET", url_headers[0], headers=url_headers[1])
     all_shifts = response.json()['shifts']
+    return store_shifts_by_hash(token, all_shifts)
+
+def store_shifts_by_user_id(all_shifts_in):
+        # key: user_id | value: array of shifts
     employee_shifts = {}
-    for i in all_shifts:
+    for i in all_shifts_in:
         start_time = datetime.strptime(i['start_time'], '%a, %d %b %Y %H:%M:%S %z').astimezone(pytz.timezone('UTC'))
         end_time = datetime.strptime(i['end_time'], '%a, %d %b %Y %H:%M:%S %z').astimezone(pytz.timezone('UTC'))
+        new_shift = shift_classes.shift(int(i['id']), int(i['account_id']), int(i['user_id']), int(i['location_id']), int(i['position_id']),
+                                int(i['site_id']), start_time, end_time, bool(i['is_shared']), i['linked_users'], bool(i['actionable']), int(i['block_id']))
         if int(i['user_id']) in employee_shifts:
             current_users_shifts = employee_shifts.get(int(i['user_id']))
-            current_users_shifts.append((shift_classes.shift(int(i['id']), int(i['account_id']), int(i['user_id']), int(i['location_id']), int(i['position_id']),
-                                int(i['site_id']), start_time, end_time, bool(i['is_shared']), i['linked_users'], bool(i['actionable']), int(i['block_id']))))
+            current_users_shifts.append(new_shift)
             employee_shifts[int(i['user_id'])] = current_users_shifts
         else: 
-            employee_shifts[int(i['user_id'])] = [(shift_classes.shift(int(i['id']), int(i['account_id']), int(i['user_id']), int(i['location_id']), int(i['position_id']),
-                                int(i['site_id']), start_time, end_time, bool(i['is_shared']), i['linked_users'], bool(i['actionable']), int(i['block_id'])))]
+            employee_shifts[int(i['user_id'])] = [new_shift]
     return employee_shifts
 
-def delete_shift(shift_id, token):
-    url_headers = get_url_and_headers('shifts/' + str(shift_id), token)
-    response = requests.request("DELETE", url_headers[0], headers=url_headers[1])
-    print('shift deleted')
+# deletes all duplicate shifts
+def store_shifts_by_hash(token, all_shifts_in):
+    hashed_shifts = {}
+    for i in all_shifts_in:
+        new_shift = create_shift_from_json(i)
+        shift_hash = get_shift_hash(new_shift)
+        if shift_hash in hashed_shifts: #deletes any duplicate shifts
+            delete_shift(new_shift.shift_id,token)
+        else:
+            hashed_shifts[shift_hash] = new_shift
+    return hashed_shifts
 
-def delete_conflicting_shifts_for_user(user_id, token):
-    all_shifts = get_all_future_shifts(token)
-    try:
-        user_shifts = all_shifts.get(int(user_id))
-    except:
-        print('issue with delete_conflicting_shifts_for_user()')
-    for shift in user_shifts:
-        for shift_to_delete in user_shifts:
-            if (shift.start_time <= shift_to_delete.start_time < shift.end_time) and shift.shift_id != shift_to_delete.shift_id:
-                delete_shift(shift_to_delete.shift_id, token)
-                user_shifts.remove(shift_to_delete)
+#creates a unique hash for each shift by multiplying the start time by user ID
+# allows for quick lookup of duplicate shifts
+def get_shift_hash(shift_in):
+    start_time = int(shift_in.start_time.strftime('%Y%m%d%H%M'))
+    user_id = int(shift_in.user_id)
+    return start_time * user_id
+
+# takes a json shift object and creates
+def create_shift_from_json(i):
+        start_time = datetime.strptime(i['start_time'], '%a, %d %b %Y %H:%M:%S %z').astimezone(pytz.timezone('UTC'))
+        end_time = datetime.strptime(i['end_time'], '%a, %d %b %Y %H:%M:%S %z').astimezone(pytz.timezone('UTC'))
+        return shift_classes.shift(int(i['id']), int(i['account_id']), int(i['user_id']), int(i['location_id']), int(i['position_id']),
+                                int(i['site_id']), start_time, end_time, bool(i['is_shared']), i['linked_users'], bool(i['actionable']), int(i['block_id']))
+
+
+
+
 

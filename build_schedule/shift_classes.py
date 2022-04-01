@@ -323,7 +323,7 @@ def get_tse3_schedule(rotation_char):
         return tse3_schedule_c
 
         
-def get_emea_schedule(rotation_char):
+def get_emea_t1_schedule(rotation_char):
         purple_notes = ''
         green_notes =''
         yellow_notes = ''
@@ -341,13 +341,9 @@ def get_emea_schedule(rotation_char):
         return emea_a
 
 def get_techops_schedule(rotation_char): #TODO finish this. In production.
-
-        schedule = []
         current_schedule = techops_a
-
         if rotation_char == 'b':
                 current_schedule = techops_b
-
         techops_a = {
             1: [["teal", 17, 8, 1, "notes"],["teal", 17, 8, 1, "notes"], 
                     ["teal", 17, 8, 1, "notes"], ["teal", 17, 8, 1, "notes"], 
@@ -421,7 +417,7 @@ def get_current_schedule(schedule_name, rotation_char):
     elif schedule_name == "5189759": #Colin Test
         return get_tse3_schedule(rotation_char)
     elif schedule_name == "5227330":
-        return get_emea_schedule(rotation_char)
+        return get_emea_t1_schedule(rotation_char)
     elif schedule_name == "5132410":
         return get_tse2_schedule(rotation_char)
     elif schedule_name == "5129876":
