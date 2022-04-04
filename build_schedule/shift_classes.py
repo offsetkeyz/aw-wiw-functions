@@ -151,34 +151,14 @@ def get_frontline_schedule(rotation_char):
         return frontline_a
 
 def get_tse2_schedule(rotation_char):
-        teal_notes = """8am - 12pm EST - Incident Triage as scheduled in PagerDuty.
-                12-4pm - Lunch/Breaks/Assist where needed.
-                Open/Pending Tier 2 ticket work Zendesk.        
-                """
-        red_notes = '''
-                10 am-12 pm EST - Assist where needed/Breaks/Ticket work
-                12 pm-4pm EST - Incident Triage as scheduled in PagerDuty
-                4 pm-6 pm EST - Assist where needed/Breaks/Ticket work
-        '''
-        orange_notes = '''
-                12pm - 4pm EST - Lunch/Break/Assist where needed/ Ticket work
-                4 pm - 8 pm EST - Incident Triage as scheduled in PagerDuty
-        '''
-        purple_notes = '''
-                2 hours working on SCCS requests
-                Entry/ Ticket work Tier 2 open&Pending          
-        '''
-        night_and_weekend_notes = '''
-                * Incident triage as scheduled with team
-                * Ticket work
-                * Hourly checks on AC/EMEA boards
-        '''
-        green_notes = '''
-                Main priority - Ticket work Tier 2 open&Pending
-                Main Priority #2 - Supporting Tier 3 Security investigation
-                Shadow sessions/Training new hires
-                Assist where needed (e.g. SCCS, Entry)
-        '''
+        all_notes = get_tse2_notes()
+        orange_notes = all_notes['orange_notes']
+        red_notes = all_notes['red_notes']
+        green_notes= all_notes['green_notes']
+        teal_notes= all_notes['teal_notes']
+        night_and_weekend_notes= all_notes['night_and_weekend_notes']
+        purple_notes= all_notes['purple_notes']
+
         tse2_a = { # has monday off rotation
                 1: [['orange', 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 3, orange_notes]],
                 2: [["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 3, red_notes]],
@@ -204,6 +184,43 @@ def get_tse2_schedule(rotation_char):
         if rotation_char == 'b':
                 return tse2_b
         return tse2_a
+
+def get_tse2_notes():
+        notes = {        
+                'teal_notes' : """8am - 12pm EST - Incident Triage as scheduled in PagerDuty.
+                12-4pm - Lunch/Breaks/Assist where needed.
+                Open/Pending Tier 2 ticket work Zendesk.        
+                """,
+                'red_notes': '''
+                10 am-12 pm EST - Assist where needed/Breaks/Ticket work
+                12 pm-4pm EST - Incident Triage as scheduled in PagerDuty
+                4 pm-6 pm EST - Assist where needed/Breaks/Ticket work
+                ''',
+                'orange_notes': '''
+                12pm - 4pm EST - Lunch/Break/Assist where needed/ Ticket work
+                4 pm - 8 pm EST - Incident Triage as scheduled in PagerDuty
+                ''',
+                'purple_notes': '''
+                2 hours working on SCCS requests
+                Entry/ Ticket work Tier 2 open&Pending          
+                ''',
+                'night_and_weekend_notes': '''
+                * Incident triage as scheduled with team
+                * Ticket work
+                * Hourly checks on AC/EMEA boards
+                ''',
+                'green_notes': '''
+                Main priority - Ticket work Tier 2 open&Pending
+                Main Priority #2 - Supporting Tier 3 Security investigation
+                Shadow sessions/Training new hires
+                Assist where needed (e.g. SCCS, Entry)
+                '''
+                }
+        return notes
+
+        
+        
+        
 
 def get_EMEA_tier3(rotation_char):
         yellow_notes = "AC Board Coverage 11a-5pm Frankfurt Time"

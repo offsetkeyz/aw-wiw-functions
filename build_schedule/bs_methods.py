@@ -1,6 +1,7 @@
 __author__ = "Colin McAllister"
 
 from tracemalloc import start
+from turtle import update
 import shift_classes
 import requests
 import json
@@ -33,7 +34,7 @@ def authenticate_WiW_API():
         return authenticate_WiW_API()
 
 def get_url_and_headers(type, token):
-    url = "https://api.wheniwork.com/2/" + type
+    url = "https://api.wheniwork.com/2/" + str(type)
     headers = {
     'Host': 'api.wheniwork.com',
     'Authorization': 'Bearer ' + token, 
@@ -148,7 +149,6 @@ def get_team_id(team_number):
     try:
          return teams[n]
     except: 
-        print("error with team number")
         return team_number
 
 # assigns a position to each shift based on the schedule
@@ -242,18 +242,50 @@ def is_DST(dt, schedule_id):
 #######################################################################################################################################################
 
 def copy_users_schedule(user_id_to_copy, new_user_email, start_date, token):
-    all_shifts_json = get_all_future_shifts(token)
+    def create_duplicate_shift(token, user_email, start_time, length, color, notes, schedule_id, team_number, position):
+        user_id = get_user_id_from_email(token, user_email)    
+        start_hour = int(start_time.strftime('%H'))
+        start_time = start_time.replace(hour=(start_hour))
+        end_time = start_time + timedelta(hours=length) 
+        shift_color = shift_classes.get_color_code(color)
+        url_headers = get_url_and_headers('shifts', token)
+        payload = json.dumps({
+            "user_id": user_id, 
+            "location_id": schedule_id,
+            "start_time": start_time.strftime("%a, %d %b %Y %H:%M:%S %z"),
+            "end_time" : end_time.strftime("%a, %d %b %Y %H:%M:%S %z"),
+            "color": shift_color,
+            "notes" : notes,
+            "site_id" : get_team_id(team_number),
+            "position_id": position
+        }) 
+        success = False
+        i = 1
+        while success == False & i < 10:
+            try:   
+                requests.request("POST", url_headers[0], headers=url_headers[1], data=payload)
+                success = True
+            except:
+                success == False
+                i += 1
+
+    all_shifts_json = get_all_future_shifts_json(token)
     all_shifts = store_shifts_by_user_id(all_shifts_json)
     for shift in all_shifts[user_id_to_copy]:
         if shift.start_time >= start_date:
-            create_shift(token, new_user_email, shift.start_time, shift.length, shift.color, shift.notes, shift.location_id, shift.site_id, shift.position_id)
+            create_duplicate_shift(token, new_user_email, shift.start_time, shift.length, shift.color, shift.notes, shift.location_id, shift.site_id, shift.position_id)
+
+    
+            
 
 #also deletes duplicate shifts
-def get_all_future_shifts(token):    
+def get_all_future_shifts_json(token):    
 # url_headers = get_url_and_headers('shifts')
     url_headers = get_url_and_headers('shifts?start=' + str(datetime.now()) + "&end=" + str(datetime.now()+ timedelta(days=180)) + "&unpublished=true", token)
     response = requests.request("GET", url_headers[0], headers=url_headers[1])
     all_shifts = response.json()['shifts']
+    #TODO Delete for loop below.
+    # for shift in all_shifts:
     return all_shifts
 
 def delete_shift(shift_id, token):
@@ -305,7 +337,76 @@ def create_shift_from_json(i):
         return shift_classes.shift(int(i['id']), int(i['account_id']), int(i['user_id']), int(i['location_id']), int(i['position_id']),
                                 int(i['site_id']), start_time, end_time, bool(i['published']), bool(i['acknowledged']), i['notes'], i['color'], bool(i['is_open']))
 
+# TODO In Progress Don't use
+def update_shift_notes(token, schedule_id_in):
+    all_shifts_json = get_all_future_shifts_json(token)
+    all_shifts = store_shifts_by_hash(token, all_shifts_json).values()
+    for shift in all_shifts:
+        if shift.location_id == 5132410: #TSE2
+            all_notes = shift_classes.get_tse2_notes()
+            updated_shift = shift_classes.shift(shift.shift_id, shift.account_id, shift.user_id, shift.location_id, shift.position_id, shift.site_id, shift.start_time, shift.end_time, shift.published, shift.acknowledged, shift.notes, shift.color, shift.is_open)
+            if shift.color.lower() == 'eb3223': #red
+                updated_shift.notes = all_notes['red_notes']
+            elif shift.color == '72F2DA' or shift.color.lower() == '93efdb': #teal
+                updated_shift.notes = all_notes['teal_notes']
+            update_shift(token, updated_shift)
+            
+ # Takes in the updated shift information and updates the shift ID in WiW           
+def update_shift(token, updated_shift_in):
+    url_headers = get_url_and_headers('shifts/' + str(updated_shift_in.shift_id),token)
+    payload = json.dumps({
+        "id": updated_shift_in.shift_id, 
+        "location_id": updated_shift_in.location_id,
+        "position_id":updated_shift_in.position_id,
+        "site_id":updated_shift_in.site_id,
+        "start_time": updated_shift_in.start_time.strftime("%a, %d %b %Y %H:%M:%S %z"),
+        "end_time": updated_shift_in.end_time.strftime("%a, %d %b %Y %H:%M:%S %z"),
+        "notes":updated_shift_in.notes,
+        "color":updated_shift_in.color
+    }) 
+    request = requests.request("PUT", url_headers[0], headers=url_headers[1], data=payload)
+    # print(request)
 
+
+    # if schedule_name == "5132412":
+    #     return get_techops_schedule(rotation_char)
+    # elif schedule_name == "5134192":
+    #     return get_tse3_schedule(rotation_char)
+    # elif schedule_name == "5189759": #Colin Test
+    #     return get_tse3_schedule(rotation_char)
+    # elif schedule_name == "5227330":
+    #     return get_emea_t1_schedule(rotation_char)
+    # elif schedule_name == "5132410":
+    #     return get_tse2_schedule(rotation_char)
+    # elif schedule_name == "5129876":
+    #     return get_pink(rotation_char)
+    # elif schedule_name == "5132409":
+    #     return get_frontline_schedule(rotation_char)
+    # elif schedule_name == '5233779':
+    #     return get_EMEA_tier3(rotation_char)
+
+    # if color == "red":
+    #     shift_color = "eb3223"
+    # elif color == "blue":
+    #     shift_color = "4E73BE"
+    # elif color == "purple":
+    #     shift_color = "8d3ab9"
+    # elif color == "orange":
+    #     shift_color = "f6c242"
+    # elif color == "teal":
+    #     shift_color = "93efdb"
+    # elif color == "green":
+    #     shift_color = "42a611"
+    # elif color == "gray":
+    #     shift_color = "a6a6a6"
+    # elif color == "yellow":
+    #     shift_color = "ffff00"
+    # elif color == "light blue":
+    #     shift_color = "00b0f0"
+    # elif color == "dark blue":
+    #     shift_color = "0070c0"
+    # elif color == "pink":
+    #     shift_color = "ff00dd"
 
 
 
