@@ -10,12 +10,14 @@ class shift:
     site_id = 0
     start_time = datetime(1,1,1)
     end_time = datetime(1,1,1)
-    is_shared = False
-    linked_users = []
-    actionable = False
-    block_id = 0
+    length = 0
+    published = False
+    acknowledged = False
+    notes = ''
+    color = ''
+    is_open = False
 
-    def __init__(self, shift_id, account_id, user_id, location_id, position_id, site_id, start_time, end_time, is_shared, linked_users, actionable, block_id) -> None:
+    def __init__(self, shift_id, account_id, user_id, location_id, position_id, site_id, start_time, end_time, published, acknowledged, notes, color, is_open) -> None:
         self.shift_id = shift_id
         self.account_id=account_id
         self.user_id=user_id
@@ -24,35 +26,48 @@ class shift:
         self.site_id=site_id
         self.start_time=start_time
         self.end_time=end_time
-        self.is_shared=is_shared
-        self.linked_users=linked_users
-        self.actionable=actionable
-        self.block_id=block_id
+        self.published=published
+        self.acknowledged=acknowledged
+        self.notes=notes
+        self.color=color
+        self.acknowledged=acknowledged
+        self.is_open=is_open
+
+        length_in_seconds = end_time - start_time
+        self.length = length_in_seconds.seconds / 3600
 
 class user:
         first_name = ''
         last_name = ''
         email = ''
-        employee_id = 0
+        wiw_employee_id = 0
         positions = []
+        role = 3 #only add to schedule if role = 3
+        locations = [] #schedules
+        is_hidden = False #only add to schedule if False
+        is_active = True
 
-        def __init__(self, first_name, last_name, email, employee_id, position) -> None:
+        def __init__(self, first_name, last_name, email, wiw_employee_id, positions, role, locations, is_hidden, is_active) -> None:
             self.first_name=first_name
             self.last_name=last_name
             self.email=email
-            self.position = position
+            self.positions=positions
+            self.role = role
+            self.locations = locations
+            self.is_hidden = is_hidden
+            self.is_active = is_active
 
 
 
-            if employee_id == '':
-                    self.employee_id = 0
+            if wiw_employee_id == '':
+                    self.wiw_employee_id = 0
             else:
-                self.employee_id=employee_id
+                self.wiw_employee_id=int(wiw_employee_id)
 
         def __repr__(self) -> str:
                 all_positions = {'Triage Sec Eng 1': 10470912, 'Triage Sec Analyst': 10470912, 'Triage Sec Eng 2': 10471919, 'Triage Sec Eng 3': 10474041, 'Network Ops Supp Analyst': 10477571, 'Manager, iSOC': 10477572, 'TSE4': 10486791, 'ISOC Intern': 10652403, 'EMEA Intern': 10652404, 'Triage Sec Eng 4': 10486791, 'Triage Sec Engineer 1' : 10470912, 'USA': 10654095, 'CAN': 10654096, 'DEU' : 10665016, 'GBR' : 10665016, 'Dir Business Apps Sr': 10477570, 'Co-op/ Intern':10652403, 'Tech Lead Security Svs':10474045, 'Shift Lead Security Oper':10660927, 'Team Lead Security Ops':10474045,'Concierge Sec Eng 2':10668570, 'Mgr Security Ops Sr.':10668568, 'Team Lead Tech Ops':10477572,'Mgr Security Operations':10477572, 'Mgr Concierge Services':10477572,'Mgr, Security Operations':10477572, 'Triage Business Analyst':10668571,'Concierge Sec Eng 3':10665015,'Business Sys Mgr':10477572,'Dir Security Oper Sr':10477570,'Dir Security Svs':10477570}
 
-                output = str(self.first_name) + ' ' + str(self.last_name) + ': ' + str(self.employee_id)
+                output = str(self.first_name) + ' ' + str(self.last_name) + ': ' + str(self.wiw_employee_id)
                 for i in self.position:
                         try:
                                 output = str(output + " " + all_positions.get(i))
@@ -430,7 +445,6 @@ def get_current_schedule(schedule_name, rotation_char):
         print('error with get_current_schedule in shift_classes.py')
 
 def get_color_code(color):
-    shift_color="ff98ff"    
     if color == "red":
         shift_color = "eb3223"
     elif color == "blue":
@@ -454,5 +468,5 @@ def get_color_code(color):
     elif color == "pink":
         shift_color = "ff00dd"
 
-    return shift_color
+    return color
 

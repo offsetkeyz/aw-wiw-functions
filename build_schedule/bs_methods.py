@@ -149,7 +149,7 @@ def get_team_id(team_number):
          return teams[n]
     except: 
         print("error with team number")
-        return 0
+        return team_number
 
 # assigns a position to each shift based on the schedule
 def get_position(schedule_name):
@@ -241,19 +241,20 @@ def is_DST(dt, schedule_id):
 ###################################################              SHIFTS            ####################################################################
 #######################################################################################################################################################
 
-# deletes all conflicting future shifts for this user.
-def delete_conflicting_shifts_for_user(user_id, token):
-    all_shifts = get_all_future_shifts(token)
-    # try:
-    #     user_shifts = all_shifts.get(int(user_id))
-    # except:
-    #     print('issue with delete_conflicting_shifts_for_user()')
-    # for shift in user_shifts:
-    #     for shift_to_delete in user_shifts:
-    #         if (shift.start_time <= shift_to_delete.start_time < shift.end_time) and shift.shift_id != shift_to_delete.shift_id:
-    #             delete_shift(shift_to_delete.shift_id, token)
-    #             user_shifts.remove(shift_to_delete)
+def copy_users_schedule(user_id_to_copy, new_user_email, start_date, token):
+    all_shifts_json = get_all_future_shifts(token)
+    all_shifts = store_shifts_by_user_id(all_shifts_json)
+    for shift in all_shifts[user_id_to_copy]:
+        if shift.start_time >= start_date:
+            create_shift(token, new_user_email, shift.start_time, shift.length, shift.color, shift.notes, shift.location_id, shift.site_id, shift.position_id)
 
+#also deletes duplicate shifts
+def get_all_future_shifts(token):    
+# url_headers = get_url_and_headers('shifts')
+    url_headers = get_url_and_headers('shifts?start=' + str(datetime.now()) + "&end=" + str(datetime.now()+ timedelta(days=180)) + "&unpublished=true", token)
+    response = requests.request("GET", url_headers[0], headers=url_headers[1])
+    all_shifts = response.json()['shifts']
+    return all_shifts
 
 def delete_shift(shift_id, token):
     url_headers = get_url_and_headers('shifts/' + str(shift_id), token)
@@ -262,13 +263,6 @@ def delete_shift(shift_id, token):
 def get_time_off_requests(token):
     print('in progress')
 
-def get_all_future_shifts(token):    
-# url_headers = get_url_and_headers('shifts')
-    url_headers = get_url_and_headers('shifts?start=' + str(datetime.now()) + "&end=" + str(datetime.now()+ timedelta(days=180)) + "&unpublished=true", token)
-    response = requests.request("GET", url_headers[0], headers=url_headers[1])
-    all_shifts = response.json()['shifts']
-    return store_shifts_by_hash(token, all_shifts)
-
 def store_shifts_by_user_id(all_shifts_in):
         # key: user_id | value: array of shifts
     employee_shifts = {}
@@ -276,7 +270,7 @@ def store_shifts_by_user_id(all_shifts_in):
         start_time = datetime.strptime(i['start_time'], '%a, %d %b %Y %H:%M:%S %z').astimezone(pytz.timezone('UTC'))
         end_time = datetime.strptime(i['end_time'], '%a, %d %b %Y %H:%M:%S %z').astimezone(pytz.timezone('UTC'))
         new_shift = shift_classes.shift(int(i['id']), int(i['account_id']), int(i['user_id']), int(i['location_id']), int(i['position_id']),
-                                int(i['site_id']), start_time, end_time, bool(i['is_shared']), i['linked_users'], bool(i['actionable']), int(i['block_id']))
+                                int(i['site_id']), start_time, end_time, bool(i['published']), bool(i['acknowledged']), i['notes'], i['color'], bool(i['is_open']))
         if int(i['user_id']) in employee_shifts:
             current_users_shifts = employee_shifts.get(int(i['user_id']))
             current_users_shifts.append(new_shift)
@@ -309,7 +303,7 @@ def create_shift_from_json(i):
         start_time = datetime.strptime(i['start_time'], '%a, %d %b %Y %H:%M:%S %z').astimezone(pytz.timezone('UTC'))
         end_time = datetime.strptime(i['end_time'], '%a, %d %b %Y %H:%M:%S %z').astimezone(pytz.timezone('UTC'))
         return shift_classes.shift(int(i['id']), int(i['account_id']), int(i['user_id']), int(i['location_id']), int(i['position_id']),
-                                int(i['site_id']), start_time, end_time, bool(i['is_shared']), i['linked_users'], bool(i['actionable']), int(i['block_id']))
+                                int(i['site_id']), start_time, end_time, bool(i['published']), bool(i['acknowledged']), i['notes'], i['color'], bool(i['is_open']))
 
 
 
