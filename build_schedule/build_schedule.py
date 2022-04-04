@@ -19,9 +19,9 @@ def main():
 
     # excel_methods.list_all_wiw_users(token)
 
-    # bs_methods.update_shift_notes(token, 5132410)
+    bs_methods.update_shift_notes(token, 5132410)
 
-    bs_methods.copy_users_schedule(bs_methods.get_user_id_from_email(token,'rico.vielma@arcticwolf.com'), 'alexander.zidik@arcticwolf.com', datetime.datetime.now().astimezone(pytz.timezone('UTC')), token)
+    # bs_methods.copy_users_schedule(bs_methods.get_user_id_from_email(token,'rico.vielma@arcticwolf.com'), 'alexander.zidik@arcticwolf.com', datetime.datetime.now().astimezone(pytz.timezone('UTC')), token)
     end_time = time.perf_counter()
     print('Time for user_id: ' + str(end_time - start_time))
 

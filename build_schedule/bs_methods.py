@@ -284,8 +284,7 @@ def get_all_future_shifts_json(token):
     url_headers = get_url_and_headers('shifts?start=' + str(datetime.now()) + "&end=" + str(datetime.now()+ timedelta(days=180)) + "&unpublished=true", token)
     response = requests.request("GET", url_headers[0], headers=url_headers[1])
     all_shifts = response.json()['shifts']
-    #TODO Delete for loop below.
-    # for shift in all_shifts:
+
     return all_shifts
 
 def delete_shift(shift_id, token):
@@ -345,10 +344,21 @@ def update_shift_notes(token, schedule_id_in):
         if shift.location_id == 5132410: #TSE2
             all_notes = shift_classes.get_tse2_notes()
             updated_shift = shift_classes.shift(shift.shift_id, shift.account_id, shift.user_id, shift.location_id, shift.position_id, shift.site_id, shift.start_time, shift.end_time, shift.published, shift.acknowledged, shift.notes, shift.color, shift.is_open)
-            if shift.color.lower() == 'eb3223': #red
+            if shift.color.lower() == 'eb3223' or shift.color == 'FF0000': #red
                 updated_shift.notes = all_notes['red_notes']
             elif shift.color == '72F2DA' or shift.color.lower() == '93efdb': #teal
                 updated_shift.notes = all_notes['teal_notes']
+            elif shift.color.lower() == 'f6c242' or shift.color == 'FFC000': #orange
+                updated_shift.notes = all_notes['orange_notes']
+            elif shift.color.lower() == '8d3ab9' or shift.color == '992CC0' or shift.color.lower() == '9a8dd9':  #purple
+                updated_shift.notes = all_notes['purple_notes']
+            elif shift.color.lower() == '42a611' or shift.color == '00B050': #green
+                updated_shift.notes = all_notes['green_notes']
+            elif shift.color.lower() == '54a4cc' or shift.color == '00b0f0': #light blue
+                updated_shift.notes = all_notes['light_blue_notes']
+            elif shift.color.lower() == 'ffff00' or shift.color == '': #yellow
+                updated_shift.notes = all_notes['yellow_notes']
+
             update_shift(token, updated_shift)
             
  # Takes in the updated shift information and updates the shift ID in WiW           
@@ -365,48 +375,6 @@ def update_shift(token, updated_shift_in):
         "color":updated_shift_in.color
     }) 
     request = requests.request("PUT", url_headers[0], headers=url_headers[1], data=payload)
-    # print(request)
-
-
-    # if schedule_name == "5132412":
-    #     return get_techops_schedule(rotation_char)
-    # elif schedule_name == "5134192":
-    #     return get_tse3_schedule(rotation_char)
-    # elif schedule_name == "5189759": #Colin Test
-    #     return get_tse3_schedule(rotation_char)
-    # elif schedule_name == "5227330":
-    #     return get_emea_t1_schedule(rotation_char)
-    # elif schedule_name == "5132410":
-    #     return get_tse2_schedule(rotation_char)
-    # elif schedule_name == "5129876":
-    #     return get_pink(rotation_char)
-    # elif schedule_name == "5132409":
-    #     return get_frontline_schedule(rotation_char)
-    # elif schedule_name == '5233779':
-    #     return get_EMEA_tier3(rotation_char)
-
-    # if color == "red":
-    #     shift_color = "eb3223"
-    # elif color == "blue":
-    #     shift_color = "4E73BE"
-    # elif color == "purple":
-    #     shift_color = "8d3ab9"
-    # elif color == "orange":
-    #     shift_color = "f6c242"
-    # elif color == "teal":
-    #     shift_color = "93efdb"
-    # elif color == "green":
-    #     shift_color = "42a611"
-    # elif color == "gray":
-    #     shift_color = "a6a6a6"
-    # elif color == "yellow":
-    #     shift_color = "ffff00"
-    # elif color == "light blue":
-    #     shift_color = "00b0f0"
-    # elif color == "dark blue":
-    #     shift_color = "0070c0"
-    # elif color == "pink":
-    #     shift_color = "ff00dd"
 
 
 
