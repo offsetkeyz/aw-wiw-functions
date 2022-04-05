@@ -111,7 +111,7 @@ def create_shift(token, user_email, start_time, length, color, notes, schedule_i
     i = 1
     while success == False & i < 10:
         try:   
-            requests.request("POST", url_headers[0], headers=url_headers[1], data=payload)
+            request = requests.request("POST", url_headers[0], headers=url_headers[1], data=payload)
             success = True
         except:
             success == False
