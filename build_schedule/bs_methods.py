@@ -111,7 +111,7 @@ def create_shift(token, user_email, start_time, length, color, notes, schedule_i
     i = 1
     while success == False & i < 10:
         try:   
-            requests.request("POST", url_headers[0], headers=url_headers[1], data=payload)
+            request = requests.request("POST", url_headers[0], headers=url_headers[1], data=payload)
             success = True
         except:
             success == False
@@ -271,12 +271,11 @@ def copy_users_schedule(user_id_to_copy, new_user_email, start_date, token):
 
     all_shifts_json = get_all_future_shifts_json(token)
     all_shifts = store_shifts_by_user_id(all_shifts_json)
+    delete_all_shifts_for_user(token, start_date, get_user_id_from_email(token,new_user_email), all_shifts)
     for shift in all_shifts[user_id_to_copy]:
         if shift.start_time >= start_date:
             create_duplicate_shift(token, new_user_email, shift.start_time, shift.length, shift.color, shift.notes, shift.location_id, shift.site_id, shift.position_id)
 
-    
-            
 
 #also deletes duplicate shifts
 def get_all_future_shifts_json(token):    
@@ -287,9 +286,10 @@ def get_all_future_shifts_json(token):
 
     return all_shifts
 
-def delete_all_shifts_for_user(token, start_date, user_id):
-    all_shifts_json = get_all_future_shifts_json(token)
-    all_shifts = store_shifts_by_user_id(all_shifts_json)
+def delete_all_shifts_for_user(token, start_date, user_id, all_shifts=0):
+    if all_shifts == 0: #option to pass in dictionary of shift\=]-
+        all_shifts_json = get_all_future_shifts_json(token)
+        all_shifts = store_shifts_by_user_id(all_shifts_json)
     for shift in all_shifts[user_id]:
         if shift.start_time >= start_date:
             delete_shift(shift.shift_id, token)
