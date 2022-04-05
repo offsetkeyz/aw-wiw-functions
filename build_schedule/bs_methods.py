@@ -287,6 +287,14 @@ def get_all_future_shifts_json(token):
 
     return all_shifts
 
+def delete_all_shifts_for_user(token, start_date, user_id):
+    all_shifts_json = get_all_future_shifts_json(token)
+    all_shifts = store_shifts_by_user_id(all_shifts_json)
+    for shift in all_shifts[user_id]:
+        if shift.start_time >= start_date:
+            delete_shift(shift.shift_id, token)
+
+
 def delete_shift(shift_id, token):
     url_headers = get_url_and_headers('shifts/' + str(shift_id), token)
     response = requests.request("DELETE", url_headers[0], headers=url_headers[1])
