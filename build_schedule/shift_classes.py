@@ -160,25 +160,29 @@ def get_tse2_schedule(rotation_char):
         purple_notes= all_notes['purple_notes']
 
         tse2_a = { # has monday off rotation
-                1: [['orange', 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 3, orange_notes]],
-                2: [["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 3, red_notes]],
-                3: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]],
-                4: [["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 4, teal_notes]],
-                5: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 8, night_and_weekend_notes]],
-                6: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 4, night_and_weekend_notes]],
-                7: [["purple", 15, 8, 1, purple_notes],["blue", 13, 12, 1, night_and_weekend_notes],["blue", 13, 12, 2, night_and_weekend_notes]],
-                8: [["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 3, purple_notes]]
+                1: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]],
+                2: [['orange', 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 3, orange_notes]],
+                3: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 8, night_and_weekend_notes]],
+                4: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 4, night_and_weekend_notes]],
+                5: [["purple", 15, 8, 1, purple_notes],["blue", 13, 12, 1, night_and_weekend_notes]],
+                6: [["blue", 13, 12, 2, night_and_weekend_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 3, purple_notes]],
+                7: [["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 3, red_notes]],
+                8: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]],
+                9: [["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 4, teal_notes]],
+                10: [["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 3, purple_notes]]
         }
 
         tse2_b = {# tuesday off rotation
-                1: [['orange', 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 3, orange_notes]],
-                2: [["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 3, red_notes]],
-                3: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]],
-                4: [["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 4, teal_notes]],
-                5: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 8, night_and_weekend_notes]],
-                6: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 4, night_and_weekend_notes]],
-                7: [["purple", 15, 8, 1, purple_notes],["blue", 13, 12, 1, night_and_weekend_notes],["blue", 13, 12, 1, night_and_weekend_notes]],
-                8: [["purple", 15, 8, 2, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 3, purple_notes]]
+                1: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]],
+                2: [['orange', 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 3, orange_notes]],
+                3: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 8, night_and_weekend_notes]],
+                4: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 4, night_and_weekend_notes]],
+                5: [["purple", 15, 8, 1, purple_notes],["blue", 13, 12, 1, night_and_weekend_notes]],
+                6: [["blue", 13, 12, 1, night_and_weekend_notes],["purple", 15, 8, 2, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 3, purple_notes]],
+                7: [["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 3, red_notes]],
+                8: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]],
+                9: [["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 4, teal_notes]],
+                10: [["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 3, purple_notes]]
         }
 
         if rotation_char == 'b':
