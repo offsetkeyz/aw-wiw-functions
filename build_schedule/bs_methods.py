@@ -263,7 +263,7 @@ def copy_users_schedule(user_id_to_copy, new_user_email, start_date, token):
         i = 1
         while success == False & i < 10:
             try:   
-                requests.request("POST", url_headers[0], headers=url_headers[1], data=payload)
+                request = requests.request("POST", url_headers[0], headers=url_headers[1], data=payload)
                 success = True
             except:
                 success == False
@@ -283,16 +283,25 @@ def get_all_future_shifts_json(token):
     url_headers = get_url_and_headers('shifts?start=' + str(datetime.now()) + "&end=" + str(datetime.now()+ timedelta(days=180)) + "&unpublished=true", token)
     response = requests.request("GET", url_headers[0], headers=url_headers[1])
     all_shifts = response.json()['shifts']
+    return all_shifts
 
+def get_all_shifts_json(token):    
+# url_headers = get_url_and_headers('shifts')
+    url_headers = get_url_and_headers('shifts?start=' + str(datetime(2022, 3, 1)) + "&end=" + str(datetime.now()+ timedelta(days=180)) + "&unpublished=true", token)
+    response = requests.request("GET", url_headers[0], headers=url_headers[1])
+    all_shifts = response.json()['shifts']
     return all_shifts
 
 def delete_all_shifts_for_user(token, start_date, user_id, all_shifts=0):
     if all_shifts == 0: #option to pass in dictionary of shift\=]-
         all_shifts_json = get_all_future_shifts_json(token)
         all_shifts = store_shifts_by_user_id(all_shifts_json)
-    for shift in all_shifts[user_id]:
-        if shift.start_time >= start_date:
-            delete_shift(shift.shift_id, token)
+    try: 
+        for shift in all_shifts[user_id]:
+            if shift.start_time >= start_date:
+                delete_shift(shift.shift_id, token)
+    except:
+        print('user has no shifts')
 
 
 def delete_shift(shift_id, token):
@@ -345,28 +354,32 @@ def create_shift_from_json(i):
                                 int(i['site_id']), start_time, end_time, bool(i['published']), bool(i['acknowledged']), i['notes'], i['color'], bool(i['is_open']))
 
 # TODO In Progress Don't use
-def update_shift_notes(token, schedule_id_in):
-    all_shifts_json = get_all_future_shifts_json(token)
+def update_shift_color(token):
+    all_shifts_json = get_all_shifts_json(token)
     all_shifts = store_shifts_by_hash(token, all_shifts_json).values()
     for shift in all_shifts:
-        if shift.location_id == 5132410: #TSE2
-            all_notes = shift_classes.get_tse2_notes()
-            updated_shift = shift_classes.shift(shift.shift_id, shift.account_id, shift.user_id, shift.location_id, shift.position_id, shift.site_id, shift.start_time, shift.end_time, shift.published, shift.acknowledged, shift.notes, shift.color, shift.is_open)
-            if shift.color.lower() == 'eb3223' or shift.color == 'FF0000': #red
-                updated_shift.notes = all_notes['red_notes']
-            elif shift.color == '72F2DA' or shift.color.lower() == '93efdb': #teal
-                updated_shift.notes = all_notes['teal_notes']
-            elif shift.color.lower() == 'f6c242' or shift.color == 'FFC000': #orange
-                updated_shift.notes = all_notes['orange_notes']
-            elif shift.color.lower() == '8d3ab9' or shift.color == '992CC0' or shift.color.lower() == '9a8dd9':  #purple
-                updated_shift.notes = all_notes['purple_notes']
-            elif shift.color.lower() == '42a611' or shift.color == '00B050': #green
-                updated_shift.notes = all_notes['green_notes']
-            elif shift.color.lower() == '54a4cc' or shift.color == '00b0f0': #light blue
-                updated_shift.notes = all_notes['light_blue_notes']
-            elif shift.color.lower() == 'ffff00' or shift.color == '': #yellow
-                updated_shift.notes = all_notes['yellow_notes']
+        # all_notes = shift_classes.get_tse2_notes()
+        updated_shift = shift_classes.shift(shift.shift_id, shift.account_id, shift.user_id, shift.location_id, shift.position_id, shift.site_id, shift.start_time, shift.end_time, shift.published, shift.acknowledged, shift.notes, shift.color, shift.is_open)
+        if shift.color.lower() in ['eb3223','FF0000'.lower(),'710019']: #red
+            updated_shift.color = 'FF0000'
+        elif shift.color.lower() in ['72F2DA'.lower(), '93efdb','74BDCB'.lower()]: #teal
+            updated_shift.color = '72F2DA'
+        elif shift.color.lower() in ['f6c242','FFC000'.lower(),'FFA384'.lower()]: #orange
+            updated_shift.color = 'FFC000'
+        elif shift.color.lower() in ['8d3ab9','992CC0'.lower(),'9a8dd9','887BB0'.lower()]:  #purple
+            updated_shift.color = '8d3ab9'
+        elif shift.color.lower() in ['42a611', '00B050'.lower(), '7CF3A0'.lower()]: #green
+            updated_shift.color = '42a611'
+        elif shift.color.lower() in ['54a4cc','00b0f0','E7F2F8'.lower()]: #light blue
+            updated_shift.color = '00b0f0'
+        elif shift.color.lower() in ['ffff00','FBE7C6'.lower()]: #yellow
+            updated_shift.color = 'ffff00'
+        elif shift.color.lower() in ['a6a6a6', '580001', '391306']: #gray
+            updated_shift.color = 'a6a6a6'
+        elif shift.color.lower() in ['0070c0','4E73BE'.lower(),'09224E'.lower()]: # dark blue
+            updated_shift.color = '0070c0'
 
+        if shift.color != updated_shift.color:
             update_shift(token, updated_shift)
             
  # Takes in the updated shift information and updates the shift ID in WiW           
@@ -382,7 +395,13 @@ def update_shift(token, updated_shift_in):
         "notes":updated_shift_in.notes,
         "color":updated_shift_in.color
     }) 
-    request = requests.request("PUT", url_headers[0], headers=url_headers[1], data=payload)
+    i = 1
+    while i < 10:
+        try: 
+            request = requests.request("PUT", url_headers[0], headers=url_headers[1], data=payload)
+        except:
+            i += 1
+        return
 
 
 

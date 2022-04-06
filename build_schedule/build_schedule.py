@@ -22,7 +22,11 @@ def main():
     token = bs_methods.authenticate_WiW_API()
     start_time = time.perf_counter()
 
-    build_schedule(token, 'tse2')
+    # bs_methods.delete_all_shifts_for_user(token, datetime.datetime(2022,5,1).astimezone(pytz.timezone('UTC')),bs_methods.get_user_id_from_email(token, 'ryan.berry@arcticwolf.com'))
+
+    # bs_methods.update_shift_color(token)
+
+    # build_schedule(token, 'tse2')
 
     # bs_methods.get_all_future_shifts(token)
 
@@ -32,7 +36,9 @@ def main():
 
     # bs_methods.update_shift_notes(token, 5132410)
 
-    # bs_methods.copy_users_schedule(bs_methods.get_user_id_from_email(token,'chaise.dale@arcticwolf.com'), 'harshil.mahuvagara@arcticwolf.com', datetime.datetime(2022, 5, 1,0).astimezone(pytz.timezone('UTC')), token)
+    bs_methods.copy_users_schedule(bs_methods.get_user_id_from_email(token,'divya.rathod@arcticwolf.com'), 'pruthvish.patel@arcticwolf.com', datetime.datetime(2022,4,1).astimezone(pytz.timezone('UTC')), token)
+    bs_methods.copy_users_schedule(bs_methods.get_user_id_from_email(token,'mike.tredinnick@arcticwolf.com'), 'chris.whitehead@arcticwolf.com', datetime.datetime(2022,4,1).astimezone(pytz.timezone('UTC')), token)
+
     end_time = time.perf_counter()
     print('Time: ' + str(end_time - start_time))
 
