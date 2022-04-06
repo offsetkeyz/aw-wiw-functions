@@ -468,25 +468,23 @@ def get_current_schedule(schedule_name, rotation_char):
 def get_color_code(color):
     shift_color = color
     if color == "red":
-        shift_color = "eb3223"
-    elif color == "blue":
-        shift_color = "4E73BE"
+        shift_color = "FF0000"
+    elif color == "blue" or color == "dark blue":
+        shift_color = "0070c0"
     elif color == "purple":
         shift_color = "8d3ab9"
     elif color == "orange":
-        shift_color = "f6c242"
+        shift_color = "FFC000"
     elif color == "teal":
-        shift_color = "93efdb"
+        shift_color = "72F2DA"
     elif color == "green":
         shift_color = "42a611"
     elif color == "gray":
-        shift_color = "580001" #a6a6a6
+        shift_color = "a6a6a6"
     elif color == "yellow":
         shift_color = "ffff00"
     elif color == "light blue":
         shift_color = "00b0f0"
-    elif color == "dark blue":
-        shift_color = "0070c0"
     elif color == "pink":
         shift_color = "ff00dd"
 
