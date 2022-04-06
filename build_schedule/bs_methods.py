@@ -214,15 +214,17 @@ def get_user_id_from_email(token, user_email):
         user_id = 0
     return user_id
 
+#takes in user_id and returns user object
 def get_user_from_id(token, user_id):
-    url_headers = get_url_and_headers('users/'+user_id, token)
+    url_headers = get_url_and_headers('users/'+str(user_id), token)
     i = 1
     while i < 10:
         try:
-            return requests.request("GET", url_headers[0], headers=url_headers[1])
+            j = requests.request("GET", url_headers[0], headers=url_headers[1]).json()['user']
+            break
         except:
             i +=1 
-    return
+    return shift_classes.user(j['first_name'], j['last_name'], j['email'], j['id'],j['positions'],j['role'],j['locations'],j['is_hidden'],j['is_active'])
 
 #takes DateTime and returns 0 if no and -1 if yes.
 def is_DST(dt, schedule_id):

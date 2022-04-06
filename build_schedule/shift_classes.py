@@ -39,6 +39,7 @@ class shift:
 class user:
         first_name = ''
         last_name = ''
+        full_name = ''
         email = ''
         wiw_employee_id = 0
         positions = []
@@ -46,6 +47,7 @@ class user:
         locations = [] #schedules
         is_hidden = False #only add to schedule if False
         is_active = True
+        
 
         def __init__(self, first_name, last_name, email, wiw_employee_id, positions, role, locations, is_hidden, is_active) -> None:
             self.first_name=first_name
@@ -56,6 +58,7 @@ class user:
             self.locations = locations
             self.is_hidden = is_hidden
             self.is_active = is_active
+            self.full_name = str(first_name) + ' ' + str(last_name)
 
 
 
