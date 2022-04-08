@@ -151,6 +151,19 @@ def get_team_id(team_number):
     except: 
         return team_number
 
+def get_team_number(site_id):
+    try:
+        n = int(site_id)
+    except:
+        print("Team number not INT")
+    teams = {
+        4781862:1 ,4781869:2,4781872:3,4781879:4,4781874:5,4781875:6,4781876:7,4781877:8,4781878:9,4781873:10
+     }
+    try:
+         return teams[n]
+    except: 
+        return site_id
+
 # assigns a position to each shift based on the schedule
 def get_position(schedule_name):
     all_positions = {'tse1': 10470912, 'tse1': 10470912, 'tse2': 10471919, 'tse3': 10474041, 'techops': 10477571}
