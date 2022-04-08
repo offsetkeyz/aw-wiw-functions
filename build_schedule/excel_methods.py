@@ -8,7 +8,7 @@ import bs_methods
 import shift_classes
 from openpyxl import load_workbook
 from openpyxl.styles import colors
-from openpyxl.styles import Font, Color, PatternFill
+from openpyxl.styles import Font, Color, PatternFill, Border, Side
 
 workbook_location = '/Users/colin.mcallister/Library/CloudStorage/OneDrive-ArcticWolfNetworksInc/Documents/test_triage_schedule.xlsx'
 workbook = load_workbook(workbook_location)
@@ -82,6 +82,27 @@ def check_sheet_for_name(name_in, schedule_name):
         #add to dict
         all_names[schedule_name][name_in] = current_row
 
+def populate_user_in_excel_sheet(user_shifts, schedule_name, user):
+        team_number = False
+        for shift in user_shifts:
+           ws = workbook[schedule_name]
+           try:
+                current_cell = ws.cell(row=all_names[schedule_name][user.full_name], column=date_columns[datetime.strftime(shift.start_time, '%d %b %Y')])
+           except KeyError:
+               continue
+           current_cell.value = shift.length
+           if shift.location_id not in [5227330,5233779] and 0 <= int(datetime.strftime(shift.start_time, '%-H')) <= 6:
+               current_cell.value = str(int(current_cell.value)) + 'N'
+           elif shift.location_id not in [5227330,5233779]:
+                current_cell.value = str(int(current_cell.value)) + 'D'
+            #checks if the shift is within 20 days of current day
+           if team_number == False and (int(datetime.strftime(datetime.now(), '%-j'))-10) < int(datetime.strftime(shift.start_time, '%-j')) < (int(datetime.strftime(datetime.now(), '%-j'))+10):
+                team_cell = ws.cell(row=all_names[schedule_name][user.full_name], column=2)
+                team_cell.value = bs_methods.get_team_number(shift.site_id)
+                team_number = True
+           current_cell.fill = PatternFill("solid", fgColor=shift.color)
+           current_cell.border = Border(left=Side(style='thin'), right=Side(style='thin'),top=Side(style='thick'),bottom=Side(style='thick'))
+
 def main():
     # build_date_row()
     get_date_rows()
@@ -96,14 +117,14 @@ def main():
         if schedule_name == 0:
             continue #shift not on a tracked schedule
         check_sheet_for_name(user.full_name, schedule_name)
-        for shift in user_shifts:
-           ws = workbook[schedule_name]
-           try:
-                current_cell = ws.cell(row=all_names[schedule_name][user.full_name], column=date_columns[datetime.strftime(shift.start_time, '%d %b %Y')])
-           except KeyError:
-               continue
-           current_cell.value = shift.length
-           current_cell.fill = PatternFill("solid", fgColor=shift.color)
+        populate_user_in_excel_sheet(user_shifts, schedule_name, user)
+
+    # for i in workbook.sheetnames:
+    #     ws = workbook[i]
+    #     ws['A2'].hyperlink = 'A' + str(date_columns[datetime.strftime(datetime.now(), '%d %b %Y')])
+    #     ws['A2'].value = "TODAY"
+    #     ws['A2'].style = "Hyperlink"
+
     workbook.save(str(workbook_location))
 
 
