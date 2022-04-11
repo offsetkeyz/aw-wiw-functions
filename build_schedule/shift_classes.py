@@ -324,8 +324,8 @@ def get_tse3_schedule(rotation_char):
                     ["purple", 15, 8, 4, purple_notes]],
             8: [["orange", 13, 8, 1, orange_b_notes],["orange", 13, 8, 1, orange_b_notes], 
                     ["orange", 13, 8, 1, orange_b_notes], ["orange", 13, 8, 1, orange_b_notes],["orange", 13, 8, 3, orange_b_notes]],
-            9: [["light blue", 15, 8, 1, light_blue_notes],["light blue", 15, 8, 1, light_blue_notes], 
-                    ["light blue", 15, 8, 1, light_blue_notes], ["light blue", 15, 8, 1, light_blue_notes],["light blue", 15, 8, 3, light_blue_notes]],
+            9: [["light blue", 17, 8, 1, light_blue_notes],["light blue", 17, 8, 1, light_blue_notes], 
+                    ["light blue", 17, 8, 1, light_blue_notes], ["light blue", 17, 8, 1, light_blue_notes],["light blue", 17, 8, 3, light_blue_notes]],
             10: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes], 
                     ["green", 14, 8, 1, green_notes], ["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]]
         }
@@ -350,8 +350,8 @@ def get_tse3_schedule(rotation_char):
                     ["purple", 15, 8, 4, purple_notes]],
             8: [["orange", 13, 8, 1, orange_c_notes],["orange", 13, 8, 1, orange_c_notes], 
                     ["orange", 13, 8, 1, orange_c_notes], ["orange", 13, 8, 1, orange_c_notes],["orange", 13, 8, 3, orange_c_notes]],
-            9: [["light blue", 15, 8, 1, light_blue_notes],["light blue", 15, 8, 1, light_blue_notes], 
-                    ["light blue", 15, 8, 1, light_blue_notes], ["light blue", 15, 8, 1, light_blue_notes],["light blue", 15, 8, 3, light_blue_notes]],
+            9: [["light blue", 17, 8, 1, light_blue_notes],["light blue", 17, 8, 1, light_blue_notes], 
+                    ["light blue", 17, 8, 1, light_blue_notes], ["light blue", 17, 8, 1, light_blue_notes],["light blue", 17, 8, 3, light_blue_notes]],
             10: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes], 
                     ["green", 14, 8, 1, green_notes], ["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]]
         }
@@ -452,8 +452,6 @@ def get_current_schedule(schedule_name, rotation_char):
     if schedule_name == "5132412":
         return get_techops_schedule(rotation_char)
     elif schedule_name == "5134192":
-        return get_tse3_schedule(rotation_char)
-    elif schedule_name == "5189759": #Colin Test
         return get_tse3_schedule(rotation_char)
     elif schedule_name == "5227330":
         return get_emea_t1_schedule(rotation_char)
