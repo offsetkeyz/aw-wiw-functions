@@ -435,15 +435,19 @@ def get_techops_schedule(rotation_char): #TODO finish this. In production.
 
         return current_schedule
 
-def get_pink(rotation_char): #TODO Finish this.
+def get_pink(schedule_name): #TODO Finish this.
         pink_notes = ''
-        pink_emea = {
-                1: [["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 3, pink_notes]],
-                2: [["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 3, pink_notes]],
-                3: [["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 3, pink_notes]]
-        }
 
-        return pink_emea
+        pink_NA = [["pink", 14, 8, 1, pink_notes],["pink", 14, 8, 1, pink_notes],["pink", 14, 8, 1, pink_notes],["pink", 14, 8, 1, pink_notes],["pink", 14, 8, 3, pink_notes]]
+        
+
+        pink_emea = [["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 3, pink_notes]]
+        
+
+        if schedule_name in ["5227330",'5233779']:
+                return pink_emea
+        else:
+                return pink_NA
 
 
 

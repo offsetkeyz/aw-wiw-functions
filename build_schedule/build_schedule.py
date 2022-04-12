@@ -7,10 +7,13 @@ import bs_methods
 import excel_methods
 import pytz
 
-def build_schedule(token, schedule_name='tse2'):
+def build_schedule(token, file_name='tse2'):
     # replace the contents of the parenthesis with the file location
-    for x in bs_methods.get_employee_starts_from_csv('/Users/colin.mcallister/Documents/WiW API/aw-wiw-functions/build_schedule/' + str(schedule_name) + '.csv'):
-        bs_methods.build_schedule(token, schedule_name, x[0], x[1], x[2], x[3], x[4])
+    for x in bs_methods.get_employee_starts_from_csv('/Users/colin.mcallister/Documents/WiW API/aw-wiw-functions/build_schedule/' + str(file_name) + '.csv'):
+        if file_name == "pink":
+            bs_methods.build_pinks(token, x[0], x[1], x[2], x[3])
+        else:
+            bs_methods.build_schedule(token, file_name, x[0], x[1], x[2], x[3], x[4])
 
 def bulk_delete_all_shifts(token, file_name):
     all_shifts_json = bs_methods.get_all_future_shifts_json(token)
@@ -22,11 +25,13 @@ def main():
     token = bs_methods.authenticate_WiW_API()
     start_time = time.perf_counter()
 
-    # bs_methods.delete_all_shifts_for_user(token, datetime.datetime(2022,5,1).astimezone(pytz.timezone('UTC')),bs_methods.get_user_id_from_email(token, 'ryan.berry@arcticwolf.com'))
+    bs_methods.delete_all_shifts_for_user(token, datetime.datetime(2022,3,1).astimezone(pytz.timezone('UTC')),bs_methods.get_user_id_from_email(token, 'osman.erol@arcticwolf.com'))
+    bs_methods.delete_all_shifts_for_user(token, datetime.datetime(2022,3,1).astimezone(pytz.timezone('UTC')),bs_methods.get_user_id_from_email(token, 'tamara.perovic@arcticwolf.com'))
 
-    bs_methods.update_shift_start_time(token)
 
-    # build_schedule(token, 'tse2')
+    # bs_methods.update_shift_start_time(token)
+
+    build_schedule(token, 'pink')
 
     # bs_methods.get_all_future_shifts(token)
 
