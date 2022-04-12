@@ -362,6 +362,21 @@ def store_shifts_by_user_id(all_shifts_in):
             employee_shifts[int(i['user_id'])] = [new_shift]
     return employee_shifts
 
+def store_time_off(all_requests):
+    requests = {}
+    for i in all_requests:
+        start_time = datetime.strptime(i['start_time'], '%a, %d %b %Y %H:%M:%S %z').astimezone(pytz.timezone('UTC'))
+        end_time = datetime.strptime(i['end_time'], '%a, %d %b %Y %H:%M:%S %z').astimezone(pytz.timezone('UTC'))
+        new_request = shift_classes.time_off_request(i['id'], i['account_id'],i['user_id'], i['status'],i['type'],i['type_id'], i['hours'], start_time, end_time, 0,i['user_status'],i['type_label'])
+        if int(i['user_id']) in requests:
+            current_users_requests =requests.get(int(i['user_id']))
+            current_users_requests.append(new_request)
+            requests[int(i['user_id'])] = current_users_requests
+        else: 
+            requests[int(i['user_id'])] = [new_request]
+    return requests
+
+
 # deletes all duplicate shifts
 def store_shifts_by_hash(token, all_shifts_in):
     hashed_shifts = {}

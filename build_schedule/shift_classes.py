@@ -1,6 +1,35 @@
 
 from datetime import datetime
 
+class time_off_request:
+        # to_id = 0
+        # account_id = 0
+        # user_id = 0
+        status = 0
+        type = 0
+        type_id = 0
+        hours = 0
+        start_time = 0
+        end_time = 0
+        cancelled_by = 0
+        user_status = 0
+        type_label = ''
+
+        def __init__(self, to_id=0, account_id=0, user_id=0, status=0, type=0, type_id=0, hours=0, start_time=0, end_time=0, cancelled_by=0, user_status=0, type_label='') -> None:
+            self.to_id=to_id
+            self.accoun_id=account_id
+            self.user_id=user_id
+            self.status=status
+            self.type=type
+            self.type_id=type_id
+            self.hours=hours
+            self.start_time=start_time
+            self.end_time=end_time
+            self.cancelled_by=cancelled_by
+            self.user_status+user_status
+            self.type_label=type_label
+
+
 class shift:
     shift_id = 0
     account_id = 0

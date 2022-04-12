@@ -157,13 +157,34 @@ def populate_user_in_excel_sheet(user_shifts, schedule_name, user):
                 team_cell = ws.cell(row=all_names[schedule_name][user.full_name], column=2)
                 team_cell.value = bs_methods.get_team_number(shift.site_id)
                 team_number = True
-           current_cell.fill = PatternFill("solid", fgColor=shift.color)
-           current_cell.border = Border(left=Side(style='thin'), right=Side(style='thin'),top=Side(style='thick'),bottom=Side(style='thick'))
+           if shift.published == True:
+                current_cell.fill = PatternFill("solid", fgColor=shift.color)
+           else:
+                current_cell.fill = PatternFill("lightGrid", fgColor=shift.color)
+        #    current_cell.border = Border(left=Side(style='thin'), right=Side(style='thin'),top=Side(style='thick'),bottom=Side(style='thick'))
            current_cell.comment = Comment(shift.notes, "iSOC Scheduling")
 
-def input_time_off_requests():
-    all_requests_json = bs_methods.get_time_off_requests(token)
-    #TODO
+def populate_users_time_off(user_requests, schedule_name, user):
+        for request in user_requests:
+           ws = workbook[schedule_name]
+           date_check = request.start_time
+           while request.start_time <= date_check < request.end_time:
+                try:
+                    current_cell = ws.cell(row=all_names[schedule_name][user.full_name], column=date_columns[datetime.strftime(request.start_time, '%d %b %Y')])
+                except KeyError:
+                    date_check = date_check + timedelta(days=1)
+                    continue                
+                current_cell.value = 'V - Time Off'
+                current_cell.fill = PatternFill("darkHorizontal", fgColor='F44336')
+                current_cell.comment = Comment(request.type_label, "iSOC Scheduling")
+                date_check = date_check + timedelta(days=1)
+
+def get_time_off_requests(token):
+    url_headers = bs_methods.get_url_and_headers('requests', token)
+    response = requests.request("GET", url_headers[0], headers=url_headers[1]).json()
+    requests_json = response['requests']
+    return bs_methods.store_time_off(requests_json)
+    
 
 def create_today_hyperlinks():
     for i in workbook.sheetnames:
@@ -188,6 +209,7 @@ def main():
     get_date_rows()
     get_all_names()
     token = bs_methods.authenticate_WiW_API()
+    all_to_requests = get_time_off_requests(token)
     all_shifts_json = bs_methods.get_all_shifts_json(token)
     all_shifts = bs_methods.store_shifts_by_user_id(all_shifts_json) #returns dict with user_id as key
     for user_id in all_shifts:
@@ -198,13 +220,12 @@ def main():
             continue #shift not on a tracked schedule
         check_sheet_for_name(user.full_name, schedule_name)
         populate_user_in_excel_sheet(user_shifts, schedule_name, user)
+        try:
+            populate_users_time_off(all_to_requests[user_id],schedule_name, user)
+        except:
+            continue
     # update_users(token)
-
-
     create_today_hyperlinks()
-
-
-
     workbook.save(str(workbook_location))
 
 
