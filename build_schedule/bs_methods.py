@@ -43,6 +43,7 @@ def get_url_and_headers(type, token):
 
 # Builds out a full rotation given the below parameters.
 def build_schedule(token, schedule_name,user_email, start_date, starting_week, rotations, team_number):
+    
     user_email = check_email_format(user_email)
     start_date = get_start_date(start_date)
     location_id = get_location_id(schedule_name)
@@ -87,6 +88,22 @@ def build_schedule(token, schedule_name,user_email, start_date, starting_week, r
                 print('error switching rotation character line 65')
         i = i+1
             
+def build_pinks(token, user_email, start_date, number_of_weeks, schedule_name):
+    location_id = get_location_id(schedule_name)
+    start_date = get_start_date(start_date)
+    position = get_position(schedule_name)
+    i=1
+    current_date = start_date
+    try:
+        number_of_weeks = int(number_of_weeks)
+    except:
+        return('wrong CSV format for number of weeks')
+    while i <= number_of_weeks:
+        current_schedule = shift_classes.get_pink(location_id)
+        for j in current_schedule:
+            create_shift(token, user_email, current_date.replace(hour=j[1], tzinfo=tzutc()), j[2], j[0], j[4], location_id, '0', position)
+            current_date = current_date + timedelta(days=j[3])
+        i+=1
 
 def create_shift(token, user_email, start_time, length, color, notes, schedule_id, team_number, position):
     user_id = get_user_id_from_email(token, user_email)
@@ -315,7 +332,7 @@ def get_all_shifts_json(token):
 
 def delete_all_shifts_for_user(token, start_date, user_id, all_shifts=0):
     if all_shifts == 0: #option to pass in dictionary of shift\=]-
-        all_shifts_json = get_all_future_shifts_json(token)
+        all_shifts_json = get_all_shifts_json(token)
         all_shifts = store_shifts_by_user_id(all_shifts_json)
     try: 
         for shift in all_shifts[user_id]:
