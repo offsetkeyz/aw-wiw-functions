@@ -19,14 +19,14 @@ schedule_wb = load_workbook('/Users/colin.mcallister/Library/CloudStorage/OneDri
 perks_workbook = load_workbook('/Users/colin.mcallister/Documents/PERKS with Python/iSOC Perks Mar27-Apr9.xlsx')
 perks_ws = perks_workbook['iSOC Perks']
 
-US_stat_dates = []
+US_stat_dates = ['21 Feb 2022']
 # calculates stat for night before STAT holiday
-US_stat_nights = []
+US_stat_nights = ['21 Feb 2022']
 US_OT_days = []
 US_OT_nights = []
 
-CA_stat_dates = []
-CA_stat_nights = []
+CA_stat_dates = ['21 Feb 2022']
+CA_stat_nights = ['21 Feb 2022']
 CA_OT_days = []
 CA_OT_nights = []
 
@@ -151,7 +151,7 @@ def calc_percs_by_section():
                 check_and_calc_for_12s(new_employee, cell_value)
                 if cell_value == None:
                     cell_value =0
-                new_employee.shifts_worked[sheet.cell(row=row[0].row, column=cell.column)] = cell_value
+                new_employee.shifts_worked[datetime.datetime.strftime(date_range[0], '%d %b %Y')] = cell_value
             calculate_stat(new_employee)
             calculate_OT(new_employee)
             add_to_perks(new_employee)

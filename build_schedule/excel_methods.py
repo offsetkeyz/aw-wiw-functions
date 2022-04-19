@@ -152,7 +152,7 @@ def populate_user_in_excel_sheet(user_shifts, schedule_name, user):
                current_cell.value = str(int(current_cell.value)) + 'N'
            elif shift.location_id not in [5227330,5233779]:
                 current_cell.value = str(int(current_cell.value)) + 'D'
-            #checks if the shift is within 20 days of current day
+            #checks if the shift is within 20 days of current day to assign team number
            if team_number == False and (int(datetime.strftime(datetime.now(), '%-j'))-10) < int(datetime.strftime(shift.start_time, '%-j')) < (int(datetime.strftime(datetime.now(), '%-j'))+10):
                 team_cell = ws.cell(row=all_names[schedule_name][user.full_name], column=2)
                 team_cell.value = bs_methods.get_team_number(shift.site_id)
@@ -170,7 +170,7 @@ def populate_users_time_off(user_requests, schedule_name, user):
            date_check = request.start_time
            while request.start_time <= date_check < request.end_time:
                 try:
-                    current_cell = ws.cell(row=all_names[schedule_name][user.full_name], column=date_columns[datetime.strftime(request.start_time, '%d %b %Y')])
+                    current_cell = ws.cell(row=all_names[schedule_name][user.full_name], column=date_columns[datetime.strftime(date_check.start_time, '%d %b %Y')])
                 except KeyError:
                     date_check = date_check + timedelta(days=1)
                     continue                

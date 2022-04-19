@@ -409,57 +409,68 @@ def get_emea_t1_schedule(rotation_char):
         return emea_a
 
 def get_techops_schedule(rotation_char): #TODO finish this. In production.
+        teal_notes = ''
+        green_notes = ''
+        red_notes = ''
+        gray_notes = ''
+        orange_notes = ''
         current_schedule = techops_a
         if rotation_char == 'b':
                 current_schedule = techops_b
         techops_a = {
-            1: [["teal", 17, 8, 1, "notes"],["teal", 17, 8, 1, "notes"], 
-                    ["teal", 17, 8, 1, "notes"], ["teal", 17, 8, 1, "notes"], 
-                    ["teal", 17, 8, 3, "notes"]],
-            2: [["purple", 14, 8, 1, "notes"],["purple", 14, 8, 1, "notes"], 
-                    ["purple", 14, 8, 1, "notes"], ["purple", 14, 8, 1, "notes"], 
-                    ["purple", 14, 8, 3, "notes"]],
-            3: [["green", 16, 8, 1, "notes"],["green", 16, 8, 1, "notes"], 
-                    ["green", 16, 8, 1, "notes"], ["green", 16, 8, 1, "notes"], 
-                    ["green", 16, 8, 3, "notes"]],
-            4: [["red", 13, 8, 1, "notes"],["red", 13, 8, 1, "notes"], 
-                    ["red", 13, 8, 1, "notes"], ["red", 13, 8, 1, "notes"], 
-                    ["red", 13, 8, 4, "notes"]],
-            5: [["gray", 1, 12, 1, "notes"],["gray", 1, 12, 1, "notes"], 
-                    ["gray", 1, 12, 8, "notes"]],
-            6: [["gray", 1, 12, 1, "notes"],["gray", 1, 12, 1, "notes"], 
-                    ["gray", 1, 12, 1, "notes"], ["gray", 1, 12, 4, "notes"]],
-            7: [["orange", 15, 8, 1, "notes"],["blue", 13, 12, 1, "notes"], 
-                    ["blue", 13, 12, 2, "notes"]],
-            8: [["orange", 15, 8, 1, "notes"],["orange", 15, 8, 1, "notes"], 
-                    ["orange", 15, 8, 1, "notes"], ["orange", 15, 8, 3, "notes"]],
-            9: [["orange", 15, 8, 1, "notes"],["orange", 15, 8, 1, "notes"], 
-                    ["orange", 15, 8, 1, "notes"], ["orange", 15, 8, 1, "notes"],["orange", 15, 8, 3, "notes"]]
+            1: [["teal", 17, 8, 1, teal_notes],["teal", 17, 8, 1, teal_notes], 
+                    ["teal", 17, 8, 1, teal_notes], ["teal", 17, 8, 1, teal_notes], 
+                    ["teal", 17, 8, 3, teal_notes]],
+            2: [["teal", 17, 8, 1, teal_notes],["teal", 17, 8, 1, teal_notes], 
+                    ["teal", 17, 8, 1, teal_notes], ["teal", 17, 8, 1, teal_notes], 
+                    ["teal", 17, 8, 3, teal_notes]],
+            3: [["green", 16, 8, 1, green_notes],["green", 16, 8, 1, green_notes], 
+                    ["green", 16, 8, 1, green_notes], ["green", 16, 8, 1, green_notes], 
+                    ["green", 16, 8, 3, green_notes]],
+            4: [["green", 16, 8, 1, green_notes],["green", 16, 8, 1, green_notes], 
+                    ["green", 16, 8, 1, green_notes], ["green", 16, 8, 1, green_notes], 
+                    ["green", 16, 8, 3, green_notes]],
+            5: [["red", 13, 8, 1, red_notes],["red", 13, 8, 1, red_notes], 
+                    ["red", 13, 8, 1, red_notes], ["red", 13, 8, 1, red_notes], 
+                    ["red", 13, 8, 4, red_notes]],
+            6: [["gray", 1, 12, 1, gray_notes],["gray", 1, 12, 1, gray_notes], 
+                    ["gray", 1, 12, 8, gray_notes]],
+            7: [["gray", 1, 12, 1, gray_notes],["gray", 1, 12, 1, gray_notes], 
+                    ["gray", 1, 12, 1, gray_notes], ["gray", 1, 12, 4, gray_notes]],
+            8: [["orange", 15, 8, 1, orange_notes],["blue", 13, 12, 1, orange_notes], 
+                    ],
+            9: [["blue", 13, 12, 1, orange_notes], ["orange", 15, 8, 2, orange_notes],["orange", 15, 8, 1, orange_notes], 
+                    ["orange", 15, 8, 1, orange_notes], ["orange", 15, 8, 3, orange_notes]],
+            10: [["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes], 
+                    ["orange", 15, 8, 1, orange_notes], ["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 3, orange_notes]]
         }
 
         techops_b = {
-            1: [["teal", 17, 8, 1, "notes"],["teal", 17, 8, 1, "notes"], 
-                    ["teal", 17, 8, 1, "notes"], ["teal", 17, 8, 1, "notes"], 
-                    ["teal", 17, 8, 3, "notes"]],
-            2: [["purple", 14, 8, 1, "notes"],["purple", 14, 8, 1, "notes"], 
-                    ["purple", 14, 8, 1, "notes"], ["purple", 14, 8, 1, "notes"], 
-                    ["purple", 14, 8, 3, "notes"]],
-            3: [["green", 16, 8, 1, "notes"],["green", 16, 8, 1, "notes"], 
-                    ["green", 16, 8, 1, "notes"], ["green", 16, 8, 1, "notes"], 
-                    ["green", 16, 8, 3, "notes"]],
-            4: [["red", 13, 8, 1, "notes"],["red", 13, 8, 1, "notes"], 
-                    ["red", 13, 8, 1, "notes"], ["red", 13, 8, 1, "notes"], 
-                    ["red", 13, 8, 4, "notes"]],
-            5: [["gray", 1, 12, 1, "notes"],["gray", 1, 12, 1, "notes"], 
-                    ["gray", 1, 12, 8, "notes"]],
-            6: [["gray", 1, 12, 1, "notes"],["gray", 1, 12, 1, "notes"], 
-                    ["gray", 1, 12, 1, "notes"], ["gray", 1, 12, 4, "notes"]],
-            7: [["orange", 15, 8, 1, "notes"],["blue", 13, 12, 1, "notes"], 
-                    ["blue", 13, 12, 1, "notes"]],
-            8: [["orange", 15, 8, 2, "notes"],["orange", 15, 8, 1, "notes"], 
-                    ["orange", 15, 8, 1, "notes"], ["orange", 15, 8, 3, "notes"]],
-            9: [["orange", 15, 8, 1, "notes"],["orange", 15, 8, 1, "notes"], 
-                    ["orange", 15, 8, 1, "notes"], ["orange", 15, 8, 1, "notes"],["orange", 15, 8, 3, "notes"]]
+            1: [["teal", 17, 8, 1, teal_notes],["teal", 17, 8, 1, teal_notes], 
+                    ["teal", 17, 8, 1, teal_notes], ["teal", 17, 8, 1, teal_notes], 
+                    ["teal", 17, 8, 3, teal_notes]],
+            2: [["teal", 17, 8, 1, teal_notes],["teal", 17, 8, 1, teal_notes], 
+                    ["teal", 17, 8, 1, teal_notes], ["teal", 17, 8, 1, teal_notes], 
+                    ["teal", 17, 8, 3, teal_notes]],
+            3: [["green", 16, 8, 1, green_notes],["green", 16, 8, 1, green_notes], 
+                    ["green", 16, 8, 1, green_notes], ["green", 16, 8, 1, green_notes], 
+                    ["green", 16, 8, 3, green_notes]],
+            4: [["green", 16, 8, 1, green_notes],["green", 16, 8, 1, green_notes], 
+                    ["green", 16, 8, 1, green_notes], ["green", 16, 8, 1, green_notes], 
+                    ["green", 16, 8, 3, green_notes]],
+            5: [["red", 13, 8, 1, red_notes],["red", 13, 8, 1, red_notes], 
+                    ["red", 13, 8, 1, red_notes], ["red", 13, 8, 1, red_notes], 
+                    ["red", 13, 8, 4, red_notes]],
+            6: [["gray", 1, 12, 1, gray_notes],["gray", 1, 12, 1, gray_notes], 
+                    ["gray", 1, 12, 8, gray_notes]],
+            7: [["gray", 1, 12, 1, gray_notes],["gray", 1, 12, 1, gray_notes], 
+                    ["gray", 1, 12, 1, gray_notes], ["gray", 1, 12, 4, gray_notes]],
+            8: [["orange", 15, 8, 1, orange_notes],["blue", 13, 12, 1, orange_notes], 
+                    ],
+            9: [["blue", 13, 12, 2, orange_notes], ["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes], 
+                    ["orange", 15, 8, 1, orange_notes], ["orange", 15, 8, 3, orange_notes]],
+            10: [["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes], 
+                    ["orange", 15, 8, 1, orange_notes], ["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 3, orange_notes]]
         }
 
         return current_schedule

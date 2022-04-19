@@ -51,6 +51,8 @@ def build_schedule(token, schedule_name,user_email, start_date, starting_week, r
     rotation_char = starting_week_rotation[-1]
     position = get_position(schedule_name)
 
+    delete_all_shifts_for_user(token, start_date, get_user_id_from_email(token,user_email))
+
     if len(starting_week_rotation) == 3:
         starting_week = int(starting_week_rotation[:2])
     else:
