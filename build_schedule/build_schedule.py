@@ -9,7 +9,7 @@ import pytz
 
 def build_schedule(token, file_name='tse2'):
     # replace the contents of the parenthesis with the file location
-    for x in bs_methods.get_employee_starts_from_csv('/Users/colin.mcallister/Documents/WiW API/aw-wiw-functions/build_schedule/' + str(file_name) + '.csv'):
+    for x in bs_methods.get_employee_starts_from_csv('/Users/colin.mcallister/Documents/WiW API/aw-wiw-functions/build_schedule/csvs/' + str(file_name) + '.csv'):
         if file_name == "pink":
             bs_methods.build_pinks(token, x[0], x[1], x[2], x[3])
         else:
@@ -18,7 +18,7 @@ def build_schedule(token, file_name='tse2'):
 def bulk_delete_all_shifts(token, file_name):
     all_shifts_json = bs_methods.get_all_future_shifts_json(token)
     all_shifts = bs_methods.store_shifts_by_user_id(all_shifts_json)
-    for x in bs_methods.get_employee_starts_from_csv('/Users/colin.mcallister/Documents/WiW API/aw-wiw-functions/build_schedule/' + str(file_name) + '.csv'):
+    for x in bs_methods.get_employee_starts_from_csv('/Users/colin.mcallister/Documents/WiW API/aw-wiw-functions/build_schedule/csvs/' + str(file_name) + '.csv'):
         bs_methods.delete_all_shifts_for_user(token, datetime.datetime.strptime(x[1], '%d %b %Y').astimezone(pytz.timezone('UTC')), bs_methods.get_user_id_from_email(token, x[0]), all_shifts)
 
 def main():
@@ -29,7 +29,7 @@ def main():
 
     # bs_methods.update_shift_start_time(token)
 
-    # build_schedule(token, 'emea tier 1')
+    build_schedule(token, 'techops')
 
     # bs_methods.get_all_future_shifts(token)
 
@@ -39,7 +39,7 @@ def main():
 
     # bs_methods.update_shift_notes(token, 5132410)
 
-    bs_methods.copy_users_schedule(bs_methods.get_user_id_from_email(token,'shay.bingham@arcticwolf.com'), 'vinny.frias@arcticwolf.com', datetime.datetime(2022,5,3).astimezone(pytz.timezone('UTC')), token)
+    # bs_methods.copy_users_schedule(bs_methods.get_user_id_from_email(token,'shay.bingham@arcticwolf.com'), 'vinny.frias@arcticwolf.com', datetime.datetime(2022,5,3).astimezone(pytz.timezone('UTC')), token)
 
     # bs_methods.build_schedule(token, 'tse1', 'andres.escobar@arcticwolf.com', '16 May 2022', '2b', '2', '10')
 
