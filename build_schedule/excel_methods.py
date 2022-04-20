@@ -160,7 +160,8 @@ def populate_user_in_excel_sheet(user_shifts, schedule_name, user):
            if shift.published == True:
                 current_cell.fill = PatternFill("solid", fgColor=shift.color)
            else:
-                current_cell.fill = PatternFill("lightGrid", fgColor=shift.color)
+                current_cell.fill = PatternFill("solid", fgColor='ffffff')
+                current_cell.border = Border(left=Side(border_style='thick', color=shift.color),right=Side(border_style='thick', color=shift.color),top=Side(border_style='thick', color=shift.color),bottom=Side(border_style='thick', color=shift.color))
         #    current_cell.border = Border(left=Side(style='thin'), right=Side(style='thin'),top=Side(style='thick'),bottom=Side(style='thick'))
            current_cell.comment = Comment(shift.notes, "iSOC Scheduling")
 
@@ -170,12 +171,12 @@ def populate_users_time_off(user_requests, schedule_name, user):
            date_check = request.start_time
            while request.start_time <= date_check < request.end_time:
                 try:
-                    current_cell = ws.cell(row=all_names[schedule_name][user.full_name], column=date_columns[datetime.strftime(date_check.start_time, '%d %b %Y')])
-                except KeyError:
+                    current_cell = ws.cell(row=all_names[schedule_name][user.full_name], column=date_columns[datetime.strftime(date_check, '%d %b %Y')])
+                except KeyError as e:
                     date_check = date_check + timedelta(days=1)
                     continue                
                 current_cell.value = 'V - Time Off'
-                current_cell.fill = PatternFill("darkHorizontal", fgColor='F44336')
+                current_cell.fill = PatternFill("solid", fgColor='ff8789')
                 current_cell.comment = Comment(request.type_label, "iSOC Scheduling")
                 date_check = date_check + timedelta(days=1)
 
@@ -204,8 +205,8 @@ def clear_sheets():
         ws.delete_rows(2, ws.max_row)
 
 def main():
-    clear_sheets()
-    build_date_row()
+    # clear_sheets()
+    # build_date_row()
     get_date_rows()
     get_all_names()
     token = bs_methods.authenticate_WiW_API()
@@ -222,7 +223,8 @@ def main():
         populate_user_in_excel_sheet(user_shifts, schedule_name, user)
         try:
             populate_users_time_off(all_to_requests[user_id],schedule_name, user)
-        except:
+        except Exception as e:
+            _ = e
             continue
     # update_users(token)
     create_today_hyperlinks()

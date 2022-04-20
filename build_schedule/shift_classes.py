@@ -414,38 +414,8 @@ def get_techops_schedule(rotation_char): #TODO finish this. In production.
         red_notes = ''
         gray_notes = ''
         orange_notes = ''
-        current_schedule = techops_a
-        if rotation_char == 'b':
-                current_schedule = techops_b
-        techops_a = {
-            1: [["teal", 17, 8, 1, teal_notes],["teal", 17, 8, 1, teal_notes], 
-                    ["teal", 17, 8, 1, teal_notes], ["teal", 17, 8, 1, teal_notes], 
-                    ["teal", 17, 8, 3, teal_notes]],
-            2: [["teal", 17, 8, 1, teal_notes],["teal", 17, 8, 1, teal_notes], 
-                    ["teal", 17, 8, 1, teal_notes], ["teal", 17, 8, 1, teal_notes], 
-                    ["teal", 17, 8, 3, teal_notes]],
-            3: [["green", 16, 8, 1, green_notes],["green", 16, 8, 1, green_notes], 
-                    ["green", 16, 8, 1, green_notes], ["green", 16, 8, 1, green_notes], 
-                    ["green", 16, 8, 3, green_notes]],
-            4: [["green", 16, 8, 1, green_notes],["green", 16, 8, 1, green_notes], 
-                    ["green", 16, 8, 1, green_notes], ["green", 16, 8, 1, green_notes], 
-                    ["green", 16, 8, 3, green_notes]],
-            5: [["red", 13, 8, 1, red_notes],["red", 13, 8, 1, red_notes], 
-                    ["red", 13, 8, 1, red_notes], ["red", 13, 8, 1, red_notes], 
-                    ["red", 13, 8, 4, red_notes]],
-            6: [["gray", 1, 12, 1, gray_notes],["gray", 1, 12, 1, gray_notes], 
-                    ["gray", 1, 12, 8, gray_notes]],
-            7: [["gray", 1, 12, 1, gray_notes],["gray", 1, 12, 1, gray_notes], 
-                    ["gray", 1, 12, 1, gray_notes], ["gray", 1, 12, 4, gray_notes]],
-            8: [["orange", 15, 8, 1, orange_notes],["blue", 13, 12, 1, orange_notes], 
-                    ],
-            9: [["blue", 13, 12, 1, orange_notes], ["orange", 15, 8, 2, orange_notes],["orange", 15, 8, 1, orange_notes], 
-                    ["orange", 15, 8, 1, orange_notes], ["orange", 15, 8, 3, orange_notes]],
-            10: [["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes], 
-                    ["orange", 15, 8, 1, orange_notes], ["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 3, orange_notes]]
-        }
 
-        techops_b = {
+        techops_a = {
             1: [["teal", 17, 8, 1, teal_notes],["teal", 17, 8, 1, teal_notes], 
                     ["teal", 17, 8, 1, teal_notes], ["teal", 17, 8, 1, teal_notes], 
                     ["teal", 17, 8, 3, teal_notes]],
@@ -473,6 +443,36 @@ def get_techops_schedule(rotation_char): #TODO finish this. In production.
                     ["orange", 15, 8, 1, orange_notes], ["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 3, orange_notes]]
         }
 
+        techops_b = {
+            1: [["teal", 17, 8, 1, teal_notes],["teal", 17, 8, 1, teal_notes], 
+                    ["teal", 17, 8, 1, teal_notes], ["teal", 17, 8, 1, teal_notes], 
+                    ["teal", 17, 8, 3, teal_notes]],
+            2: [["teal", 17, 8, 1, teal_notes],["teal", 17, 8, 1, teal_notes], 
+                    ["teal", 17, 8, 1, teal_notes], ["teal", 17, 8, 1, teal_notes], 
+                    ["teal", 17, 8, 3, teal_notes]],
+            3: [["green", 16, 8, 1, green_notes],["green", 16, 8, 1, green_notes], 
+                    ["green", 16, 8, 1, green_notes], ["green", 16, 8, 1, green_notes], 
+                    ["green", 16, 8, 3, green_notes]],
+            4: [["green", 16, 8, 1, green_notes],["green", 16, 8, 1, green_notes], 
+                    ["green", 16, 8, 1, green_notes], ["green", 16, 8, 1, green_notes], 
+                    ["green", 16, 8, 3, green_notes]],
+            5: [["red", 13, 8, 1, red_notes],["red", 13, 8, 1, red_notes], 
+                    ["red", 13, 8, 1, red_notes], ["red", 13, 8, 1, red_notes], 
+                    ["red", 13, 8, 4, red_notes]],
+            6: [["gray", 1, 12, 1, gray_notes],["gray", 1, 12, 1, gray_notes], 
+                    ["gray", 1, 12, 8, gray_notes]],
+            7: [["gray", 1, 12, 1, gray_notes],["gray", 1, 12, 1, gray_notes], 
+                    ["gray", 1, 12, 1, gray_notes], ["gray", 1, 12, 4, gray_notes]],
+            8: [["orange", 15, 8, 1, orange_notes],["blue", 13, 12, 1, orange_notes], 
+                    ],
+            9: [["blue", 13, 12, 1, orange_notes], ["orange", 15, 8, 2, orange_notes],["orange", 15, 8, 1, orange_notes], 
+                    ["orange", 15, 8, 1, orange_notes], ["orange", 15, 8, 3, orange_notes]],
+            10: [["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes], 
+                    ["orange", 15, 8, 1, orange_notes], ["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 3, orange_notes]]
+        }
+        current_schedule = techops_a
+        if rotation_char == 'b':
+                current_schedule = techops_b
         return current_schedule
 
 def get_pink(schedule_name): #TODO Finish this.

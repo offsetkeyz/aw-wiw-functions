@@ -72,7 +72,7 @@ def build_schedule(token, schedule_name,user_email, start_date, starting_week, r
             for j in current_week_schedule:
                 create_shift(token, user_email, current_date.replace(hour=j[1], tzinfo=tzutc()), j[2], j[0], j[4], location_id, team_number, position)
                 current_date = current_date + timedelta(days=j[3])
-        if schedule_name != 'emea tier 3':
+        if schedule_name not in ['emea tier 3', 'techops']:
             try: #rotate through a/b or a/b/c
                 if int(rotations) > 2:
                     if rotation_char == 'a':
