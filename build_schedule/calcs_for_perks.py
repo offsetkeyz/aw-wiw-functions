@@ -16,17 +16,17 @@ import pytz
 
 
 schedule_wb = load_workbook('/Users/colin.mcallister/Library/CloudStorage/OneDrive-ArcticWolfNetworksInc/Documents/triage_schedule_from_wiw.xlsx')
-perks_workbook = load_workbook('/Users/colin.mcallister/Documents/PERKS with Python/iSOC Perks Mar27-Apr9.xlsx')
+perks_workbook = load_workbook('/Users/colin.mcallister/Documents/PERKS with Python/iSOC Perks.xlsx')
 perks_ws = perks_workbook['iSOC Perks']
 
-US_stat_dates = ['21 Feb 2022']
+US_stat_dates = ['15 Apr 2022']
 # calculates stat for night before STAT holiday
-US_stat_nights = ['21 Feb 2022']
+US_stat_nights = ['16 Apr 2022', '15 Apr 2022']
 US_OT_days = []
 US_OT_nights = []
 
-CA_stat_dates = ['21 Feb 2022']
-CA_stat_nights = ['21 Feb 2022']
+CA_stat_dates = ['15 Apr 2022']
+CA_stat_nights = ['15 Apr 2022', '16 Apr 2022']
 CA_OT_days = []
 CA_OT_nights = []
 
@@ -35,7 +35,7 @@ all_perks_cells = []
 all_isoc_names = []
 
 
-date_range = [datetime.datetime(2022, 3, 27, tzinfo=tzutc()), datetime.datetime(2022, 4, 9, tzinfo=tzutc())]
+date_range = [datetime.datetime(2022, 4, 10, tzinfo=tzutc()), datetime.datetime(2022, 4, 23, tzinfo=tzutc())]
 
 
 
@@ -57,14 +57,22 @@ def is_canadian(employee_in):
 def compare_names():
     for i in range(0,3,1):
         for cell in schedule_wb.worksheets[i]['A']:
-            all_isoc_names.append(cell.value)
+            try:
+                if len(cell.value) > 1 and '>' not in str(cell.value):
+                    all_isoc_names.append(cell.value)
+            except Exception as e:
+                continue
     for cell in perks_workbook['iSOC Perks']['D']:
-        all_perks_names.append(cell.value)
-        all_perks_cells.append(cell)
+        try:
+            if len(cell.value) > 1 and '>' not in str(cell.value):
+                all_perks_names.append(cell.value)
+                all_perks_cells.append(cell)
+        except Exception as e:
+            continue
 
     for name in all_isoc_names:
         if name not in all_perks_names:
-            print(name + ' | Canadian: ' + str(find_name_in_perks(name)<99))
+            print(name)
                 
 
 # given the contents of the cell, returns an INT with how many hours worked
@@ -151,12 +159,12 @@ def calc_percs_by_section():
                 check_and_calc_for_12s(new_employee, cell_value)
                 if cell_value == None:
                     cell_value =0
-                new_employee.shifts_worked[datetime.datetime.strftime(date_range[0], '%d %b %Y')] = cell_value
+                new_employee.shifts_worked[sheet.cell(row=1, column=cell.column).value] = cell_value
             calculate_stat(new_employee)
             calculate_OT(new_employee)
             add_to_perks(new_employee)
 
-    perks_workbook.save('/Users/colin.mcallister/Documents/PERKS with Python/iSOC Perks Mar27-Apr9test.xlsx')
+    perks_workbook.save('/Users/colin.mcallister/Documents/PERKS with Python/iSOC Perks Apr10-23.xlsx')
 
 def calculate_OT(employee_in):
     if is_canadian(employee_in):
@@ -251,8 +259,6 @@ def calculate_stat(employee_in):
 
  #used by above function. this does the counting    
 def check_and_calc_for_12s(new_employee, cell_value):
-    if new_employee.name == "Joe Kuelbs":
-        print()
     if str(cell_value).strip() == "12D":
         new_employee.weekend_hours = new_employee.weekend_hours + 12
         new_employee.meals = new_employee.meals + 1

@@ -300,7 +300,7 @@ def get_tse3_schedule(rotation_char):
         orange_a_notes = "CFE Alpha Board 8-12 EST. Project Shift (Beta testing tools, automation, Surge support for SCCS, etc)"
         orange_b_notes = "CFE Bravo Board 8-12 EST. Project Shift (Beta testing tools, automation, Surge support for SCCS, etc)"
         orange_c_notes = "CFE Charlie Board 8-12 EST. Project Shift (Beta testing tools, automation, Surge support for SCCS, etc)"
-        green_notes = "On-Call After Hours. Security Investigations and Projects"
+        green_notes = "On-Call After Hours. Security Investigations, Projects, and SCCS"
         purple_notes = 'Security Investigations'
         light_blue_notes = 'Security Investigations / Projects'
         red_notes = "Split Combined Board amongst team members. Flex Shift (Security Investigations, SCCS, PenTest Board)"
@@ -321,9 +321,8 @@ def get_tse3_schedule(rotation_char):
                     ["gray", 1, 12, 8, night_notes]],
             5: [["gray", 1, 12, 1, night_notes],["gray", 1, 12, 1, night_notes], 
                     ["gray", 1, 12, 1, night_notes], ["gray", 1, 12, 4, night_notes]],
-            6: [["purple", 15, 8, 1, purple_notes],["red", 13, 12, 1, red_notes], 
-                    ["red", 13, 12, 2, red_notes]],
-            7: [["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes], 
+            6: [["purple", 15, 8, 1, purple_notes],["red", 13, 12, 1, red_notes]],
+            7: [["red", 13, 12, 2, red_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes], 
                     ["purple", 15, 8, 4, purple_notes]],
             8: [["orange", 13, 8, 1, orange_a_notes],["orange", 13, 8, 1, orange_a_notes], 
                     ["orange", 13, 8, 1, orange_a_notes], ["orange", 13, 8, 1, orange_a_notes],["orange", 13, 8, 3, orange_a_notes]],
@@ -347,9 +346,8 @@ def get_tse3_schedule(rotation_char):
                     ["gray", 1, 12, 8, night_notes]],
             5: [["gray", 1, 12, 1, night_notes],["gray", 1, 12, 1, night_notes], 
                     ["gray", 1, 12, 1, night_notes], ["gray", 1, 12, 4, night_notes]],
-            6: [["purple", 15, 8, 1, purple_notes],["red", 13, 12, 1, red_notes], 
-                    ["red", 13, 12, 1, red_notes]],
-            7: [["purple", 15, 8, 2, purple_notes],["purple", 15, 8, 1, purple_notes], 
+            6: [["purple", 15, 8, 1, purple_notes],["red", 13, 12, 1, red_notes]],
+            7: [["red", 13, 12, 1, red_notes],["purple", 15, 8, 2, purple_notes],["purple", 15, 8, 1, purple_notes], 
                     ["purple", 15, 8, 4, purple_notes]],
             8: [["orange", 13, 8, 1, orange_b_notes],["orange", 13, 8, 1, orange_b_notes], 
                     ["orange", 13, 8, 1, orange_b_notes], ["orange", 13, 8, 1, orange_b_notes],["orange", 13, 8, 3, orange_b_notes]],
@@ -373,9 +371,8 @@ def get_tse3_schedule(rotation_char):
                     ["gray", 1, 12, 8, night_notes]],
             5: [["gray", 1, 12, 1, night_notes],["gray", 1, 12, 1, night_notes], 
                     ["gray", 1, 12, 1, night_notes], ["gray", 1, 12, 4, night_notes]],
-            6: [["purple", 15, 8, 1, purple_notes],["red", 13, 12, 1, red_notes], 
-                    ["red", 13, 12, 1, red_notes]],
-            7: [["purple", 15, 8, 2, purple_notes],["purple", 15, 8, 1, purple_notes], 
+            6: [["purple", 15, 8, 1, purple_notes],["red", 13, 12, 1, red_notes]],
+            7: [["red", 13, 12, 1, red_notes],["purple", 15, 8, 2, purple_notes],["purple", 15, 8, 1, purple_notes], 
                     ["purple", 15, 8, 4, purple_notes]],
             8: [["orange", 13, 8, 1, orange_c_notes],["orange", 13, 8, 1, orange_c_notes], 
                     ["orange", 13, 8, 1, orange_c_notes], ["orange", 13, 8, 1, orange_c_notes],["orange", 13, 8, 3, orange_c_notes]],

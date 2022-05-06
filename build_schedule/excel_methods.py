@@ -3,8 +3,10 @@ from datetime import *
 from distutils.command import build
 import json
 from lib2to3.pgen2 import token
+from logging.config import DEFAULT_LOGGING_CONFIG_PORT
 import sched
 from tkinter import CENTER, HORIZONTAL, VERTICAL
+from xmlrpc.client import DateTime
 from dateutil.tz import *
 import requests
 import bs_methods
@@ -13,6 +15,7 @@ from openpyxl import load_workbook
 from openpyxl.styles import colors
 from openpyxl.styles import Font, Color, PatternFill, Border, Side, Alignment
 from openpyxl.comments import Comment
+import pytz
 
 workbook_location = '/Users/colin.mcallister/Library/CloudStorage/OneDrive-ArcticWolfNetworksInc/Documents/triage_schedule_from_wiw.xlsx'
 workbook = load_workbook(workbook_location)
@@ -48,7 +51,7 @@ def check_location_id(location_id) -> str:
 def build_date_row():
     for sheet in workbook.sheetnames:
         current_ws = workbook[sheet]
-        start_date = datetime(2022,3,1)
+        start_date = datetime(2022,2,28)
         for col in current_ws.iter_cols(min_row=1, max_row=1, min_col=3, max_col=360):
             for cell in col:
                 cell.value = datetime.strftime(start_date, '%d %b %Y')
@@ -142,11 +145,13 @@ def check_sheet_for_name(name_in, schedule_name):
 def populate_user_in_excel_sheet(user_shifts, schedule_name, user):
         team_number = False
         for shift in user_shifts:
-           ws = workbook[schedule_name]
            try:
-                current_cell = ws.cell(row=all_names[schedule_name][user.full_name], column=date_columns[datetime.strftime(shift.start_time, '%d %b %Y')])
-           except KeyError:
-               continue
+                ws = workbook[check_location_id(shift.location_id)]  
+                check_sheet_for_name(user.full_name, check_location_id(shift.location_id))     
+                current_cell = ws.cell(row=all_names[check_location_id(shift.location_id)][user.full_name], column=date_columns[datetime.strftime(shift.start_time, '%d %b %Y')])
+           except KeyError as e:
+                continue
+
            current_cell.value = shift.length
            if shift.location_id not in [5227330,5233779] and 0 <= int(datetime.strftime(shift.start_time, '%-H')) <= 6:
                current_cell.value = str(int(current_cell.value)) + 'N'
@@ -199,17 +204,26 @@ def create_today_hyperlinks():
         ws['A2'].alignment = Alignment(horizontal='center', vertical='center')
         ws['A2'].border = Border(left=Side(style='double'), right=Side(style='double'),top=Side(style='double'),bottom=Side(style='double'))
 
-def clear_sheets():
+def completely_clear_sheets():
     for i in workbook.sheetnames:
         ws = workbook[i]
         ws.delete_rows(2, ws.max_row)
 
+def clear_future_columns(start_date:datetime):
+    get_date_rows()
+    for i in workbook.sheetnames:
+        ws = workbook[i]
+        ws.delete_cols(date_columns[datetime.strftime(start_date, '%d %b %Y')], ws.max_column)
+    build_date_row()
+    get_date_rows()
+
 def main():
-    # clear_sheets()
-    # build_date_row()
+    clear_future_columns(datetime.now())
+    build_date_row()
     get_date_rows()
     get_all_names()
     token = bs_methods.authenticate_WiW_API()
+    # update_users(token)
     all_to_requests = get_time_off_requests(token)
     all_shifts_json = bs_methods.get_all_shifts_json(token)
     all_shifts = bs_methods.store_shifts_by_user_id(all_shifts_json) #returns dict with user_id as key
