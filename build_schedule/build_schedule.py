@@ -29,7 +29,7 @@ def main():
 
     # bs_methods.update_shift_start_time(token)
 
-    build_schedule(token, 'techops')
+    build_schedule(token, 'tse3')
 
     # bs_methods.get_all_future_shifts(token)
 

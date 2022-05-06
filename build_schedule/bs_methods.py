@@ -204,7 +204,7 @@ def get_start_date(input_date):
     try:
         dt_start = datetime.strptime(input_date, '%d %b %Y')
         dt_start = dt_start.replace(hour=13, tzinfo=tzutc())
-    except ValueError:
+    except ValueError as e:
         print ("Incorrect format with get_start_date: " + input_date)
     return dt_start
 
