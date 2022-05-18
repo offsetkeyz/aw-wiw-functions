@@ -1,5 +1,6 @@
 __author__ = "Colin McAllister"
 
+from tokenize import String
 from tracemalloc import start
 from turtle import update
 import shift_classes
@@ -90,7 +91,7 @@ def build_schedule(token, schedule_name,user_email, start_date, starting_week, r
                 print('error switching rotation character line 65')
         i = i+1
             
-def build_pinks(token, user_email, start_date, number_of_weeks, schedule_name):
+def build_pinks(token, user_email, start_date: str, number_of_weeks : int, schedule_name):
     location_id = get_location_id(schedule_name)
     start_date = get_start_date(start_date)
     position = get_position(schedule_name)
@@ -406,7 +407,7 @@ def create_shift_from_json(i):
                                 int(i['site_id']), start_time, end_time, bool(i['published']), bool(i['acknowledged']), i['notes'], i['color'], bool(i['is_open']))
 
 # TODO In Progress Don't use
-def update_shift_start_time(token):
+def shift_start_time(token):
     all_shifts_json = get_all_shifts_json(token)
     all_shifts = store_shifts_by_hash(token, all_shifts_json).values()
     for shift in all_shifts:

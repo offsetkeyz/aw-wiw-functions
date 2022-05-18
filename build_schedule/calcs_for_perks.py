@@ -19,14 +19,14 @@ schedule_wb = load_workbook('/Users/colin.mcallister/Library/CloudStorage/OneDri
 perks_workbook = load_workbook('/Users/colin.mcallister/Documents/PERKS with Python/iSOC Perks.xlsx')
 perks_ws = perks_workbook['iSOC Perks']
 
-US_stat_dates = ['15 Apr 2022']
+US_stat_dates = ['12 Apr 2022']
 # calculates stat for night before STAT holiday
-US_stat_nights = ['16 Apr 2022', '15 Apr 2022']
+US_stat_nights = ['15 Apr 2022','16 Apr 2022']
 US_OT_days = []
 US_OT_nights = []
 
-CA_stat_dates = ['15 Apr 2022']
-CA_stat_nights = ['15 Apr 2022', '16 Apr 2022']
+CA_stat_dates = ['12 Apr 2022']
+CA_stat_nights = ['15 Apr 2022','16 Apr 2022']
 CA_OT_days = []
 CA_OT_nights = []
 
@@ -35,7 +35,7 @@ all_perks_cells = []
 all_isoc_names = []
 
 
-date_range = [datetime.datetime(2022, 4, 10, tzinfo=tzutc()), datetime.datetime(2022, 4, 23, tzinfo=tzutc())]
+date_range = [datetime.datetime(2022, 4, 14, tzinfo=tzutc()), datetime.datetime(2022, 4, 17, tzinfo=tzutc())]
 
 
 
@@ -164,7 +164,7 @@ def calc_percs_by_section():
             calculate_OT(new_employee)
             add_to_perks(new_employee)
 
-    perks_workbook.save('/Users/colin.mcallister/Documents/PERKS with Python/iSOC Perks Apr10-23.xlsx')
+    perks_workbook.save('/Users/colin.mcallister/Documents/PERKS with Python/iSOC Perks Apr24-May8 for perks.xlsx')
 
 def calculate_OT(employee_in):
     if is_canadian(employee_in):
