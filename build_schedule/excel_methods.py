@@ -5,6 +5,7 @@ import json
 from lib2to3.pgen2 import token
 from logging.config import DEFAULT_LOGGING_CONFIG_PORT
 import sched
+from sqlite3 import enable_shared_cache
 from tkinter import CENTER, HORIZONTAL, VERTICAL
 from xmlrpc.client import DateTime
 from dateutil.tz import *
@@ -61,6 +62,34 @@ def build_date_row():
                     cell.fill = PatternFill("solid", fgColor="AFD5FF")
             start_date = start_date + timedelta(days=1)
         workbook.save(str(workbook_location))
+
+def isoc_team_structure_update(token):
+    s2_employees = get_s2_employees()
+    structure_users = get_isoc_structure_users()
+    all_positions = {'Triage Sec Eng 1': 10470912, 'Triage Sec Analyst': 10470912, 'Triage Sec Eng 2': 10471919, 'Triage Sec Eng 3': 10474041, 'Network Ops Supp Analyst': 10477571, 'Manager, iSOC': 10477572, 'TSE4': 10486791, 'ISOC Intern': 10652403, 'EMEA Intern': 10652404, 'Triage Sec Eng 4': 10486791, 'Triage Sec Engineer 1' : 10470912, 'USA': 10654095, 'CAN': 10654096, 'DEU' : 10665016, 'GBR' : 10665016, 'Dir Business Apps Sr': 10477570, 'Co-op/ Intern':10652403, 'Tech Lead Security Svs':10474045, 'Shift Lead Security Oper':10660927, 'Team Lead Security Ops':10474045,'Concierge Sec Eng 2':10668570, 'Mgr Security Ops Sr.':10668568, 'Team Lead Tech Ops':10477572,'Mgr Security Operations':10477572, 'Mgr Concierge Services':10477572,'Mgr, Security Operations':10477572, 'Triage Business Analyst':10668571,'Concierge Sec Eng 3':10665015,'Business Sys Mgr':10477572,'Dir Security Oper Sr':10477570,'Dir Security Svs':10477570}
+
+    for user in s2_employees:
+        if user['position'] in all_positions.keys:
+            if user['email'] not in structure_users.keys:
+                structure_users[user['email']] = 0 #TODO add user to list.
+
+
+def get_isoc_structure_users():
+    weekly_headcount = load_workbook('/Users/colin.mcallister/Downloads/iSOC Team Structure.xlsx', data_only=True)
+    S2_Roster = weekly_headcount['Raw User Data']
+    all_s2_employees = {}
+    for row in range(2, S2_Roster.max_row):
+        current_email = str(S2_Roster.cell(row=row, column=4).value).strip().lower()
+        job_role = S2_Roster.cell(row=row, column=3).value
+        active_status = S2_Roster.cell(row=row, column=6).value
+        zendesk_id = S2_Roster.cell(row=row, column=1).value
+        full_name = ''
+        enable = True
+        manager = ''
+        all_s2_employees[current_email] = {'id' : zendesk_id, 'position' : job_role, 'status' :active_status, 'email' : current_email}
+
+        #TODO Get Zendesk ID spreadsheet
+    return all_s2_employees
 
 def update_users(token):
     s2_employees = get_s2_employees()
@@ -223,7 +252,7 @@ def main():
     get_date_rows()
     get_all_names()
     token = bs_methods.authenticate_WiW_API()
-    # update_users(token)
+    update_users(token)
     all_to_requests = get_time_off_requests(token)
     all_shifts_json = bs_methods.get_all_shifts_json(token)
     all_shifts = bs_methods.store_shifts_by_user_id(all_shifts_json) #returns dict with user_id as key
