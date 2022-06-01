@@ -35,7 +35,7 @@ all_perks_cells = []
 all_isoc_names = []
 
 
-date_range = [datetime.datetime(2022, 4, 14, tzinfo=tzutc()), datetime.datetime(2022, 4, 17, tzinfo=tzutc())]
+date_range = [datetime.datetime(2022, 5, 8, tzinfo=tzutc()), datetime.datetime(2022, 5, 21, tzinfo=tzutc())]
 
 
 
@@ -164,7 +164,7 @@ def calc_percs_by_section():
             calculate_OT(new_employee)
             add_to_perks(new_employee)
 
-    perks_workbook.save('/Users/colin.mcallister/Documents/PERKS with Python/iSOC Perks Apr24-May8 for perks.xlsx')
+    perks_workbook.save('/Users/colin.mcallister/Documents/PERKS with Python/iSOC Perks May8-21.xlsx')
 
 def calculate_OT(employee_in):
     if is_canadian(employee_in):
@@ -286,6 +286,7 @@ def add_to_perks(new_employee):
 
 def main():
     compare_names()
+    input("DID YOU CHANGE THE DATE RANGE?")
     calc_percs_by_section()
 
 if __name__ == '__main__':
