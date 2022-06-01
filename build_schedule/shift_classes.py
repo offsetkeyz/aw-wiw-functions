@@ -186,36 +186,66 @@ def get_tse2_schedule(rotation_char):
         all_notes = get_tse2_notes()
         orange_notes = all_notes['orange_notes']
         red_notes = all_notes['red_notes']
-        green_notes= all_notes['green_notes']
+        green_notes_a= all_notes['green_notes_a']
+        green_notes_b= all_notes['green_notes_b']
         teal_notes= all_notes['teal_notes']
         night_and_weekend_notes= all_notes['night_and_weekend_notes']
         purple_notes= all_notes['purple_notes']
+        black_notes = all_notes['black_notes']
+        yellow_notes = all_notes['yellow_notes']
 
-        tse2_a = { # has monday off rotation
-                1: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]],
+        tse2_a = { # has monday off rotation 1500 = 10EST
+                1: [["blue", 13, 12, 2, night_and_weekend_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 3, purple_notes]],
+                2: [["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 3, red_notes]],
+                3: [["green", 17, 8, 1, green_notes_a],["green", 17, 8, 1, green_notes_a],["green", 17, 8, 1, green_notes_a],["green", 17, 8, 1, green_notes_a],["green", 17, 8, 3, green_notes_a]],
+                4: [["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 3, teal_notes]],
+                5: [['orange', 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 3, orange_notes]],
+                6: [['black', 13, 8, 1, black_notes],['black', 13, 8, 1, black_notes],['black', 13, 8, 1, black_notes],['black', 13, 8, 1, black_notes],['black', 13, 8, 3, black_notes]],
+                7: [['yellow', 17, 8, 1, yellow_notes],['yellow', 17, 8, 1, yellow_notes],['yellow', 17, 8, 1, yellow_notes],['yellow', 17, 8, 1, yellow_notes],['yellow', 17, 8, 4, yellow_notes]],
+                8: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 8, night_and_weekend_notes]],
+                9: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 4, night_and_weekend_notes]],
+                10: [["purple", 15, 8, 1, purple_notes],["blue", 13, 12, 1, night_and_weekend_notes]]
+        }
+
+        tse2_b = { # has tuesday off rotation
+                1: [["blue", 13, 12, 1, night_and_weekend_notes],["purple", 15, 8, 2, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 3, purple_notes]],
+                2: [["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 3, red_notes]],
+                3: [["green", 17, 8, 1, green_notes_b],["green", 17, 8, 1, green_notes_b],["green", 17, 8, 1, green_notes_b],["green", 17, 8, 1, green_notes_b],["green", 17, 8, 3, green_notes_b]],
+                4: [["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 3, teal_notes]],
+                5: [['orange', 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 3, orange_notes]],
+                6: [['black', 13, 8, 1, black_notes],['black', 13, 8, 1, black_notes],['black', 13, 8, 1, black_notes],['black', 13, 8, 1, black_notes],['black', 13, 8, 3, black_notes]],
+                7: [['yellow', 17, 8, 1, yellow_notes],['yellow', 17, 8, 1, yellow_notes],['yellow', 17, 8, 1, yellow_notes],['yellow', 17, 8, 1, yellow_notes],['yellow', 17, 8, 4, yellow_notes]],
+                8: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 8, night_and_weekend_notes]],
+                9: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 4, night_and_weekend_notes]],
+                10: [["purple", 15, 8, 1, purple_notes],["blue", 13, 12, 1, night_and_weekend_notes]]
+        }
+
+        old_tse2_a = { # has monday off rotation
+                1: [["green", 14, 8, 1, green_notes_a],["green", 14, 8, 1, green_notes_a],["green", 14, 8, 1, green_notes_a],["green", 14, 8, 1, green_notes_a],["green", 14, 8, 3, green_notes_a]],
                 2: [['orange', 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 4, orange_notes]],
                 3: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 8, night_and_weekend_notes]],
                 4: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 4, night_and_weekend_notes]],
                 5: [["purple", 15, 8, 1, purple_notes],["blue", 13, 12, 1, night_and_weekend_notes]],
                 6: [["blue", 13, 12, 2, night_and_weekend_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 3, purple_notes]],
                 7: [["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 3, red_notes]],
-                8: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]],
+                8: [["green", 14, 8, 1, green_notes_a],["green", 14, 8, 1, green_notes_a],["green", 14, 8, 1, green_notes_a],["green", 14, 8, 1, green_notes_a],["green", 14, 8, 3, green_notes_a]],
                 9: [["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 3, teal_notes]],
                 10: [["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 3, purple_notes]]
         }
 
-        tse2_b = {# tuesday off rotation
-                1: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]],
+        old_tse2_b = {# tuesday off rotation
+                1: [["green", 14, 8, 1, green_notes_a],["green", 14, 8, 1, green_notes_a],["green", 14, 8, 1, green_notes_a],["green", 14, 8, 1, green_notes_a],["green", 14, 8, 3, green_notes_a]],
                 2: [['orange', 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 4, orange_notes]],
                 3: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 8, night_and_weekend_notes]],
                 4: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 4, night_and_weekend_notes]],
                 5: [["purple", 15, 8, 1, purple_notes],["blue", 13, 12, 1, night_and_weekend_notes]],
                 6: [["blue", 13, 12, 1, night_and_weekend_notes],["purple", 15, 8, 2, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 3, purple_notes]],
                 7: [["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 3, red_notes]],
-                8: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]],
+                8: [["green", 14, 8, 1, green_notes_a],["green", 14, 8, 1, green_notes_a],["green", 14, 8, 1, green_notes_a],["green", 14, 8, 1, green_notes_a],["green", 14, 8, 3, green_notes_a]],
                 9: [["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 3, teal_notes]],
                 10: [["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 3, purple_notes]]
         }
+
 
         if rotation_char == 'b':
                 return tse2_b
@@ -224,17 +254,16 @@ def get_tse2_schedule(rotation_char):
 def get_tse2_notes():
         notes = {        
                 'teal_notes' : """8am - 12pm EST - Incident Triage as scheduled in PagerDuty.
-                12-4pm - Lunch/Breaks/Assist where needed.
+                12-4pm - Investigations.
                 Open/Pending Tier 2 ticket work Zendesk.        
                 """,
                 'red_notes': '''
                 10 am-12 pm EST - Assist where needed/Breaks/Ticket work
                 12 pm-4pm EST - Incident Triage as scheduled in PagerDuty
-                4 pm-6 pm EST - Assist where needed/Breaks/Ticket work
+                4 pm-6 pm EST - Workshift
                 ''',
                 'orange_notes': '''
-                12pm - 4pm EST - Lunch/Break/Assist where needed/ Ticket work
-                4 pm - 8 pm EST - Incident Triage as scheduled in PagerDuty
+
                 ''',
                 'purple_notes': '''
                 2 hours working on SCCS requests
@@ -245,11 +274,19 @@ def get_tse2_notes():
                 * Ticket work
                 * Hourly checks on AC/EMEA boards
                 ''',
-                'green_notes': '''
-                Main priority - Ticket work Tier 2 open&Pending
-                Main Priority #2 - Supporting Tier 3 Security investigation
-                Shadow sessions/Training new hires
-                Assist where needed (e.g. SCCS, Entry)
+                'green_notes_a': '''
+                4-8p EST: Workshift.
+                ''',
+                'green_notes_b': '''
+                12-4p EST: Workshift. 
+                ''',
+                'black_notes': '''
+                8a-12p EST: Workshift.
+                12p-4p EST: Pentest Board.
+                ''',
+                'yellow_notes': '''
+                12p-4p EST: Workshift.
+                4p-8p: Triage Board
                 '''
                 }
         return notes

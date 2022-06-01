@@ -326,6 +326,22 @@ def get_all_future_shifts_json(token):
     all_shifts = response.json()['shifts']
     return all_shifts
 
+def get_open_shifts(token):
+    url_headers = get_url_and_headers('shifts?start=' + str(datetime.now()-timedelta(days=180)) + "&end=" + str(datetime.now()+ timedelta(days=180)) + '&include_onlyopen=true' + "&unpublished=true", token)
+    response = requests.request("GET", url_headers[0], headers=url_headers[1])
+    all_shifts = response.json()['shifts']
+    return all_shifts
+
+def delete_open_shifts(token, all_open_shifts=0):
+    if all_open_shifts == 0: #option to pass in dictionary of shift\=]-
+        all_shifts_json = get_open_shifts(token)
+        all_open_shifts = store_shifts_in_array(token, all_shifts_json)
+    try: 
+        for shift in all_open_shifts:
+            delete_shift(shift.shift_id, token)
+    except:
+        print('user has no shifts')
+
 def get_all_shifts_json(token):    
 # url_headers = get_url_and_headers('shifts')
     url_headers = get_url_and_headers('shifts?start=' + str(datetime(2022, 3, 1)) + "&end=" + str(datetime.now()+ timedelta(days=180)) + "&unpublished=true", token)
@@ -391,6 +407,13 @@ def store_shifts_by_hash(token, all_shifts_in):
         else:
             hashed_shifts[shift_hash] = new_shift
     return hashed_shifts
+
+def store_shifts_in_array(token, all_shifts_in):
+    array_o_shifts = []
+    for i in all_shifts_in:
+        new_shift = create_shift_from_json(i)
+        array_o_shifts.append(new_shift)
+    return array_o_shifts
 
 #creates a unique hash for each shift by multiplying the start time by user ID
 # allows for quick lookup of duplicate shifts
