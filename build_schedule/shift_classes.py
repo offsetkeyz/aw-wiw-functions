@@ -199,9 +199,9 @@ def get_tse2_schedule(rotation_char):
                 2: [["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 3, red_notes]],
                 3: [["green", 17, 8, 1, green_notes_a],["green", 17, 8, 1, green_notes_a],["green", 17, 8, 1, green_notes_a],["green", 17, 8, 1, green_notes_a],["green", 17, 8, 3, green_notes_a]],
                 4: [["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 3, teal_notes]],
-                5: [['orange', 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 3, orange_notes]],
+                5: [['orange', 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 3, orange_notes]],
                 6: [['black', 13, 8, 1, black_notes],['black', 13, 8, 1, black_notes],['black', 13, 8, 1, black_notes],['black', 13, 8, 1, black_notes],['black', 13, 8, 3, black_notes]],
-                7: [['yellow', 17, 8, 1, yellow_notes],['yellow', 17, 8, 1, yellow_notes],['yellow', 17, 8, 1, yellow_notes],['yellow', 17, 8, 1, yellow_notes],['yellow', 17, 8, 4, yellow_notes]],
+                7: [['yellow', 15, 8, 1, yellow_notes],['yellow', 15, 8, 1, yellow_notes],['yellow', 15, 8, 1, yellow_notes],['yellow', 15, 8, 1, yellow_notes],['yellow', 15, 8, 4, yellow_notes]],
                 8: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 8, night_and_weekend_notes]],
                 9: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 4, night_and_weekend_notes]],
                 10: [["purple", 15, 8, 1, purple_notes],["blue", 13, 12, 1, night_and_weekend_notes]]
@@ -212,9 +212,9 @@ def get_tse2_schedule(rotation_char):
                 2: [["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 1, red_notes],["red", 15, 8, 3, red_notes]],
                 3: [["green", 17, 8, 1, green_notes_b],["green", 17, 8, 1, green_notes_b],["green", 17, 8, 1, green_notes_b],["green", 17, 8, 1, green_notes_b],["green", 17, 8, 3, green_notes_b]],
                 4: [["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 1, teal_notes],["teal", 13, 8, 3, teal_notes]],
-                5: [['orange', 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 3, orange_notes]],
+                5: [['orange', 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 1, orange_notes],["orange", 17, 8, 3, orange_notes]],
                 6: [['black', 13, 8, 1, black_notes],['black', 13, 8, 1, black_notes],['black', 13, 8, 1, black_notes],['black', 13, 8, 1, black_notes],['black', 13, 8, 3, black_notes]],
-                7: [['yellow', 17, 8, 1, yellow_notes],['yellow', 17, 8, 1, yellow_notes],['yellow', 17, 8, 1, yellow_notes],['yellow', 17, 8, 1, yellow_notes],['yellow', 17, 8, 4, yellow_notes]],
+                7: [['yellow', 15, 8, 1, yellow_notes],['yellow', 15, 8, 1, yellow_notes],['yellow', 15, 8, 1, yellow_notes],['yellow', 15, 8, 1, yellow_notes],['yellow', 15, 8, 4, yellow_notes]],
                 8: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 8, night_and_weekend_notes]],
                 9: [["gray", 1, 12, 1, night_and_weekend_notes],["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 1, night_and_weekend_notes], ["gray", 1, 12, 4, night_and_weekend_notes]],
                 10: [["purple", 15, 8, 1, purple_notes],["blue", 13, 12, 1, night_and_weekend_notes]]
@@ -253,40 +253,65 @@ def get_tse2_schedule(rotation_char):
 
 def get_tse2_notes():
         notes = {        
-                'teal_notes' : """8am - 12pm EST - Incident Triage as scheduled in PagerDuty.
-                12-4pm - Investigations.
-                Open/Pending Tier 2 ticket work Zendesk.        
+                'teal_notes' : """8am - 12pm EST - Incident Triage as scheduled in PagerDuty. Floater supports workshift.
+
+                12-4pm - Workshift       
                 """,
+
                 'red_notes': '''
-                10 am-12 pm EST - Assist where needed/Breaks/Ticket work
-                12 pm-4pm EST - Incident Triage as scheduled in PagerDuty
+                10 am-12 pm EST - Entry/ Ticket work Tier 2 open&Pending
+
+                12 pm-4pm EST - Incident Triage as scheduled in PagerDuty. Floater supports workshift.
+
                 4 pm-6 pm EST - Workshift
                 ''',
-                'orange_notes': '''
 
+                'orange_notes': '''
+                12pm-4pm EST: Workshift
+
+                4pm-8pm EST: Incident Triage as scheduled, floater supports workshift
                 ''',
+
                 'purple_notes': '''
                 2 hours working on SCCS requests
-                Entry/ Ticket work Tier 2 open&Pending          
+
+                Entry/ Ticket work Tier 2 open&Pending    
+
+                Training      
                 ''',
+
                 'night_and_weekend_notes': '''
                 * Incident triage as scheduled with team
+
                 * Ticket work
+
                 * Hourly checks on AC/EMEA boards
+
                 ''',
+
                 'green_notes_a': '''
+                12p-4p EST: Investigation Support
+
                 4-8p EST: Workshift.
                 ''',
                 'green_notes_b': '''
                 12-4p EST: Workshift. 
+
+                4p-8p EST: Investigation Support.
                 ''',
+
                 'black_notes': '''
                 8a-12p EST: Workshift.
+
                 12p-4p EST: Pentest Board.
                 ''',
+
                 'yellow_notes': '''
+                10a-12p EST: SCCS Request
+
                 12p-4p EST: Workshift.
-                4p-8p: Triage Board
+
+                4p-6p: Tier 1 up-level ticket shadowing
                 '''
                 }
         return notes
@@ -512,7 +537,7 @@ def get_techops_schedule(rotation_char): #TODO finish this. In production.
 def get_pink(schedule_name): #TODO Finish this.
         pink_notes = 'Follow your heart <3'
 
-        pink_NA = [["pink", 14, 8, 1, pink_notes],["pink", 14, 8, 1, pink_notes],["pink", 14, 8, 1, pink_notes],["pink", 14, 8, 1, pink_notes],["pink", 14, 8, 3, pink_notes]]
+        pink_NA = [["pink", 13, 8, 1, pink_notes],["pink", 13, 8, 1, pink_notes],["pink", 13, 8, 1, pink_notes],["pink", 13, 8, 1, pink_notes],["pink", 13, 8, 3, pink_notes]]
         
 
         pink_emea = [["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 1, pink_notes],["pink", 9, 8, 3, pink_notes]]
@@ -566,6 +591,8 @@ def get_color_code(color):
         shift_color = "00b0f0"
     elif color == "pink":
         shift_color = "ff00dd"
+    elif color == "black":
+        shift_color = "000000"
 
     return shift_color
 

@@ -5,6 +5,7 @@ import json
 from lib2to3.pgen2 import token
 from logging.config import DEFAULT_LOGGING_CONFIG_PORT
 import sched
+from secrets import token_bytes
 from sqlite3 import enable_shared_cache
 from tkinter import CENTER, HORIZONTAL, VERTICAL
 from xmlrpc.client import DateTime
@@ -22,6 +23,49 @@ workbook_location = '/Users/colin.mcallister/Library/CloudStorage/OneDrive-Arcti
 workbook = load_workbook(workbook_location)
 date_columns = {}
 all_names = {}
+all_positions = {
+    'Business Analyst 1':10762839,
+    'Business Systems Manager':10762840,
+    'Co-op/ Intern':10762841,
+    'Concierge Sec Eng 3':10762842,
+    'Concierge Sec Engineer 2':10762843,
+    'Concierge Sec Engnr 2': 10762843,
+    'Concierge Security Eng 2':10762843,
+    'Concierge Sec Engnr 3':10762842,
+    'Concierge Security Eng 3':10762842,
+    'Dir, Security Services':10762845,
+    'IT Applications Admin':10762846,
+    'Mgr Concierge Services':10762847,
+    'Mgr Technical Operations':10762848,
+    'Mgr, Concierge Security':10762847,
+    'Mgr, Security Operations':10762849,
+    'Network Ops Supp Analyst':10762850,
+    'Network Sec Ops Analyst 2':10762850,
+    'Network Sec Ops Anlst 1':10762850,
+    'S2 Technical Trainer 4':10762851,
+    'Shift Lead Sec Ops':10762852,
+    'Shift Lead Security Ops':10762852,
+    'Sr Dir, Sec Ops':10762854,
+    'Sr Mgr, Security Ops':10762855,
+    'SVP, Security Services':10762856,
+    'Tech Lead Security Svcs':10762857,
+    'Triage Sec Eng 1':10762858,
+    'Triage Security Engr 1':10762858,
+    'Triage Security Eng 1':10762858,
+    'Triage Security Analyst':10762858,
+    'Triage Security Eng 2':10762859,
+    'Triage Security Engr 2':10762859,
+    'Triage Sec Eng 3':10762860,
+    'Triage Security Eng 3':10762860,
+    'Triage Security Engr 3':10762860,
+    'Triage Security Engr 4':10762861,
+    'VP, Business Applications':10762862,
+    'CAN': 10762911,
+    'USA': 10762910,
+    'DEU':10762912,
+    'DNK':10762912,
+    'GBR':10762912
+}
 
 def list_all_wiw_users(token):
     all_users = []
@@ -64,20 +108,18 @@ def build_date_row():
         workbook.save(str(workbook_location))
 
 def isoc_team_structure_update(token):
-    s2_employees = get_s2_employees()
+    s2_employees = get_iSOC_employees()
     structure_users = get_isoc_structure_users()
-    all_positions = {'Triage Sec Eng 1': 10470912, 'Triage Sec Analyst': 10470912, 'Triage Sec Eng 2': 10471919, 'Triage Sec Eng 3': 10474041, 'Network Ops Supp Analyst': 10477571, 'Manager, iSOC': 10477572, 'TSE4': 10486791, 'ISOC Intern': 10652403, 'EMEA Intern': 10652404, 'Triage Sec Eng 4': 10486791, 'Triage Sec Engineer 1' : 10470912, 'USA': 10654095, 'CAN': 10654096, 'DEU' : 10665016, 'GBR' : 10665016, 'Dir Business Apps Sr': 10477570, 'Co-op/ Intern':10652403, 'Tech Lead Security Svs':10474045, 'Shift Lead Security Oper':10660927, 'Team Lead Security Ops':10474045,'Concierge Sec Eng 2':10668570, 'Mgr Security Ops Sr.':10668568, 'Team Lead Tech Ops':10477572,'Mgr Security Operations':10477572, 'Mgr Concierge Services':10477572,'Mgr, Security Operations':10477572, 'Triage Business Analyst':10668571,'Concierge Sec Eng 3':10665015,'Business Sys Mgr':10477572,'Dir Security Oper Sr':10477570,'Dir Security Svs':10477570}
 
-    for user in s2_employees:
-        if user['position'] in all_positions.keys:
-            if user['email'] not in structure_users.keys:
-                structure_users[user['email']] = 0 #TODO add user to list.
+    # highlight if fields are missing
+    # if team member is TSE1 or TSA, highlight if den is missing.
 
 
 def get_isoc_structure_users():
-    weekly_headcount = load_workbook('/Users/colin.mcallister/Downloads/iSOC Team Structure.xlsx', data_only=True)
-    S2_Roster = weekly_headcount['Raw User Data']
+    iSOC_Team_Structure = load_workbook('/Users/colin.mcallister/Library/CloudStorage/OneDrive-ArcticWolfNetworksInc/Documents/iSOC Team Structure - Colin.xlsx', data_only=True)
+    S2_Roster = iSOC_Team_Structure['Raw User Data']
     all_s2_employees = {}
+    
     for row in range(2, S2_Roster.max_row):
         current_email = str(S2_Roster.cell(row=row, column=4).value).strip().lower()
         job_role = S2_Roster.cell(row=row, column=3).value
@@ -111,17 +153,35 @@ def get_s2_employees():
         active_status = S2_Roster.cell(row=row, column=22).value
         region = S2_Roster.cell(row=row, column=10).value
         employee_id = S2_Roster.cell(row=row, column=1).value
-        all_s2_employees[current_email] = {'id' : employee_id, 'position' : position, 'status' :active_status, 'region' : region, 'email' : current_email}
+        manager = S2_Roster.cell(row=row, column=12).value
+        all_s2_employees[current_email] = {'id' : employee_id, 'position' : position, 'status' :active_status, 'region' : region, 'email' : current_email, 'manager': manager}
     return all_s2_employees
 
-def update_wiw_user(token,user_details): #10656558 is "unknown"
-    all_positions = {'Triage Sec Eng 1': 10470912, 'Triage Sec Analyst': 10470912, 'Triage Sec Eng 2': 10471919, 'Triage Sec Eng 3': 10474041, 'Network Ops Supp Analyst': 10477571, 'Manager, iSOC': 10477572, 'TSE4': 10486791, 'ISOC Intern': 10652403, 'EMEA Intern': 10652404, 'Triage Sec Eng 4': 10486791, 'Triage Sec Engineer 1' : 10470912, 'USA': 10654095, 'CAN': 10654096, 'DEU' : 10665016, 'GBR' : 10665016, 'Dir Business Apps Sr': 10477570, 'Co-op/ Intern':10652403, 'Tech Lead Security Svs':10474045, 'Shift Lead Security Oper':10660927, 'Team Lead Security Ops':10474045,'Concierge Sec Eng 2':10668570, 'Mgr Security Ops Sr.':10668568, 'Team Lead Tech Ops':10477572,'Mgr Security Operations':10477572, 'Mgr Concierge Services':10477572,'Mgr, Security Operations':10477572, 'Triage Business Analyst':10668571,'Concierge Sec Eng 3':10665015,'Business Sys Mgr':10477572,'Dir Security Oper Sr':10477570,'Dir Security Svs':10477570}
-    
+def get_iSOC_employees():
+    weekly_headcount = load_workbook('/Users/colin.mcallister/Downloads/Weekly Headcount Report - S2.xlsx', data_only=True)
+    S2_Roster = weekly_headcount['S2 Roster']
+    all_headcount_positions = {'Triage Sec Analyst':'TSA', 'Triage Security Eng 1':'TSE1', 'Triage Security Eng 2':'TSE2', 'Triage Security Eng 3':'TSE3', 'Triage Security Engr 1':'TSE1', 'Triage Security Engr 2':'TSE2', 'Triage Security Engr 3': 'TSE3', 'Triage Sec Analyst':'TSA', 'Triage Sec Eng 1':'TSE1', 'Triage Sec Eng 2':'TSE2', 'Triage Sec Eng 3':'TSE3', 'Triage Sec Eng 4':'TSE4', 'Triage Sec Engineer 1':'TSE1', 'Triage Security Analyst':'TSA'}
+    position_acronyms = ['TSA','TSE1','TSE2','TSE3','TSE4','Intern']
+    # if INTERN, don't check. Not in weekly headcount
+    # highlight if position is different, or if they aren't in weekly headcount --DON'T DELETE--
+    all_s2_employees = {}
+    for row in range(2, S2_Roster.max_row):
+        current_email = str(S2_Roster.cell(row=row, column=19).value).strip().lower()
+        position = S2_Roster.cell(row=row, column=5).value
+        active_status = S2_Roster.cell(row=row, column=22).value
+        region = S2_Roster.cell(row=row, column=10).value
+        employee_id = S2_Roster.cell(row=row, column=1).value
+        manager = S2_Roster.cell(row=row, column=12).value
+        all_s2_employees[current_email] = {'id' : employee_id, 'position' : position, 'status' :active_status, 'region' : region, 'email' : current_email, 'manager': manager}
+    return all_s2_employees
+
+def update_wiw_user(token,user_details): #10656558 is "unknown"    
     url_headers = bs_methods.get_url_and_headers('users/' + str(bs_methods.get_user_id_from_email(token, user_details['email'])),token)
     user_positions = []
     if user_details['position'] not in all_positions:
         user_positions.append(10656558)
-        print(user_details['position'])
+        print(user_details['position'] + ", " + user_details['email'])
+        all_positions[user_details['position']] = 10656558
     else: 
         user_positions.append(all_positions[user_details['position']])
 
@@ -249,12 +309,13 @@ def clear_future_columns(start_date:datetime):
     get_date_rows()
 
 def main():
+    token = bs_methods.authenticate_WiW_API()
+    # isoc_team_structure_update(token)
     clear_future_columns(datetime.now()-timedelta(days=21))
     build_date_row()
     get_date_rows()
-    get_all_names()
-    token = bs_methods.authenticate_WiW_API()
-    # update_users(token)
+    get_all_names()    
+    update_users(token)
     all_to_requests = get_time_off_requests(token)
     all_shifts_json = bs_methods.get_all_shifts_json(token)
     all_shifts = bs_methods.store_shifts_by_user_id(all_shifts_json) #returns dict with user_id as key

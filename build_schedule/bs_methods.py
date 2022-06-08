@@ -164,7 +164,7 @@ def get_team_id(team_number):
     except:
         print("Team number not INT")
     teams = {
-        1: 4781862,2: 4781869,3: 4781872,4: 4781873,5: 4781874,6: 4781875,7: 4781876,8: 4781877,9: 4781878,10: 4781873
+        1: 4781862,2: 4781869,3: 4781872,4: 4781873,5: 4781874,6: 4781875,7: 4781876,8: 4781877,9: 4781878,10: 781879
      }
     try:
          return teams[n]
@@ -177,7 +177,7 @@ def get_team_number(site_id):
     except:
         print("Team number not INT")
     teams = {
-        4781862:1 ,4781869:2,4781872:3,4781879:4,4781874:5,4781875:6,4781876:7,4781877:8,4781878:9,4781873:10
+        4781862:1 ,4781869:2,4781872:3,4781873:4,4781874:5,4781875:6,4781876:7,4781877:8,4781878:9,4781879:10
      }
     try:
          return teams[n]
@@ -186,7 +186,7 @@ def get_team_number(site_id):
 
 # assigns a position to each shift based on the schedule
 def get_position(schedule_name):
-    all_positions = {'tse1': 10470912, 'tse1': 10470912, 'tse2': 10471919, 'tse3': 10474041, 'techops': 10477571}
+    all_positions = {'tse1': 10762858, 'tse2': 10762859, 'tse3': 10762860, 'techops': 10762850}
     try:
         return all_positions[schedule_name]
     except:
@@ -278,6 +278,25 @@ def get_time_off_requests(token):
     all_requests = response.json()['requests']
     return all_requests
 
+def get_all_positions(token):
+    url_headers = get_url_and_headers('positions', token)
+    response = requests.request("GET", url_headers[0], headers=url_headers[1])
+    all_requests = response.json()['positions']
+    all_positions = ''
+    for i in all_requests:
+        all_positions = all_positions + '\n' + str(i['name']) + ': ' + str(i['id'])
+
+    return all_positions
+
+def get_all_sites(token):
+    url_headers = get_url_and_headers('sites', token)
+    response = requests.request("GET", url_headers[0], headers=url_headers[1])
+    all_sites = response.json()['sites']
+    all_positions = ''
+    for i in all_sites:
+        all_positions = all_positions + '\n' + str(i['name']) + ': ' + str(i['id'])
+
+    return all_positions
 #######################################################################################################################################################
 ###################################################              SHIFTS            ####################################################################
 #######################################################################################################################################################
@@ -435,10 +454,10 @@ def shift_start_time(token):
     all_shifts = store_shifts_by_hash(token, all_shifts_json).values()
     for shift in all_shifts:
         updated_shift = shift_classes.shift(shift.shift_id, shift.account_id, shift.user_id, shift.location_id, shift.position_id, shift.site_id, shift.start_time, shift.end_time, shift.published, shift.acknowledged, shift.notes, shift.color, shift.is_open)
-
-        if (shift.color.lower() in ['54a4cc','00b0f0','E7F2F8'.lower()]) and (shift.location_id == 5134192): #light blue
+        # CHANGE THE NEXT LINE
+        if (shift.color in ['FFC000']) and (shift.location_id == 5132410) and shift.start_time > datetime(2022, 6, 1, 0, 0, tzinfo=tzutc()): 
             updated_shift.start_time = updated_shift.start_time.replace(hour=17+is_DST(updated_shift.start_time, 0), tzinfo=tzutc())
-            shift.end_time = shift.end_time.replace(hour=1+is_DST(updated_shift.end_time, 0), tzinfo=tzutc())
+            # shift.end_time = shift.end_time.replace(hour=1+is_DST(updated_shift.end_time, 0), tzinfo=tzutc())
 
 
         if shift.start_time != updated_shift.start_time:
