@@ -3,6 +3,7 @@ __author__ = "Colin McAllister"
 from tokenize import String
 from tracemalloc import start
 from turtle import update
+from webbrowser import get
 import shift_classes
 import requests
 import json
@@ -108,6 +109,45 @@ def build_pinks(token, user_email, start_date: str, number_of_weeks : int, sched
             current_date = current_date + timedelta(days=j[3])
         i+=1
 
+def build_reds(token, user_email, start_date: str, number_of_weeks : int, schedule_name):
+    location_id = get_location_id(schedule_name)
+    start_date = get_start_date(start_date)
+    position = get_position(schedule_name)
+    delete_all_shifts_for_user(token, start_date, get_user_id_from_email(token, user_email))
+    i=1
+    current_date = start_date
+    notes = 'check https://arcticwolf.atlassian.net/l/c/2wNs1gzp for responsibilities'
+    try:
+        number_of_weeks = int(number_of_weeks)
+    except:
+        return('wrong CSV format for number of weeks')
+    while i <= number_of_weeks:
+        current_schedule = [["red", 13, 8, 1, notes],["red", 13, 8, 1, notes],["red", 13, 8, 1, notes],["red", 13, 8, 1, notes],["red", 13, 8, 3, notes]]
+        for j in current_schedule:
+            create_shift(token, user_email, current_date.replace(hour=j[1], tzinfo=tzutc()), j[2], j[0], j[4], location_id, '0', position)
+            current_date = current_date + timedelta(days=j[3])
+        i+=1
+
+def build_oranges(token, user_email, start_date: str, number_of_weeks : int, schedule_name):
+    location_id = get_location_id(schedule_name)
+    start_date = get_start_date(start_date)
+    position = get_position(schedule_name)
+    delete_all_shifts_for_user(token, start_date, get_user_id_from_email(token, user_email))
+    i=1
+    current_date = start_date
+    notes = 'check https://arcticwolf.atlassian.net/l/c/2wNs1gzp for responsibilities'
+    try:
+        number_of_weeks = int(number_of_weeks)
+    except:
+        return('wrong CSV format for number of weeks')
+    while i <= number_of_weeks:
+        current_schedule = [["orange", 15, 8, 1, notes],["orange", 15, 8, 1, notes],["orange", 15, 8, 1, notes],["orange", 15, 8, 1, notes],["orange", 15, 8, 3, notes]]
+        for j in current_schedule:
+            create_shift(token, user_email, current_date.replace(hour=j[1], tzinfo=tzutc()), j[2], j[0], j[4], location_id, '0', position)
+            current_date = current_date + timedelta(days=j[3])
+        i+=1
+
+
 def create_shift(token, user_email, start_time, length, color, notes, schedule_id, team_number, position):
     user_id = get_user_id_from_email(token, user_email)
     
@@ -164,7 +204,7 @@ def get_team_id(team_number):
     except:
         print("Team number not INT")
     teams = {
-        1: 4781862,2: 4781869,3: 4781872,4: 4781873,5: 4781874,6: 4781875,7: 4781876,8: 4781877,9: 4781878,10: 781879
+        1: 4781862,2: 4781869,3: 4781872,4: 4781873,5: 4781874,6: 4781875,7: 4781876,8: 4781877,9: 4781878,10: 4781879
      }
     try:
          return teams[n]
@@ -340,7 +380,7 @@ def copy_users_schedule(user_id_to_copy, new_user_email, start_date, token):
 #also deletes duplicate shifts
 def get_all_future_shifts_json(token):    
 # url_headers = get_url_and_headers('shifts')
-    url_headers = get_url_and_headers('shifts?start=' + str(datetime.now()) + "&end=" + str(datetime.now()+ timedelta(days=180)) + "&unpublished=true", token)
+    url_headers = get_url_and_headers('shifts?start=' + str(datetime.now()) + "&end=" + str(datetime.now()+ timedelta(days=360)) + "&unpublished=true", token)
     response = requests.request("GET", url_headers[0], headers=url_headers[1])
     all_shifts = response.json()['shifts']
     return all_shifts
@@ -363,7 +403,7 @@ def delete_open_shifts(token, all_open_shifts=0):
 
 def get_all_shifts_json(token):    
 # url_headers = get_url_and_headers('shifts')
-    url_headers = get_url_and_headers('shifts?start=' + str(datetime(2022, 3, 1)) + "&end=" + str(datetime.now()+ timedelta(days=180)) + "&unpublished=true", token)
+    url_headers = get_url_and_headers('shifts?start=' + str(datetime(2022, 3, 1)) + "&end=" + str(datetime.now()+ timedelta(days=360)) + "&unpublished=true", token)
     response = requests.request("GET", url_headers[0], headers=url_headers[1])
     all_shifts = response.json()['shifts']
     return all_shifts
@@ -449,18 +489,18 @@ def create_shift_from_json(i):
                                 int(i['site_id']), start_time, end_time, bool(i['published']), bool(i['acknowledged']), i['notes'], i['color'], bool(i['is_open']))
 
 # TODO In Progress Don't use
-def shift_start_time(token):
+def updated_shift_parameters(token):
     all_shifts_json = get_all_shifts_json(token)
     all_shifts = store_shifts_by_hash(token, all_shifts_json).values()
     for shift in all_shifts:
         updated_shift = shift_classes.shift(shift.shift_id, shift.account_id, shift.user_id, shift.location_id, shift.position_id, shift.site_id, shift.start_time, shift.end_time, shift.published, shift.acknowledged, shift.notes, shift.color, shift.is_open)
         # CHANGE THE NEXT LINE
-        if (shift.color in ['FFC000']) and (shift.location_id == 5132410) and shift.start_time > datetime(2022, 6, 1, 0, 0, tzinfo=tzutc()): 
-            updated_shift.start_time = updated_shift.start_time.replace(hour=17+is_DST(updated_shift.start_time, 0), tzinfo=tzutc())
-            # shift.end_time = shift.end_time.replace(hour=1+is_DST(updated_shift.end_time, 0), tzinfo=tzutc())
+        user_ids = [get_user_id_from_email(token, 'nate.reagles@arcticwolf.com'), get_user_id_from_email(token, 'rinky.mishra@arcticwolf.com'), get_user_id_from_email(token, 'betsy.thomas@arcticwolf.com'), get_user_id_from_email(token, 'rajat.bakshi@arcticwolf.com'), get_user_id_from_email(token, 'mary.yang@arcticwolf.com'), get_user_id_from_email(token, 'brandon.young@arcticwolf.com'), get_user_id_from_email(token, 'andres.escobar@arcticwolf.com')]
+        if (shift.user_id in user_ids) and (shift.location_id == 5132409) and shift.start_time > datetime(2022, 6, 1, 0, 0, tzinfo=tzutc()): 
+            updated_shift.site_id = 4781879
 
 
-        if shift.start_time != updated_shift.start_time:
+        if shift.site_id != updated_shift.site_id:
             update_shift(token, updated_shift)
             
  # Takes in the updated shift information and updates the shift ID in WiW           
