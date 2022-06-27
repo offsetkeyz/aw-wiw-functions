@@ -4,6 +4,7 @@ from distutils.command import build
 import json
 from lib2to3.pgen2 import token
 from logging.config import DEFAULT_LOGGING_CONFIG_PORT
+import re
 import sched
 from secrets import token_bytes
 from sqlite3 import enable_shared_cache
@@ -20,6 +21,8 @@ from openpyxl.comments import Comment
 import pytz
 
 workbook_location = '/Users/colin.mcallister/Library/CloudStorage/OneDrive-ArcticWolfNetworksInc/Documents/triage_schedule_from_wiw.xlsx'
+iSOC_Team_Structure = load_workbook('/Users/colin.mcallister/Library/CloudStorage/OneDrive-ArcticWolfNetworksInc/Documents/iSOC Team Structure - Colin.xlsx', data_only=True)
+weekly_headcount = load_workbook('/Users/colin.mcallister/Downloads/Weekly Headcount Report - S2.xlsx', data_only=True)
 workbook = load_workbook(workbook_location)
 date_columns = {}
 all_names = {}
@@ -46,6 +49,7 @@ all_positions = {
     'Shift Lead Sec Ops':10762852,
     'Shift Lead Security Ops':10762852,
     'Sr Dir, Sec Ops':10762854,
+    'Sr Dir Security Ops':10762854,
     'Sr Mgr, Security Ops':10762855,
     'SVP, Security Services':10762856,
     'Tech Lead Security Svcs':10762857,
@@ -54,11 +58,13 @@ all_positions = {
     'Triage Security Eng 1':10762858,
     'Triage Security Analyst':10762858,
     'Triage Security Eng 2':10762859,
+    'Triage Sec Eng 2':10762859,
     'Triage Security Engr 2':10762859,
     'Triage Sec Eng 3':10762860,
     'Triage Security Eng 3':10762860,
     'Triage Security Engr 3':10762860,
     'Triage Security Engr 4':10762861,
+    'Triage Sec Eng 4':10762861,
     'VP, Business Applications':10762862,
     'CAN': 10762911,
     'USA': 10762910,
@@ -107,31 +113,67 @@ def build_date_row():
             start_date = start_date + timedelta(days=1)
         workbook.save(str(workbook_location))
 
-def isoc_team_structure_update(token):
+def isoc_team_structure_update():
+    red_border = Border(
+        left=Side(border_style='thick', color='FF0005'),
+        right=Side(border_style='thick', color='FF0005'),
+        top=Side(border_style='thick', color='FF0005'),
+        bottom=Side(border_style='thick', color='FF0005')
+        )
     s2_employees = get_iSOC_employees()
-    structure_users = get_isoc_structure_users()
+    all_known_emails = {}
+    sheet = iSOC_Team_Structure['Raw User Data']
+    for cell in sheet['D']:
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        if(re.fullmatch(regex, str(cell.value))):
+            all_known_emails[cell.value] = cell.row
+    for i in s2_employees:
+        if i not in all_known_emails:
+            row_ = sheet.max_row+1
+            sheet.cell(row=row_, column=1).border = red_border
+            sheet.cell(row=row_, column=2).value = s2_employees[i]['full_name']
+            sheet.cell(row=row_, column=3).value = s2_employees[i]['position']
+            sheet.cell(row=row_, column=4).value = s2_employees[i]['email']
+            sheet.cell(row=row_, column=5).value = s2_employees[i]['manager']
+            if s2_employees[i]['status'] == 'Active':
+                active_status = 1
+                sheet.cell(row=row_, column=7).value = 1
+            else:
+                sheet.cell(row=row_, column=7).value = 0
+            if s2_employees[i]['position'] in ['TSA', 'TSE1']:
+                sheet.cell(row=row_, column=6).border = red_border
+                
+    iSOC_Team_Structure.save('/Users/colin.mcallister/Library/CloudStorage/OneDrive-ArcticWolfNetworksInc/Documents/iSOC Team Structure - Colin.xlsx')        
+
+    for cell in sheet['D']:
+        if cell.value not in s2_employees:
+            if sheet.cell(row=cell.row, column=7).value == '1':
+                sheet.cell(row = cell.row, column = 7).border = red_border
+
+    iSOC_Team_Structure.save('/Users/colin.mcallister/Library/CloudStorage/OneDrive-ArcticWolfNetworksInc/Documents/iSOC Team Structure - Colin.xlsx')        
+
 
     # highlight if fields are missing
     # if team member is TSE1 or TSA, highlight if den is missing.
 
 
-def get_isoc_structure_users():
-    iSOC_Team_Structure = load_workbook('/Users/colin.mcallister/Library/CloudStorage/OneDrive-ArcticWolfNetworksInc/Documents/iSOC Team Structure - Colin.xlsx', data_only=True)
-    S2_Roster = iSOC_Team_Structure['Raw User Data']
-    all_s2_employees = {}
+# def get_isoc_structure_users():
+#     S2_Roster = iSOC_Team_Structure['Raw User Data']
+#     all_s2_employees = {}
     
-    for row in range(2, S2_Roster.max_row):
-        current_email = str(S2_Roster.cell(row=row, column=4).value).strip().lower()
-        job_role = S2_Roster.cell(row=row, column=3).value
-        active_status = S2_Roster.cell(row=row, column=6).value
-        zendesk_id = S2_Roster.cell(row=row, column=1).value
-        full_name = ''
-        enable = True
-        manager = ''
-        all_s2_employees[current_email] = {'id' : zendesk_id, 'position' : job_role, 'status' :active_status, 'email' : current_email}
+#     for row in range(2, S2_Roster.max_row):
+#         current_email = str(S2_Roster.cell(row=row, column=4).value).strip().lower()
+#         job_role = S2_Roster.cell(row=row, column=3).value
+#         active_status = S2_Roster.cell(row=row, column=6).value
 
-        #TODO Get Zendesk ID spreadsheet
-    return all_s2_employees
+#         zendesk_id = S2_Roster.cell(row=row, column=1).value
+#         full_name = S2_Roster.cell(row=row, column=2).value
+#         manager = S2_Roster.cell(row=row, column=5).value
+#         den = S2_Roster.cell(row=row, column=6).value
+#         all_s2_employees[current_email] = {'id': zendesk_id, 'full_name':full_name, 'position' : job_role,'email' : current_email, 'manager':manager,  'den':den , 'status' :active_status, }
+
+#         #TODO Get Zendesk ID spreadsheet
+#     return all_s2_employees
 
 def update_users(token):
     s2_employees = get_s2_employees()
@@ -144,36 +186,51 @@ def update_users(token):
         update_wiw_user(token,user_details)
 
 def get_s2_employees():
-    weekly_headcount = load_workbook('/Users/colin.mcallister/Downloads/Weekly Headcount Report - S2.xlsx', data_only=True)
+    
     S2_Roster = weekly_headcount['Current Employee List']
     all_s2_employees = {}
-    for row in range(2, S2_Roster.max_row):
+    for row in range(6, S2_Roster.max_row):
         current_email = str(S2_Roster.cell(row=row, column=19).value).strip().lower()
-        position = S2_Roster.cell(row=row, column=5).value
+        if S2_Roster.cell(row=row, column=23).value == 'Intern' and S2_Roster.cell(row=row, column=24).value == 'ISOC':
+            position = 'Co-op/ Intern'
+        elif S2_Roster.cell(row=row, column=5).value == 'Co-op/ Intern' and not (S2_Roster.cell(row=row, column=23).value == 'Intern' and S2_Roster.cell(row=row, column=24).value == 'ISOC'):
+             continue
+        else:
+            position = S2_Roster.cell(row=row, column=5).value
         active_status = S2_Roster.cell(row=row, column=22).value
         region = S2_Roster.cell(row=row, column=10).value
         employee_id = S2_Roster.cell(row=row, column=1).value
-        manager = S2_Roster.cell(row=row, column=12).value
-        all_s2_employees[current_email] = {'id' : employee_id, 'position' : position, 'status' :active_status, 'region' : region, 'email' : current_email, 'manager': manager}
+        manager = S2_Roster.cell(row=row, column=12).value.split(',')
+        manager = str(manager[1] + ' ' + manager[0]).strip()
+        full_name = S2_Roster.cell(row=row, column=2).value.split(',')
+        full_name = str(full_name[1] + ' ' + full_name[0]).strip()
+        all_s2_employees[current_email] = {'id' : employee_id, 'position' : position, 'full_name': full_name, 'status' :active_status, 'region' : region, 'email' : current_email, 'manager': manager}
     return all_s2_employees
 
 def get_iSOC_employees():
-    weekly_headcount = load_workbook('/Users/colin.mcallister/Downloads/Weekly Headcount Report - S2.xlsx', data_only=True)
-    S2_Roster = weekly_headcount['S2 Roster']
-    all_headcount_positions = {'Triage Sec Analyst':'TSA', 'Triage Security Eng 1':'TSE1', 'Triage Security Eng 2':'TSE2', 'Triage Security Eng 3':'TSE3', 'Triage Security Engr 1':'TSE1', 'Triage Security Engr 2':'TSE2', 'Triage Security Engr 3': 'TSE3', 'Triage Sec Analyst':'TSA', 'Triage Sec Eng 1':'TSE1', 'Triage Sec Eng 2':'TSE2', 'Triage Sec Eng 3':'TSE3', 'Triage Sec Eng 4':'TSE4', 'Triage Sec Engineer 1':'TSE1', 'Triage Security Analyst':'TSA'}
-    position_acronyms = ['TSA','TSE1','TSE2','TSE3','TSE4','Intern']
-    # if INTERN, don't check. Not in weekly headcount
+    all_employees = get_s2_employees()
+    all_headcount_positions = {
+        'Triage Sec Eng 1':'TSE1',
+        'Triage Security Engr 1':'TSE1',
+        'Triage Security Eng 1':'TSE1',
+        'Triage Security Analyst':'TSA',
+        'Triage Security Eng 2':'TSE2',
+        'Triage Sec Eng 2':'TSE2',
+        'Triage Security Engr 2':'TSE2',
+        'Triage Sec Eng 3':'TSE3',
+        'Triage Security Eng 3':'TSE3',
+        'Triage Security Engr 3':'TSE3',
+        'Triage Security Engr 4':'TSE4',
+        'Triage Sec Eng 4':'TSE4',
+        'Co-op/ Intern':'Intern'
+    }
     # highlight if position is different, or if they aren't in weekly headcount --DON'T DELETE--
-    all_s2_employees = {}
-    for row in range(2, S2_Roster.max_row):
-        current_email = str(S2_Roster.cell(row=row, column=19).value).strip().lower()
-        position = S2_Roster.cell(row=row, column=5).value
-        active_status = S2_Roster.cell(row=row, column=22).value
-        region = S2_Roster.cell(row=row, column=10).value
-        employee_id = S2_Roster.cell(row=row, column=1).value
-        manager = S2_Roster.cell(row=row, column=12).value
-        all_s2_employees[current_email] = {'id' : employee_id, 'position' : position, 'status' :active_status, 'region' : region, 'email' : current_email, 'manager': manager}
-    return all_s2_employees
+    isoc_employees = {}
+    for i in all_employees:
+        if all_employees[i]['position'] in all_headcount_positions:
+            all_employees[i]['position'] = all_headcount_positions[all_employees[i]['position']]
+            isoc_employees[i] = all_employees[i]
+    return isoc_employees
 
 def update_wiw_user(token,user_details): #10656558 is "unknown"    
     url_headers = bs_methods.get_url_and_headers('users/' + str(bs_methods.get_user_id_from_email(token, user_details['email'])),token)
@@ -232,8 +289,6 @@ def check_sheet_for_name(name_in, schedule_name):
         all_names[schedule_name][name_in] = current_row
 
 def populate_user_in_excel_sheet(user_shifts, schedule_name, user):
-        if user.full_name == 'Silvia Lira-Perez':
-            print("asdf")
         team_number = False
         for shift in user_shifts:
            try:
@@ -309,8 +364,8 @@ def clear_future_columns(start_date:datetime):
     get_date_rows()
 
 def main():
+    isoc_team_structure_update()
     token = bs_methods.authenticate_WiW_API()
-    # isoc_team_structure_update(token)
     clear_future_columns(datetime.now()-timedelta(days=21))
     build_date_row()
     get_date_rows()

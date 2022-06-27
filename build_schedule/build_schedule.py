@@ -7,7 +7,7 @@ import bs_methods
 import excel_methods
 import pytz
 
-def build_schedule(token, file_name='tse2'):
+def build_schedule(token, file_name='tse1'):
     # replace the contents of the parenthesis with the file location
     for x in bs_methods.get_employee_starts_from_csv('/Users/colin.mcallister/Documents/WiW API/aw-wiw-functions/build_schedule/csvs/' + str(file_name) + '.csv'):
         if file_name == "pink":
@@ -28,27 +28,26 @@ def main():
 
     # bs_methods.delete_open_shifts(token)
 
-    # bs_methods.copy_users_schedule(bs_methods.get_user_id_from_email(token,'toni.guevara@arcticwolf.com'), 'brianda.macedo@arcticwolf.com', datetime.datetime(2022,6,16).astimezone(pytz.timezone('UTC')), token)
+    bs_methods.copy_users_schedule(bs_methods.get_user_id_from_email(token,'tasneem.ansari@arcticwolf.com'), 'navjot.navjot@arcticwolf.com', datetime.datetime(2022,6,26).astimezone(pytz.timezone('UTC')), token)
 
-    # bs_methods.shift_start_time(token)
+    # bs_methods.updated_shift_parameters(token)
 
-    # build_schedule(token, 'tse1')
+    # build_schedule(token, 'techops')
 
     # bs_methods.get_all_future_shifts(token)
 
     # excel_methods.list_all_wiw_users(token)
 
-    # bulk_delete_all_shifts(token, 'tse2')
-
-    # bs_methods.update_shift_notes(token, 5132410)
+    # bulk_delete_all_shifts(token, 'tse1')
 
     # bs_methods.build_schedule(token,'tse2','keith.perlman@arcticwolf.com','17 Jun 2022','10a','2','6')
 
-    # bs_methods.build_pinks(token, 'kevin.grams@arcticwolf.com', '4 Sep 2022', 10, 'tse1')
+    # bs_methods.build_oranges(token, 'sam.durston@arcticwolf.com', '18 Jul 2022', 25, 'techops')
+    # bs_methods.build_reds(token, 'premal.patel@arcticwolf.com', '18 Jul 2022', 25, 'techops')
 
     # bs_methods.delete_all_shifts_for_user(token, datetime.datetime(2022,6,17).astimezone(pytz.timezone('UTC')),bs_methods.get_user_id_from_email(token, 'kevin.grams@arcticwolf.com'))
 
-    print(bs_methods.get_all_sites(token))
+    # print(bs_methods.get_all_sites(token))
 
     end_time = time.perf_counter()
     print('Time: ' + str(end_time - start_time))

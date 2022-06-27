@@ -65,6 +65,10 @@ class shift:
         length_in_seconds = end_time - start_time
         self.length = length_in_seconds.seconds / 3600
 
+class isoc_user:
+        def __init__(self) -> None:
+              pass
+
 class user:
         first_name = ''
         last_name = ''
@@ -468,13 +472,27 @@ def get_emea_t1_schedule(rotation_char):
         return emea_a
 
 def get_techops_schedule(rotation_char): #TODO finish this. In production.
-        teal_notes = ''
-        green_notes = ''
-        red_notes = ''
-        gray_notes = ''
-        orange_notes = ''
+        teal_notes = 'check https://arcticwolf.atlassian.net/l/c/2wNs1gzp for responsibilities'
+        green_notes = 'check https://arcticwolf.atlassian.net/l/c/2wNs1gzp for responsibilities'
+        red_notes = 'check https://arcticwolf.atlassian.net/l/c/2wNs1gzp for responsibilities'
+        gray_notes = 'check https://arcticwolf.atlassian.net/l/c/2wNs1gzp for responsibilities'
+        orange_notes = 'check https://arcticwolf.atlassian.net/l/c/2wNs1gzp for responsibilities'
 
         techops_a = {
+            1: [["teal", 17, 8, 1, teal_notes],["teal", 17, 8, 1, teal_notes], 
+                    ["teal", 17, 8, 1, teal_notes], ["teal", 17, 8, 1, teal_notes], 
+                    ["teal", 17, 8, 4, teal_notes]],
+            2: [["gray", 1, 12, 1, gray_notes],["gray", 1, 12, 1, gray_notes], 
+                    ["gray", 1, 12, 8, gray_notes]],
+            3: [["gray", 1, 12, 1, gray_notes],["gray", 1, 12, 1, gray_notes], 
+                    ["gray", 1, 12, 1, gray_notes], ["gray", 1, 12, 4, gray_notes]],
+            4: [["orange", 15, 8, 1, orange_notes],["blue", 13, 12, 1, orange_notes], 
+                    ],
+            5: [["blue", 13, 12, 2, orange_notes], ["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 1, orange_notes], 
+                    ["orange", 15, 8, 1, orange_notes], ["orange", 15, 8, 3, orange_notes]]
+        }
+
+        old_techops_a = {
             1: [["teal", 17, 8, 1, teal_notes],["teal", 17, 8, 1, teal_notes], 
                     ["teal", 17, 8, 1, teal_notes], ["teal", 17, 8, 1, teal_notes], 
                     ["teal", 17, 8, 3, teal_notes]],
@@ -502,7 +520,7 @@ def get_techops_schedule(rotation_char): #TODO finish this. In production.
                     ["orange", 15, 8, 1, orange_notes], ["orange", 15, 8, 1, orange_notes],["orange", 15, 8, 3, orange_notes]]
         }
 
-        techops_b = {
+        old_techops_b = {
             1: [["teal", 17, 8, 1, teal_notes],["teal", 17, 8, 1, teal_notes], 
                     ["teal", 17, 8, 1, teal_notes], ["teal", 17, 8, 1, teal_notes], 
                     ["teal", 17, 8, 3, teal_notes]],
@@ -531,7 +549,7 @@ def get_techops_schedule(rotation_char): #TODO finish this. In production.
         }
         current_schedule = techops_a
         if rotation_char == 'b':
-                current_schedule = techops_b
+                current_schedule = techops_a
         return current_schedule
 
 def get_pink(schedule_name): #TODO Finish this.
