@@ -357,95 +357,101 @@ def get_EMEA_tier3(rotation_char):
         return emea_t3_a
 
 def get_tse3_schedule(rotation_char):
-        teal_a_notes = "CFE Alpha Board 16:00 - 20:00 EST and Miss Investigations"
-        teal_b_notes = "CFE Bravo Board 16:00 - 20:00 EST and DTR"
-        teal_c_notes = "CFE Charlie Board 16:00 - 20:00 EST and Flex Shift (Surge support for Miss Investigations, DTR, Security Investigations)"
-        yellow_a_notes = "CFE Alpha Board 12:00 - 16:00 EST  and PenTest Board"
-        yellow_b_notes = "CFE Bravo Board 12:00 - 16:00 EST and SCCS"
-        yellow_c_notes = "CFE Charlie Board 12:00 - 16:00 EST and Flex Shift (Surge support for PenTest Board, SCCS, Security Investigations)"
-        orange_a_notes = "CFE Alpha Board 8-12 EST. Project Shift (Beta testing tools, automation, Surge support for SCCS, etc)"
-        orange_b_notes = "CFE Bravo Board 8-12 EST. Project Shift (Beta testing tools, automation, Surge support for SCCS, etc)"
-        orange_c_notes = "CFE Charlie Board 8-12 EST. Project Shift (Beta testing tools, automation, Surge support for SCCS, etc)"
-        green_notes = "On-Call After Hours. Security Investigations, Projects, and SCCS"
-        purple_notes = 'Security Investigations'
-        light_blue_notes = 'Security Investigations / Projects'
-        red_notes = "Split Combined Board amongst team members. Flex Shift (Security Investigations, SCCS, PenTest Board)"
-        night_notes = "Split Combined Board amongst team members. Flex Shift (Security Investigations, SCCS, PenTest Board)"
+        teal_a_notes = "Teammate 1: CFE Alpha Board 16:00 - 20:00 EST and DTR (Min. 10 DTR/SCCS request a week) --- https://arcticwolf.atlassian.net/l/c/XqgX10iw"
+        teal_b_notes = "Teammate 2: CFE Bravo Board 16:00 - 20:00 EST and Miss Investigations --- https://arcticwolf.atlassian.net/l/c/XqgX10iw"
+        teal_c_notes = "Teammate 3: CFE Charlie Board 16:00 - 20:00 EST and Tickets (Workshift) --- https://arcticwolf.atlassian.net/l/c/XqgX10iw"
+        yellow_a_notes = "Teammate 1: CFE Alpha Board 12:00 - 16:00 EST  and PenTest Board --- https://arcticwolf.atlassian.net/l/c/XqgX10iw"
+        yellow_b_notes = "Teammate 2: CFE Bravo Board 12:00 - 16:00 EST and SCCS --- https://arcticwolf.atlassian.net/l/c/XqgX10iw"
+        yellow_c_notes = "Teammate 3: CFE Charlie Board 12:00 - 16:00 EST and Tier3 Ticket Queues) --- https://arcticwolf.atlassian.net/l/c/XqgX10iw "
+        orange_a_notes = "Teammate 1: CFE Alpha Board 8-12 EST. Project Shift (Beta testing tools, automation, Surge support for SCCS, etc) --- https://arcticwolf.atlassian.net/l/c/XqgX10iw"
+        orange_b_notes = "Teammate 2: CFE Bravo Board 8-12 EST. Project Shift (Beta testing tools, automation, Surge support for SCCS, etc) --- https://arcticwolf.atlassian.net/l/c/XqgX10iw"
+        orange_c_notes = "Teammate 3: CFE Charlie Board 8-12 EST. Primary on Tickets from 12-4p EST --- https://arcticwolf.atlassian.net/l/c/XqgX10iw"
+        green_notes_a = "Teammate 1: On-Call After Hours. Security Investigations, Projects, and SCCS --- https://arcticwolf.atlassian.net/l/c/XqgX10iw"
+        green_notes_b = "Teammate 2: On-Call After Hours. Security Investigations, Projects, and SCCS --- https://arcticwolf.atlassian.net/l/c/XqgX10iw"
+        green_notes_c = "Teammate 3: Tier 3 tickets --- https://arcticwolf.atlassian.net/l/c/XqgX10iw"
+        purple_notes_a = 'Teammate 1: Security Investigations and Surge Support --- https://arcticwolf.atlassian.net/l/c/XqgX10iw'
+        purple_notes_b = 'Teammate 2: Security Investigations and Surge Support --- https://arcticwolf.atlassian.net/l/c/XqgX10iw'
+        purple_notes_c = 'Teammate 3: Tier 3 tickets --- https://arcticwolf.atlassian.net/l/c/XqgX10iw'
+        blue_notes_a = 'Security Investigations / Surge Support --- https://arcticwolf.atlassian.net/l/c/XqgX10iw'
+        blue_notes_b = 'Security Investigations / Surge Support --- https://arcticwolf.atlassian.net/l/c/XqgX10iw'
+        blue_notes_c = 'Primary on Tickets all day --- https://arcticwolf.atlassian.net/l/c/XqgX10iw'
+        red_notes = "see https://arcticwolf.atlassian.net/l/c/XqgX10iw"
+        night_notes = "see https://arcticwolf.atlassian.net/l/c/XqgX10iw"
         
 # Format: color, start time, length, days until next shift, notes
         tse3_schedule_a = {
             1: [["teal", 17, 8, 1, teal_a_notes],["teal", 17, 8, 1, teal_a_notes], 
                     ["teal", 17, 8, 1, teal_a_notes], ["teal", 17, 8, 1, teal_a_notes], 
                     ["teal", 17, 8, 3, teal_a_notes]],
-            2: [["yellow", 15, 8, 1, yellow_a_notes],["yellow", 15, 8, 1, yellow_a_notes], 
-                    ["yellow", 15, 8, 1, yellow_a_notes], ["yellow", 15, 8, 1, yellow_a_notes], 
-                    ["yellow", 15, 8, 3, yellow_a_notes]],
-            3: [["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes], 
-                    ["purple", 15, 8, 1, purple_notes], ["purple", 15, 8, 1, purple_notes], 
-                    ["purple", 15, 8, 4, purple_notes]],
+            2: [["yellow", 13, 8, 1, yellow_a_notes],["yellow", 13, 8, 1, yellow_a_notes], 
+                    ["yellow", 13, 8, 1, yellow_a_notes], ["yellow", 13, 8, 1, yellow_a_notes], 
+                    ["yellow", 13, 8, 3, yellow_a_notes]],
+            3: [["purple", 15, 8, 1, purple_notes_a],["purple", 15, 8, 1, purple_notes_a], 
+                    ["purple", 15, 8, 1, purple_notes_a], ["purple", 15, 8, 1, purple_notes_a], 
+                    ["purple", 15, 8, 4, purple_notes_a]],
             4: [["gray", 1, 12, 1, night_notes],["gray", 1, 12, 1, night_notes], 
                     ["gray", 1, 12, 8, night_notes]],
             5: [["gray", 1, 12, 1, night_notes],["gray", 1, 12, 1, night_notes], 
                     ["gray", 1, 12, 1, night_notes], ["gray", 1, 12, 4, night_notes]],
-            6: [["purple", 15, 8, 1, purple_notes],["red", 13, 12, 1, red_notes]],
-            7: [["red", 13, 12, 2, red_notes],["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes], 
-                    ["purple", 15, 8, 4, purple_notes]],
+            6: [["purple", 15, 8, 1, purple_notes_a],["red", 13, 12, 1, red_notes]],
+            7: [["red", 13, 12, 2, red_notes],["purple", 15, 8, 1, purple_notes_a],["purple", 15, 8, 1, purple_notes_a], 
+                    ["purple", 15, 8, 4, purple_notes_a]],
             8: [["orange", 13, 8, 1, orange_a_notes],["orange", 13, 8, 1, orange_a_notes], 
                     ["orange", 13, 8, 1, orange_a_notes], ["orange", 13, 8, 1, orange_a_notes],["orange", 13, 8, 3, orange_a_notes]],
-            9: [["light blue", 15, 8, 1, light_blue_notes],["light blue", 15, 8, 1, light_blue_notes], 
-                    ["light blue", 15, 8, 1, light_blue_notes], ["light blue", 15, 8, 1, light_blue_notes],["light blue", 15, 8, 3, light_blue_notes]],
-            10: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes], 
-                    ["green", 14, 8, 1, green_notes], ["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]]
+            9: [["light blue", 17, 8, 1, blue_notes_a],["light blue", 17, 8, 1, blue_notes_a], 
+                    ["light blue", 17, 8, 1, blue_notes_a], ["light blue", 17, 8, 1, blue_notes_a],["light blue", 17, 8, 3, blue_notes_a]],
+            10: [["green", 13, 8, 1, green_notes_a],["green", 13, 8, 1, green_notes_a], 
+                    ["green", 13, 8, 1, green_notes_a], ["green", 13, 8, 1, green_notes_a],["green", 13, 8, 3, green_notes_a]]
         }
 # Format: color, start time, length, days until next shift, notes
         tse3_schedule_b = {
             1: [["teal", 17, 8, 1, teal_b_notes],["teal", 17, 8, 1, teal_b_notes], 
                     ["teal", 17, 8, 1, teal_b_notes], ["teal", 17, 8, 1, teal_b_notes], 
                     ["teal", 17, 8, 3, teal_b_notes]],
-            2: [["yellow", 15, 8, 1, yellow_b_notes],["yellow", 15, 8, 1, yellow_b_notes], 
-                    ["yellow", 15, 8, 1, yellow_b_notes], ["yellow", 15, 8, 1, yellow_b_notes], 
-                    ["yellow", 15, 8, 3, yellow_b_notes]],
-            3: [["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes], 
-                    ["purple", 15, 8, 1, purple_notes], ["purple", 15, 8, 1, purple_notes], 
-                    ["purple", 15, 8, 4, purple_notes]],
+            2: [["yellow", 13, 8, 1, yellow_b_notes],["yellow", 13, 8, 1, yellow_b_notes], 
+                    ["yellow", 13, 8, 1, yellow_b_notes], ["yellow", 13, 8, 1, yellow_b_notes], 
+                    ["yellow", 13, 8, 3, yellow_b_notes]],
+            3: [["purple", 15, 8, 1, purple_notes_b],["purple", 15, 8, 1, purple_notes_b], 
+                    ["purple", 15, 8, 1, purple_notes_b], ["purple", 15, 8, 1, purple_notes_b], 
+                    ["purple", 15, 8, 4, purple_notes_b]],
             4: [["gray", 1, 12, 1, night_notes],["gray", 1, 12, 1, night_notes], 
                     ["gray", 1, 12, 8, night_notes]],
             5: [["gray", 1, 12, 1, night_notes],["gray", 1, 12, 1, night_notes], 
                     ["gray", 1, 12, 1, night_notes], ["gray", 1, 12, 4, night_notes]],
-            6: [["purple", 15, 8, 1, purple_notes],["red", 13, 12, 1, red_notes]],
-            7: [["red", 13, 12, 1, red_notes],["purple", 15, 8, 2, purple_notes],["purple", 15, 8, 1, purple_notes], 
-                    ["purple", 15, 8, 4, purple_notes]],
+            6: [["purple", 15, 8, 1, purple_notes_b],["red", 13, 12, 1, red_notes]],
+            7: [["red", 13, 12, 1, red_notes],["purple", 15, 8, 2, purple_notes_b],["purple", 15, 8, 1, purple_notes_b], 
+                    ["purple", 15, 8, 4, purple_notes_b]],
             8: [["orange", 13, 8, 1, orange_b_notes],["orange", 13, 8, 1, orange_b_notes], 
                     ["orange", 13, 8, 1, orange_b_notes], ["orange", 13, 8, 1, orange_b_notes],["orange", 13, 8, 3, orange_b_notes]],
-            9: [["light blue", 17, 8, 1, light_blue_notes],["light blue", 17, 8, 1, light_blue_notes], 
-                    ["light blue", 17, 8, 1, light_blue_notes], ["light blue", 17, 8, 1, light_blue_notes],["light blue", 17, 8, 3, light_blue_notes]],
-            10: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes], 
-                    ["green", 14, 8, 1, green_notes], ["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]]
+            9: [["light blue", 17, 8, 1, blue_notes_b],["light blue", 17, 8, 1, blue_notes_b], 
+                    ["light blue", 17, 8, 1, blue_notes_b], ["light blue", 17, 8, 1, blue_notes_b],["light blue", 17, 8, 3, blue_notes_b]],
+            10: [["green", 13, 8, 1, green_notes_b],["green", 13, 8, 1, green_notes_b], 
+                    ["green", 13, 8, 1, green_notes_b], ["green", 13, 8, 1, green_notes_b],["green", 13, 8, 3, green_notes_b]]
         }
 # Format: color, start time, length, days until next shift, notes
         tse3_schedule_c = {
             1: [["teal", 17, 8, 1, teal_c_notes],["teal", 17, 8, 1, teal_c_notes], 
                     ["teal", 17, 8, 1, teal_c_notes], ["teal", 17, 8, 1, teal_c_notes], 
                     ["teal", 17, 8, 3, teal_c_notes]],
-            2: [["yellow", 15, 8, 1, yellow_c_notes],["yellow", 15, 8, 1, yellow_c_notes], 
-                    ["yellow", 15, 8, 1, yellow_c_notes], ["yellow", 15, 8, 1, yellow_c_notes], 
-                    ["yellow", 15, 8, 3, yellow_c_notes]],
-            3: [["purple", 15, 8, 1, purple_notes],["purple", 15, 8, 1, purple_notes], 
-                    ["purple", 15, 8, 1, purple_notes], ["purple", 15, 8, 1, purple_notes], 
-                    ["purple", 15, 8, 4, purple_notes]],
+            2: [["yellow", 13, 8, 1, yellow_c_notes],["yellow", 13, 8, 1, yellow_c_notes], 
+                    ["yellow", 13, 8, 1, yellow_c_notes], ["yellow", 13, 8, 1, yellow_c_notes], 
+                    ["yellow", 13, 8, 3, yellow_c_notes]],
+            3: [["purple", 15, 8, 1, purple_notes_c],["purple", 15, 8, 1, purple_notes_c], 
+                    ["purple", 15, 8, 1, purple_notes_c], ["purple", 15, 8, 1, purple_notes_c], 
+                    ["purple", 15, 8, 4, purple_notes_c]],
             4: [["gray", 1, 12, 1, night_notes],["gray", 1, 12, 1, night_notes], 
                     ["gray", 1, 12, 8, night_notes]],
             5: [["gray", 1, 12, 1, night_notes],["gray", 1, 12, 1, night_notes], 
                     ["gray", 1, 12, 1, night_notes], ["gray", 1, 12, 4, night_notes]],
-            6: [["purple", 15, 8, 1, purple_notes],["red", 13, 12, 1, red_notes]],
-            7: [["red", 13, 12, 1, red_notes],["purple", 15, 8, 2, purple_notes],["purple", 15, 8, 1, purple_notes], 
-                    ["purple", 15, 8, 4, purple_notes]],
+            6: [["purple", 15, 8, 1, purple_notes_c],["red", 13, 12, 1, red_notes]],
+            7: [["red", 13, 12, 1, red_notes],["purple", 15, 8, 2, purple_notes_c],["purple", 15, 8, 1, purple_notes_c], 
+                    ["purple", 15, 8, 4, purple_notes_c]],
             8: [["orange", 13, 8, 1, orange_c_notes],["orange", 13, 8, 1, orange_c_notes], 
                     ["orange", 13, 8, 1, orange_c_notes], ["orange", 13, 8, 1, orange_c_notes],["orange", 13, 8, 3, orange_c_notes]],
-            9: [["light blue", 17, 8, 1, light_blue_notes],["light blue", 17, 8, 1, light_blue_notes], 
-                    ["light blue", 17, 8, 1, light_blue_notes], ["light blue", 17, 8, 1, light_blue_notes],["light blue", 17, 8, 3, light_blue_notes]],
-            10: [["green", 14, 8, 1, green_notes],["green", 14, 8, 1, green_notes], 
-                    ["green", 14, 8, 1, green_notes], ["green", 14, 8, 1, green_notes],["green", 14, 8, 3, green_notes]]
+            9: [["light blue", 17, 8, 1, blue_notes_c],["light blue", 17, 8, 1, blue_notes_c], 
+                    ["light blue", 17, 8, 1, blue_notes_c], ["light blue", 17, 8, 1, blue_notes_c],["light blue", 17, 8, 3, blue_notes_c]],
+            10: [["green", 13, 8, 1, green_notes_c],["green", 13, 8, 1, green_notes_c], 
+                    ["green", 13, 8, 1, green_notes_c], ["green", 13, 8, 1, green_notes_c],["green", 13, 8, 3, green_notes_c]]
         }
         if rotation_char == 'a':
                 return tse3_schedule_a

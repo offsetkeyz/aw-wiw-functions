@@ -495,13 +495,16 @@ def updated_shift_parameters(token):
     for shift in all_shifts:
         updated_shift = shift_classes.shift(shift.shift_id, shift.account_id, shift.user_id, shift.location_id, shift.position_id, shift.site_id, shift.start_time, shift.end_time, shift.published, shift.acknowledged, shift.notes, shift.color, shift.is_open)
         # CHANGE THE NEXT LINE
-        user_ids = [get_user_id_from_email(token, 'nate.reagles@arcticwolf.com'), get_user_id_from_email(token, 'rinky.mishra@arcticwolf.com'), get_user_id_from_email(token, 'betsy.thomas@arcticwolf.com'), get_user_id_from_email(token, 'rajat.bakshi@arcticwolf.com'), get_user_id_from_email(token, 'mary.yang@arcticwolf.com'), get_user_id_from_email(token, 'brandon.young@arcticwolf.com'), get_user_id_from_email(token, 'andres.escobar@arcticwolf.com')]
-        if (shift.user_id in user_ids) and (shift.location_id == 5132409) and shift.start_time > datetime(2022, 6, 1, 0, 0, tzinfo=tzutc()): 
-            updated_shift.site_id = 4781879
+        if (shift.color == '00b0f0') and (shift.location_id == 5134192):
+             
+            if shift.start_time.hour == 14:
+                updated_shift.start_time = shift.start_time.replace(hour=16)
+                updated_shift.end_time = shift.end_time + timedelta(hours=2)
+                update_shift(token, updated_shift)
 
 
-        if shift.site_id != updated_shift.site_id:
-            update_shift(token, updated_shift)
+        
+            
             
  # Takes in the updated shift information and updates the shift ID in WiW           
 def update_shift(token, updated_shift_in):

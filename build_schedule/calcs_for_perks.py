@@ -19,14 +19,15 @@ schedule_wb = load_workbook('/Users/colin.mcallister/Library/CloudStorage/OneDri
 perks_workbook = load_workbook('/Users/colin.mcallister/Documents/PERKS with Python/iSOC Perks.xlsx')
 perks_ws = perks_workbook['iSOC Perks']
 
-US_stat_dates = ['17 Jun 2022']
-# calculates stat for night before STAT holiday
-US_stat_nights = ['17 Jun 2022','18 Jun 2022']
+### MUST BE 2 DIGITS
+US_stat_dates = ['04 Jul 2022']
+# calculates stat for night before STAT holiday (add day and day after dates)
+US_stat_nights = ['04 Jun 2022','05 Jun 2022']
 US_OT_days = []
 US_OT_nights = []
 
-CA_stat_dates = ['']
-CA_stat_nights = ['','']
+CA_stat_dates = ['01 Jul 2022']
+CA_stat_nights = ['01 Jul 2022','02 Jul 2022']
 CA_OT_days = []
 CA_OT_nights = []
 
@@ -35,7 +36,7 @@ all_perks_cells = []
 all_isoc_names = []
 
 
-date_range = [datetime.datetime(2022, 6, 5, tzinfo=tzutc()), datetime.datetime(2022, 6, 18, tzinfo=tzutc())]
+date_range = [datetime.datetime(2022, 6, 19, tzinfo=tzutc()), datetime.datetime(2022, 7, 2, tzinfo=tzutc())]
 
 
 
@@ -50,7 +51,7 @@ def strip_spaces(name_in):
 
 
 def is_canadian(employee_in):
-    if find_name_in_perks(employee_in.name) < 109:
+    if find_name_in_perks(employee_in.name) < 112:
         return True
     return False
 
@@ -164,7 +165,7 @@ def calc_percs_by_section():
             calculate_OT(new_employee)
             add_to_perks(new_employee)
 
-    perks_workbook.save('/Users/colin.mcallister/Documents/PERKS with Python/iSOC Perks June5-18.xlsx')
+    perks_workbook.save('/Users/colin.mcallister/Documents/PERKS with Python/iSOC Perks June19-July2.xlsx')
 
 def calculate_OT(employee_in):
     if is_canadian(employee_in):
