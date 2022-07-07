@@ -18,7 +18,9 @@ from openpyxl import load_workbook
 from openpyxl.styles import colors
 from openpyxl.styles import Font, Color, PatternFill, Border, Side, Alignment
 from openpyxl.comments import Comment
-import pytz
+from openpyxl.utils.cell import coordinate_from_string, column_index_from_string, get_column_letter
+
+
 
 workbook_location = '/Users/colin.mcallister/Library/CloudStorage/OneDrive-ArcticWolfNetworksInc/Documents/triage_schedule_from_wiw.xlsx'
 iSOC_Team_Structure = load_workbook('/Users/colin.mcallister/Library/CloudStorage/OneDrive-ArcticWolfNetworksInc/Documents/iSOC Team Structure - Colin.xlsx', data_only=True)
@@ -350,6 +352,18 @@ def create_today_hyperlinks():
         ws['A2'].alignment = Alignment(horizontal='center', vertical='center')
         ws['A2'].border = Border(left=Side(style='double'), right=Side(style='double'),top=Side(style='double'),bottom=Side(style='double'))
 
+def hide_old_columns():
+    for i in workbook.sheetnames:
+        ws = workbook[i]
+        column_letter=str(ws.cell(row=1, column=date_columns[datetime.strftime(datetime.now() - timedelta(days=30), '%d %b %Y')]).column_letter)
+        column_number = column_index_from_string(column_letter)
+        for col in range(3, column_number):
+            ws.column_dimensions[get_column_letter(col)].hidden= True
+        for col in range(column_number, ws.max_column):
+            ws.column_dimensions[get_column_letter(col)].hidden= False
+
+
+
 def completely_clear_sheets():
     for i in workbook.sheetnames:
         ws = workbook[i]
@@ -364,13 +378,13 @@ def clear_future_columns(start_date:datetime):
     get_date_rows()
 
 def main():
-    isoc_team_structure_update()
     token = bs_methods.authenticate_WiW_API()
     clear_future_columns(datetime.now()-timedelta(days=21))
     build_date_row()
     get_date_rows()
     get_all_names()    
-    update_users(token)
+    # isoc_team_structure_update()
+    # update_users(token)
     all_to_requests = get_time_off_requests(token)
     all_shifts_json = bs_methods.get_all_shifts_json(token)
     all_shifts = bs_methods.store_shifts_by_user_id(all_shifts_json) #returns dict with user_id as key
@@ -389,6 +403,7 @@ def main():
             continue
     # update_users(token)
     create_today_hyperlinks()
+    hide_old_columns()
     workbook.save(str(workbook_location))
 
 

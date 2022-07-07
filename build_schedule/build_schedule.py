@@ -28,11 +28,12 @@ def main():
 
     # bs_methods.delete_open_shifts(token)
 
-    bs_methods.copy_users_schedule(bs_methods.get_user_id_from_email(token,'tasneem.ansari@arcticwolf.com'), 'navjot.navjot@arcticwolf.com', datetime.datetime(2022,6,26).astimezone(pytz.timezone('UTC')), token)
+    # bs_methods.copy_users_schedule(bs_methods.get_user_id_from_email(token,'brendan.stevens@arcticwolf.com'), 'jordan.elizardo@arcticwolf.com', datetime.datetime(2022,7,16).astimezone(pytz.timezone('UTC')), token)
+
 
     # bs_methods.updated_shift_parameters(token)
 
-    # build_schedule(token, 'techops')
+    # build_schedule(token, 'tse3')
 
     # bs_methods.get_all_future_shifts(token)
 
@@ -45,7 +46,7 @@ def main():
     # bs_methods.build_oranges(token, 'sam.durston@arcticwolf.com', '18 Jul 2022', 25, 'techops')
     # bs_methods.build_reds(token, 'premal.patel@arcticwolf.com', '18 Jul 2022', 25, 'techops')
 
-    # bs_methods.delete_all_shifts_for_user(token, datetime.datetime(2022,6,17).astimezone(pytz.timezone('UTC')),bs_methods.get_user_id_from_email(token, 'kevin.grams@arcticwolf.com'))
+    bs_methods.delete_all_shifts_for_user(token, datetime.datetime(2022,7,19).astimezone(pytz.timezone('UTC')),bs_methods.get_user_id_from_email(token, 'paul.egbert@arcticwolf.com'))
 
     # print(bs_methods.get_all_sites(token))
 
