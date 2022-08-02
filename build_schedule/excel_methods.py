@@ -47,6 +47,7 @@ all_positions = {
     'Network Ops Supp Analyst':10762850,
     'Network Sec Ops Analyst 2':10762850,
     'Network Sec Ops Anlst 1':10762850,
+    'Network Sec Ops Analyst 1':10762850,
     'S2 Technical Trainer 4':10762851,
     'Shift Lead Sec Ops':10762852,
     'Shift Lead Security Ops':10762852,
@@ -105,7 +106,7 @@ def build_date_row():
     for sheet in workbook.sheetnames:
         current_ws = workbook[sheet]
         start_date = datetime(2022,2,28)
-        for col in current_ws.iter_cols(min_row=1, max_row=1, min_col=3, max_col=360):
+        for col in current_ws.iter_cols(min_row=1, max_row=1, min_col=3, max_col=500):
             for cell in col:
                 cell.value = datetime.strftime(start_date, '%d %b %Y')
                 date_columns[datetime.strftime(start_date, '%d %b %Y')] = cell.column #stores columns of dates in global dict. Columns same for all sheets
@@ -144,6 +145,8 @@ def isoc_team_structure_update():
                 sheet.cell(row=row_, column=7).value = 0
             if s2_employees[i]['position'] in ['TSA', 'TSE1']:
                 sheet.cell(row=row_, column=6).border = red_border
+            if s2_employees[i]['position'] == 'other':
+                sheet.cell(row=row_, column=7).value = 0
                 
     iSOC_Team_Structure.save('/Users/colin.mcallister/Library/CloudStorage/OneDrive-ArcticWolfNetworksInc/Documents/iSOC Team Structure - Colin.xlsx')        
 
@@ -232,6 +235,8 @@ def get_iSOC_employees():
         if all_employees[i]['position'] in all_headcount_positions:
             all_employees[i]['position'] = all_headcount_positions[all_employees[i]['position']]
             isoc_employees[i] = all_employees[i]
+        else:
+            all_employees[i]['position'] = 'other'
     return isoc_employees
 
 def update_wiw_user(token,user_details): #10656558 is "unknown"    
@@ -298,6 +303,7 @@ def populate_user_in_excel_sheet(user_shifts, schedule_name, user):
                 check_sheet_for_name(user.full_name, check_location_id(shift.location_id))     
                 current_cell = ws.cell(row=all_names[check_location_id(shift.location_id)][user.full_name], column=date_columns[datetime.strftime(shift.start_time, '%d %b %Y')])
            except KeyError as e:
+                print("line 306" + str(e))
                 continue
 
            current_cell.value = shift.length
@@ -319,6 +325,8 @@ def populate_user_in_excel_sheet(user_shifts, schedule_name, user):
            current_cell.comment = Comment(shift.notes, "iSOC Scheduling")
 
 def populate_users_time_off(user_requests, schedule_name, user):
+    if user.full_name == 'Raed Maklai':
+        print()
         for request in user_requests:
            ws = workbook[schedule_name]
            date_check = request.start_time
@@ -331,13 +339,19 @@ def populate_users_time_off(user_requests, schedule_name, user):
                 current_cell.value = 'V - Time Off'
                 current_cell.fill = PatternFill("solid", fgColor='ff8789')
                 current_cell.comment = Comment(request.type_label, "iSOC Scheduling")
-                date_check = date_check + timedelta(days=1)
+                date_check = date_check + timedelta(hours=23)
 
 def get_time_off_requests(token):
-    url_headers = bs_methods.get_url_and_headers('requests', token)
-    response = requests.request("GET", url_headers[0], headers=url_headers[1]).json()
-    requests_json = response['requests']
-    return bs_methods.store_time_off(requests_json)
+    url_headers = bs_methods.get_url_and_headers('requests?start=' + str(datetime(2022, 3, 1)) + "&end=" + str(datetime.now()+timedelta(days=100)), token)
+    response = requests.request("GET", url_headers[0], headers=url_headers[1])
+    all_requests = response.json()['requests']
+    return bs_methods.store_time_off(all_requests)
+
+def get_time_off_requests_for_user(token, user_id):
+    url_headers = bs_methods.get_url_and_headers('requests?start=' + str(datetime(2022, 3, 1)) + "&end=" + str(datetime.now()+timedelta(days=100)) + '&user_id=' + str(user_id), token)
+    response = requests.request("GET", url_headers[0], headers=url_headers[1])
+    all_requests = response.json()['requests']
+    return bs_methods.store_time_off(all_requests)
     
 
 def create_today_hyperlinks():
@@ -379,32 +393,45 @@ def clear_future_columns(start_date:datetime):
 
 def main():
     token = bs_methods.authenticate_WiW_API()
+    bs_methods.delete_open_shifts(token)
     clear_future_columns(datetime.now()-timedelta(days=21))
     build_date_row()
     get_date_rows()
     get_all_names()    
+
+
     # isoc_team_structure_update()
     # update_users(token)
-    all_to_requests = get_time_off_requests(token)
+    # all_to_requests = get_time_off_requests(token)
     all_shifts_json = bs_methods.get_all_shifts_json(token)
     all_shifts = bs_methods.store_shifts_by_user_id(all_shifts_json) #returns dict with user_id as key
     for user_id in all_shifts:
+                    # all_to_requests[user_id]
+        
+        all_to_requests_for_user = get_time_off_requests_for_user(token, user_id)
         user = bs_methods.get_user_from_id(token, user_id)
+        if user.email == 'raed.maklai@arcticwolf.com':
+            _ = 9
         user_shifts = all_shifts[user_id]
         schedule_name = check_location_id(user_shifts[0].location_id)
         if schedule_name == 0:
+            # print(schedule_name)
             continue #shift not on a tracked schedule
         check_sheet_for_name(user.full_name, schedule_name)
         populate_user_in_excel_sheet(user_shifts, schedule_name, user)
         try:
-            populate_users_time_off(all_to_requests[user_id],schedule_name, user)
-        except Exception as e:
-            _ = e
+            _=3
+        except:
+            continue  
+        if len(all_to_requests_for_user[user_id]) > 0:
+            populate_users_time_off(all_to_requests_for_user[user_id],schedule_name, user)
+        else:
             continue
-    # update_users(token)
-    create_today_hyperlinks()
-    hide_old_columns()
+
     workbook.save(str(workbook_location))
+
+
+    # get all users, then iterate through to populate shifts and time off.
 
 
 if __name__ == "__main__":
