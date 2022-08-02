@@ -20,14 +20,14 @@ perks_workbook = load_workbook('/Users/colin.mcallister/Documents/PERKS with Pyt
 perks_ws = perks_workbook['iSOC Perks']
 
 ### MUST BE 2 DIGITS
-US_stat_dates = ['04 Jul 2022']
+US_stat_dates = []
 # calculates stat for night before STAT holiday (add day and day after dates)
-US_stat_nights = ['04 Jun 2022','05 Jun 2022']
+US_stat_nights = []
 US_OT_days = []
 US_OT_nights = []
 
-CA_stat_dates = ['01 Jul 2022']
-CA_stat_nights = ['01 Jul 2022','02 Jul 2022']
+CA_stat_dates = []
+CA_stat_nights = []
 CA_OT_days = []
 CA_OT_nights = []
 
@@ -36,7 +36,7 @@ all_perks_cells = []
 all_isoc_names = []
 
 
-date_range = [datetime.datetime(2022, 6, 19, tzinfo=tzutc()), datetime.datetime(2022, 7, 2, tzinfo=tzutc())]
+date_range = [datetime.datetime(2022, 7, 17, tzinfo=tzutc()), datetime.datetime(2022, 7, 30, tzinfo=tzutc())]
 
 
 
@@ -51,12 +51,12 @@ def strip_spaces(name_in):
 
 
 def is_canadian(employee_in):
-    if find_name_in_perks(employee_in.name) < 112:
+    if find_name_in_perks(employee_in.name) < 120:
         return True
     return False
 
 def compare_names():
-    for i in range(0,3,1):
+    for i in range(0,4,1):
         for cell in schedule_wb.worksheets[i]['A']:
             try:
                 if len(cell.value) > 1 and '>' not in str(cell.value):
@@ -165,7 +165,7 @@ def calc_percs_by_section():
             calculate_OT(new_employee)
             add_to_perks(new_employee)
 
-    perks_workbook.save('/Users/colin.mcallister/Documents/PERKS with Python/iSOC Perks June19-July2.xlsx')
+    perks_workbook.save('/Users/colin.mcallister/Documents/PERKS with Python/iSOC Perks July17-July30.xlsx')
 
 def calculate_OT(employee_in):
     if is_canadian(employee_in):
@@ -292,3 +292,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    

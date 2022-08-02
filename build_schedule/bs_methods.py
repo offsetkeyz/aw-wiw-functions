@@ -243,7 +243,7 @@ def check_email_format(user_name):
 # converts datetime to correct format for WiW API
 def get_start_date(input_date):
     try:
-        dt_start = datetime.strptime(input_date, '%d %b %Y')
+        dt_start = datetime.strptime(str(input_date), '%d %b %Y')
         dt_start = dt_start.replace(hour=13, tzinfo=tzutc())
     except ValueError as e:
         print ("Incorrect format with get_start_date: " + input_date)
@@ -386,7 +386,7 @@ def get_all_future_shifts_json(token):
     return all_shifts
 
 def get_open_shifts(token):
-    url_headers = get_url_and_headers('shifts?start=' + str(datetime.now()-timedelta(days=180)) + "&end=" + str(datetime.now()+ timedelta(days=180)) + '&include_onlyopen=true' + "&unpublished=true", token)
+    url_headers = get_url_and_headers('shifts?start=' + str(datetime.now()) + "&end=" + str(datetime.now()+ timedelta(days=180)) + '&include_onlyopen=true' + "&unpublished=true", token)
     response = requests.request("GET", url_headers[0], headers=url_headers[1])
     all_shifts = response.json()['shifts']
     return all_shifts
@@ -497,9 +497,9 @@ def updated_shift_parameters(token):
         # CHANGE THE NEXT LINE
         if (shift.color == '00b0f0') and (shift.location_id == 5134192):
              
-            if shift.start_time.hour == 14:
+            if shift.end_time.hour == 2:
                 updated_shift.start_time = shift.start_time.replace(hour=16)
-                updated_shift.end_time = shift.end_time + timedelta(hours=2)
+                updated_shift.end_time = shift.end_time.replace(hour=0)
                 update_shift(token, updated_shift)
 
 
