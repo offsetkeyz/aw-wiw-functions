@@ -1,24 +1,18 @@
-from ctypes import alignment
+
 from datetime import *
-from distutils.command import build
 import json
-from lib2to3.pgen2 import token
 from logging.config import DEFAULT_LOGGING_CONFIG_PORT
 import re
-import sched
-from secrets import token_bytes
-from sqlite3 import enable_shared_cache
 from tkinter import CENTER, HORIZONTAL, VERTICAL
-from xmlrpc.client import DateTime
 from dateutil.tz import *
 import requests
 import bs_methods
 import shift_classes
 from openpyxl import load_workbook
-from openpyxl.styles import colors
 from openpyxl.styles import Font, Color, PatternFill, Border, Side, Alignment
 from openpyxl.comments import Comment
 from openpyxl.utils.cell import coordinate_from_string, column_index_from_string, get_column_letter
+import csv
 
 
 
@@ -99,7 +93,7 @@ def check_location_id(location_id) -> str:
     }
     try:
         return schedules[int(location_id)]
-    except:
+    except Exception as e:
         return 0
 
 def build_date_row():
@@ -186,7 +180,7 @@ def update_users(token):
     for user in wiw_users:
         try:
             user_details = s2_employees[str(user.email).strip().lower()]
-        except:
+        except Exception as e:
             continue
         update_wiw_user(token,user_details)
 
@@ -303,7 +297,7 @@ def populate_user_in_excel_sheet(user_shifts, schedule_name, user):
                 check_sheet_for_name(user.full_name, check_location_id(shift.location_id))     
                 current_cell = ws.cell(row=all_names[check_location_id(shift.location_id)][user.full_name], column=date_columns[datetime.strftime(shift.start_time, '%d %b %Y')])
            except KeyError as e:
-                print("line 306" + str(e))
+                # print("line 306" + str(e))
                 continue
 
            current_cell.value = shift.length
@@ -325,21 +319,20 @@ def populate_user_in_excel_sheet(user_shifts, schedule_name, user):
            current_cell.comment = Comment(shift.notes, "iSOC Scheduling")
 
 def populate_users_time_off(user_requests, schedule_name, user):
-    if user.full_name == 'Raed Maklai':
-        print()
-        for request in user_requests:
-           ws = workbook[schedule_name]
-           date_check = request.start_time
-           while request.start_time <= date_check < request.end_time:
-                try:
-                    current_cell = ws.cell(row=all_names[schedule_name][user.full_name], column=date_columns[datetime.strftime(date_check, '%d %b %Y')])
-                except KeyError as e:
-                    date_check = date_check + timedelta(days=1)
-                    continue                
-                current_cell.value = 'V - Time Off'
-                current_cell.fill = PatternFill("solid", fgColor='ff8789')
-                current_cell.comment = Comment(request.type_label, "iSOC Scheduling")
-                date_check = date_check + timedelta(hours=23)
+
+    for request in user_requests:
+        ws = workbook[schedule_name]
+        date_check = request.start_time
+        while request.start_time <= date_check < request.end_time:
+            try:
+                current_cell = ws.cell(row=all_names[schedule_name][user.full_name], column=date_columns[datetime.strftime(date_check, '%d %b %Y')])
+            except KeyError as e:
+                date_check = date_check + timedelta(days=1)
+                continue                
+            current_cell.value = 'V - Time Off'
+            current_cell.fill = PatternFill("solid", fgColor='ff8789')
+            current_cell.comment = Comment(request.type_label, "iSOC Scheduling")
+            date_check = date_check + timedelta(hours=23, minutes=58)
 
 def get_time_off_requests(token):
     url_headers = bs_methods.get_url_and_headers('requests?start=' + str(datetime(2022, 3, 1)) + "&end=" + str(datetime.now()+timedelta(days=100)), token)
@@ -350,9 +343,11 @@ def get_time_off_requests(token):
 def get_time_off_requests_for_user(token, user_id):
     url_headers = bs_methods.get_url_and_headers('requests?start=' + str(datetime(2022, 3, 1)) + "&end=" + str(datetime.now()+timedelta(days=100)) + '&user_id=' + str(user_id), token)
     response = requests.request("GET", url_headers[0], headers=url_headers[1])
-    all_requests = response.json()['requests']
+    try: #permissions error
+        all_requests = response.json()['requests']
+    except Exception as e:
+        all_requests = {}
     return bs_methods.store_time_off(all_requests)
-    
 
 def create_today_hyperlinks():
     for i in workbook.sheetnames:
@@ -392,26 +387,31 @@ def clear_future_columns(start_date:datetime):
     get_date_rows()
 
 def main():
-    token = bs_methods.authenticate_WiW_API()
-    bs_methods.delete_open_shifts(token)
-    clear_future_columns(datetime.now()-timedelta(days=21))
-    build_date_row()
-    get_date_rows()
-    get_all_names()    
+    rows = []
 
+    token = bs_methods.authenticate_WiW_API()
+    all_wiw_users = bs_methods.get_all_wiw_users(token)
+
+    # bs_methods.delete_open_shifts(token)
+
+    # clear_future_columns(datetime.now()-timedelta(days=21))
+    # build_date_row()
+    get_date_rows()
+    get_all_names()
 
     # isoc_team_structure_update()
     # update_users(token)
-    # all_to_requests = get_time_off_requests(token)
     all_shifts_json = bs_methods.get_all_shifts_json(token)
     all_shifts = bs_methods.store_shifts_by_user_id(all_shifts_json) #returns dict with user_id as key
-    for user_id in all_shifts:
-                    # all_to_requests[user_id]
-        
-        all_to_requests_for_user = get_time_off_requests_for_user(token, user_id)
+    for user_id in all_shifts:        
         user = bs_methods.get_user_from_id(token, user_id)
-        if user.email == 'raed.maklai@arcticwolf.com':
-            _ = 9
+        all_to_requests_for_user = get_time_off_requests_for_user(token, user_id)
+        try:
+            for request in all_to_requests_for_user[user_id]:
+                if request.status not in [1,2,4]:
+                    bs_methods.approve_time_off_request(token, request)
+        except Exception as e:
+            _ = 0
         user_shifts = all_shifts[user_id]
         schedule_name = check_location_id(user_shifts[0].location_id)
         if schedule_name == 0:
@@ -420,13 +420,10 @@ def main():
         check_sheet_for_name(user.full_name, schedule_name)
         populate_user_in_excel_sheet(user_shifts, schedule_name, user)
         try:
-            _=3
-        except:
+            if len(all_to_requests_for_user[user_id]) > 0:
+                populate_users_time_off(all_to_requests_for_user[user_id],schedule_name, user)
+        except Exception as e:
             continue  
-        if len(all_to_requests_for_user[user_id]) > 0:
-            populate_users_time_off(all_to_requests_for_user[user_id],schedule_name, user)
-        else:
-            continue
 
     workbook.save(str(workbook_location))
 

@@ -1,9 +1,11 @@
 __author__ = "Colin McAllister"
 
+from ast import List
 from tokenize import String
 from tracemalloc import start
 from turtle import update
 from webbrowser import get
+from shift_classes import shift
 import shift_classes
 import requests
 import json
@@ -287,6 +289,26 @@ def get_user_id_from_email(token, user_email):
         user_id = 0
     return user_id
 
+# takes in user email and returns WiW User ID
+def get_user_id_from_name(token, user_first_name, user_last_name):
+    user_email = user_first_name + '.' + user_last_name + '@arcticwolf.com'
+    url_headers = get_url_and_headers('users?search='+ user_email, token)
+    success = False
+    i = 1
+    while success == False & i < 10:
+        try:
+            response = requests.request("GET", url_headers[0], headers=url_headers[1])
+            success = True
+        except:
+            success = False
+            i +=1 
+    try:
+        user_id = response.json()['users'][0]['id']
+    except:
+        print("User: " + user_email + " not in When I Work")
+        user_id = 0
+    return user_id
+
 #takes in user_id and returns user object
 def get_user_from_id(token, user_id):
     url_headers = get_url_and_headers('users/'+str(user_id), token)
@@ -317,6 +339,49 @@ def get_time_off_requests(token):
     response = requests.request("GET", url_headers[0], headers=url_headers[1])
     all_requests = response.json()['requests']
     return all_requests
+
+def get_time_off_requests_for_user(token, user_id):
+    url_headers = get_url_and_headers('requests?start=' + str(datetime(2022, 3, 1)) + "&end=" + str(datetime.now()+timedelta(days=100)) + '&user_id=' + str(user_id), token)
+    response = requests.request("GET", url_headers[0], headers=url_headers[1])
+    try: #permissions error
+        all_requests = response.json()['requests']
+    except Exception as e:
+        all_requests = {}
+    return store_time_off(all_requests)
+
+def create_time_off_request(token, user, start_date, end_date):
+    url_headers = get_url_and_headers('requests', token)
+    payload = json.dumps({
+        "user_id": user.wiw_employee_id, 
+        "account_id" : get_user_id_from_email(token, 'sawi43kd@arcticwolf.net'),
+        "start_time": start_date,
+        "end_time" : end_date,
+        # "created_at" : datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
+        # "status" : 2
+    }) 
+    success = False
+    i = 1
+    while success == False & i < 10:
+        try:   
+            request = requests.request("POST", url_headers[0], headers=url_headers[1], data=payload)
+            success = True
+        except:
+            success == False
+            i += 1
+    return request
+
+def approve_time_off_request(token, request):
+    url_headers = get_url_and_headers('requests/' + str(request.to_id), token)
+    payload = {
+        "status" : 2
+    }
+    i = 1
+    while i < 10:
+        try: 
+            request = requests.request("PUT", url_headers[0], headers=url_headers[1], data=payload)
+        except:
+            i += 1
+        return
 
 def get_all_positions(token):
     url_headers = get_url_and_headers('positions', token)
@@ -408,6 +473,15 @@ def get_all_shifts_json(token):
     all_shifts = response.json()['shifts']
     return all_shifts
 
+def get_all_wiw_users(token):
+    all_users = {}
+    url_headers = get_url_and_headers('users', token)
+    response = requests.request("GET", url_headers[0], headers=url_headers[1])
+    all_users_json = response.json()['users']
+    for u in all_users_json:
+        all_users[u['id']] = (shift_classes.user(u['first_name'], u['last_name'], u['email'], u['id'], u['positions'], u['role'], u['locations'], u['is_hidden'], u['is_active']))
+    return all_users
+
 def delete_all_shifts_for_user(token, start_date, user_id, all_shifts=0):
     if all_shifts == 0: #option to pass in dictionary of shift\=]-
         all_shifts_json = get_all_shifts_json(token)
@@ -438,6 +512,17 @@ def store_shifts_by_user_id(all_shifts_in):
             employee_shifts[int(i['user_id'])] = current_users_shifts
         else: 
             employee_shifts[int(i['user_id'])] = [new_shift]
+    return employee_shifts
+
+def store_shifts_for_single_user(all_shifts_in):
+        # key: user_id | value: array of shifts
+    employee_shifts = []
+    for i in all_shifts_in:
+        start_time = datetime.strptime(i['start_time'], '%a, %d %b %Y %H:%M:%S %z').astimezone(pytz.timezone('UTC'))
+        end_time = datetime.strptime(i['end_time'], '%a, %d %b %Y %H:%M:%S %z').astimezone(pytz.timezone('UTC'))
+        new_shift = shift_classes.shift(int(i['id']), int(i['account_id']), int(i['user_id']), int(i['location_id']), int(i['position_id']),
+                                int(i['site_id']), start_time, end_time, bool(i['published']), bool(i['acknowledged']), i['notes'], i['color'], bool(i['is_open']))
+        employee_shifts.append(new_shift)
     return employee_shifts
 
 def store_time_off(all_requests):
